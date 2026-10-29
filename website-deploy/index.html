@@ -1,0 +1,4088 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <base href="./website-deploy/">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>오늘의 코디 온도차</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+
+        .welcome-mark img {
+            display: block;
+            width: 100%;
+            height: auto
+        }
+
+        .think-mascot img {
+            display: block;
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 8px 8px #7892b32b)
+        }
+
+        .welcome {
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            background: radial-gradient(ellipse at 50% 35%, #fff 0, #f7faff 56%, #eaf3ff 100%);
+            text-align: center;
+            position: fixed;
+            inset: 0;
+            z-index: 20
+        }
+
+        .welcome-box {
+            width: min(520px, 100%)
+        }
+
+        .welcome-mark {
+            width: min(300px, 75vw);
+            margin: 0 auto 4px;
+            animation: floaty 3s ease-in-out infinite
+        }
+
+        .welcome h1 {
+            font: clamp(36px, 8vw, 58px)/1.2 Jua;
+            color: #5983bd;
+            margin: 7px 0 12px
+        }
+
+        .welcome p {
+            color: #7e91af;
+            line-height: 1.9;
+            margin: 0 0 25px
+        }
+
+        .start-button {
+            border: 0;
+            border-radius: 999px;
+            padding: 15px 30px;
+            background: #729cd1;
+            color: #fff;
+            font: 21px Jua;
+            box-shadow: 0 9px 22px #6f97cb45
+        }
+
+        .start-button:hover {
+            background: #5e89c0;
+            transform: translateY(-2px)
+        }
+
+        .cloud-line {
+            fill: #fffdf8;
+            stroke: #6887bf;
+            stroke-width: 5;
+            stroke-linecap: round;
+            stroke-linejoin: round
+        }
+
+        @keyframes floaty {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(-1deg)
+            }
+
+            50% {
+                transform: translateY(-8px) rotate(1deg)
+            }
+        }
+
+        :root {
+            --ink: #373344;
+            --muted: #92909f;
+            --blue: #7599c9;
+            --pink: #ff86a0;
+            --paper: #fff;
+            --line: #edf0f5;
+            --shadow: 0 12px 36px #54405a0c
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: #f3f7fc;
+            color: var(--ink);
+            font-family: 'Noto Sans KR', sans-serif
+        }
+
+        button,
+        input,
+        select {
+            font: inherit
+        }
+
+        button {
+            cursor: pointer
+        }
+
+        .shell {
+            max-width: 1050px;
+            margin: auto;
+            padding: 22px 25px 55px
+        }
+
+        .top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 22px
+        }
+
+        .brand {
+            font: 25px Jua;
+            color: #3e526f
+        }
+
+        .nav {
+            display: flex;
+            gap: 5px
+        }
+
+        .nav button {
+            border: 0;
+            background: transparent;
+            padding: 9px 14px;
+            border-radius: 99px;
+            color: #777;
+            font-weight: 700
+        }
+
+        .nav button.active {
+            background: #e8f1ff;
+            color: #6088bf
+        }
+
+        .today {
+            font-size: 12px;
+            color: #858da0
+        }
+
+        .sky {
+            position: relative;
+            overflow: hidden;
+            height: 160px;
+            border-radius: 25px;
+            padding: 28px 32px;
+            margin-bottom: 20px;
+            background: linear-gradient(115deg, #d9ecff, #eff7ff 68%, #fff9e9)
+        }
+
+        .sky h1 {
+            position: relative;
+            margin: 0 0 7px;
+            font: 30px Jua;
+            color: #4d6791
+        }
+
+        .sky p {
+            position: relative;
+            margin: 0;
+            color: #7185a1;
+            font-size: 13px
+        }
+
+        .sun {
+            position: absolute;
+            right: 12%;
+            top: 32px;
+            width: 74px;
+            height: 74px;
+            border-radius: 50%;
+            background: #ffe28b;
+            box-shadow: 0 0 0 15px #ffe28b45
+        }
+
+        .weather-badge {
+            position: absolute;
+            right: 18px;
+            bottom: 14px;
+            background: #ffffffb8;
+            color: #6486b5;
+            border-radius: 99px;
+            padding: 6px 10px;
+            font-size: 11px
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 23px;
+            padding: 23px;
+            box-shadow: var(--shadow);
+            margin-bottom: 18px
+        }
+
+        .heading {
+            font: 23px Jua;
+            margin: 0 0 5px
+        }
+
+        .sub {
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 20px
+        }
+
+        .feel {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            border: 0;
+            padding: 0;
+            margin: 0 0 19px
+        }
+
+        .feel legend,
+        .category legend {
+            font-weight: 900;
+            font-size: 14px;
+            margin-bottom: 9px
+        }
+
+        .choice {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 9px 12px;
+            background: #f5f8fd;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            font-size: 12px;
+            cursor: pointer
+        }
+
+        .choice:has(input:checked) {
+            background: #edf4ff;
+            border-color: #a9c4e6;
+            color: #5276a5
+        }
+
+        .choice input {
+            accent-color: var(--blue)
+        }
+
+        .fields {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px
+        }
+
+        .field label {
+            display: block;
+            color: #878392;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 7px
+        }
+
+        .field select,
+        .field input {
+            width: 100%;
+            border: 1px solid #eeeaf0;
+            border-radius: 12px;
+            padding: 11px 10px;
+            background: #fff;
+            color: var(--ink)
+        }
+
+        .category {
+            border: 0;
+            padding: 0;
+            margin: 18px 0
+        }
+
+        .date-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 12px 0 18px
+        }
+
+        .date-row label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #777
+        }
+
+        .date-row input {
+            margin-left: 6px;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 9px
+        }
+
+        .primary {
+            border: 0;
+            background: var(--blue);
+            color: white;
+            border-radius: 13px;
+            padding: 12px 20px;
+            font-weight: 900;
+            box-shadow: 0 5px 12px #7599c933
+        }
+
+        .primary:hover {
+            background: #6288bd
+        }
+
+        .suggest {
+            display: none;
+            margin-top: 22px;
+            padding: 18px;
+            background: #f9faff;
+            border: 1px solid #edf0fa;
+            border-radius: 18px
+        }
+
+        .suggest.show {
+            display: block
+        }
+
+        .suggest h2 {
+            font: 20px Jua;
+            margin: 0 0 5px
+        }
+
+        .suggest p {
+            font-size: 12px;
+            color: #888;
+            margin: 0 0 14px
+        }
+
+        .outfits {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 11px
+        }
+
+        .look {
+            border: 1px solid #eceaf0;
+            background: #fff;
+            border-radius: 16px;
+            padding: 11px;
+            text-align: center
+        }
+
+        .look.selected {
+            border: 2px solid var(--pink);
+            background: #fffafb
+        }
+
+        .look-title {
+            font: 15px Jua;
+            color: #615468
+        }
+
+        .stage {
+            height: 180px;
+            margin: 8px 0;
+            border-radius: 14px;
+            background: linear-gradient(160deg, var(--bg), #fff);
+            display: grid;
+            place-items: center
+        }
+
+        .person {
+            position: relative;
+            height: 138px;
+            width: 95px
+        }
+
+        .head {
+            position: absolute;
+            top: 1px;
+            left: 29px;
+            width: 38px;
+            height: 42px;
+            border-radius: 48%;
+            border: 2px solid #e9b9a9;
+            background: #ffd9c8;
+            z-index: 2;
+            text-align: center;
+            padding-top: 9px;
+            font-size: 18px
+        }
+
+        .hair {
+            position: absolute;
+            top: -5px;
+            left: -2px;
+            width: 39px;
+            height: 19px;
+            background: #735443;
+            border-radius: 50% 50% 20% 20%;
+            z-index: -1
+        }
+
+        .torso {
+            position: absolute;
+            top: 42px;
+            left: 20px;
+            width: 56px;
+            height: 45px;
+            display: grid;
+            place-items: center;
+            font-size: 53px
+        }
+
+        .bottom {
+            position: absolute;
+            top: 80px;
+            left: 29px;
+            width: 38px;
+            text-align: center;
+            font-size: 40px
+        }
+
+        .legs {
+            position: absolute;
+            top: 111px;
+            left: 34px;
+            width: 10px;
+            height: 19px;
+            border-radius: 0 0 8px 8px;
+            background: #ffd9c8;
+            box-shadow: 18px 0 #ffd9c8
+        }
+
+        .shoes {
+            position: absolute;
+            top: 126px;
+            left: 25px;
+            font-size: 17px;
+            letter-spacing: 5px
+        }
+
+        .look-items {
+            font-size: 10px;
+            line-height: 1.7;
+            color: #817b89;
+            min-height: 50px
+        }
+
+        .look-items strong {
+            color: #534b5b
+        }
+
+        .pick {
+            margin-top: 8px;
+            width: 100%;
+            border: 0;
+            border-radius: 10px;
+            padding: 8px 4px;
+            background: #f7f3f6;
+            color: #766d7c;
+            font-size: 11px;
+            font-weight: 700
+        }
+
+        .selected .pick {
+            background: var(--pink);
+            color: #fff
+        }
+
+        .calendar {
+            display: none
+        }
+
+        .calendar.visible {
+            display: block
+        }
+
+        .calhead {
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .month {
+            font: 21px Jua
+        }
+
+        .month button {
+            border: 0;
+            background: #f8f5f7;
+            border-radius: 9px;
+            padding: 6px 12px
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 14px
+        }
+
+        .dow {
+            text-align: center;
+            color: #aaa;
+            font-size: 12px;
+            padding: 6px
+        }
+
+        .day {
+            min-height: 72px;
+            border-radius: 11px;
+            padding: 6px;
+            background: #fdfbfb;
+            font-size: 11px;
+            color: #777
+        }
+
+        .day.today {
+            background: #fff0f2;
+            color: #ed6f89;
+            font-weight: 900
+        }
+
+        .event {
+            display: block;
+            margin-top: 5px;
+            padding: 4px;
+            border-radius: 6px;
+            background: #f1ebff;
+            color: #8068aa;
+            font-size: 9px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis
+        }
+
+        .empty {
+            background: transparent
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 22px;
+            transform: translate(-50%, 16px);
+            background: #393345;
+            color: white;
+            padding: 11px 17px;
+            border-radius: 12px;
+            opacity: 0;
+            transition: .2s;
+            pointer-events: none
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translate(-50%, 0)
+        }
+
+        .settings {
+            border: 0;
+            background: #ffffffb8;
+            color: #6486a8;
+            border-radius: 99px;
+            padding: 7px 11px;
+            font-size: 11px
+        }
+
+        .weather-config {
+            display: none;
+            margin-top: 8px
+        }
+
+        .weather-config.open {
+            display: flex;
+            gap: 7px
+        }
+
+        .weather-config input {
+            min-width: 0;
+            width: 220px;
+            border: 1px solid #dce5f0;
+            border-radius: 9px;
+            padding: 8px
+        }
+
+        .weather-config button {
+            border: 0;
+            border-radius: 9px;
+            padding: 8px;
+            background: #7599c9;
+            color: #fff
+        }
+
+        @media(max-width:760px) {
+            .shell {
+                padding: 15px
+            }
+
+            .top {
+                flex-wrap: wrap
+            }
+
+            .nav {
+                order: 3;
+                width: 100%;
+                justify-content: space-between
+            }
+
+            .nav button {
+                padding: 9px
+            }
+
+            .outfits {
+                grid-template-columns: repeat(2, 1fr)
+            }
+
+            .fields {
+                grid-template-columns: 1fr
+            }
+
+            .sky {
+                height: 150px;
+                padding: 24px
+            }
+
+            .sky h1 {
+                font-size: 25px
+            }
+        }
+
+        @media(max-width:420px) {
+            .outfits {
+                grid-template-columns: 1fr
+            }
+
+            .look {
+                display: grid;
+                grid-template-columns: 105px 1fr;
+                grid-template-rows: auto 1fr auto;
+                column-gap: 8px;
+                text-align: left;
+                align-items: center
+            }
+
+            .look-title {
+                grid-column: 2;
+                grid-row: 1
+            }
+
+            .stage {
+                grid-column: 1;
+                grid-row: 1/4;
+                width: 105px;
+                height: 150px;
+                margin: 0
+            }
+
+            .person {
+                transform: scale(.83)
+            }
+
+            .look-items {
+                grid-column: 2;
+                grid-row: 2
+            }
+
+            .pick {
+                grid-column: 2;
+                grid-row: 3
+            }
+
+            .card {
+                padding: 17px
+            }
+        }
+
+        .sky {
+            transition: background 1s ease, color .5s
+        }
+
+        .sky:before,
+        .sky:after {
+            content: "";
+            position: absolute;
+            pointer-events: none;
+            transition: opacity .6s
+        }
+
+        .sky:before {
+            width: 118px;
+            height: 44px;
+            right: 27%;
+            top: 58px;
+            border-radius: 50px;
+            background: #fff;
+            opacity: .85;
+            box-shadow: 18px -17px 0 -3px #fff, 43px -8px 0 -8px #fff;
+            filter: drop-shadow(0 5px 7px #6986aa22)
+        }
+
+        .sky:after {
+            inset: 0;
+            background: repeating-linear-gradient(105deg, transparent 0 48px, #ffffffa8 49px 51px, transparent 52px 88px);
+            opacity: 0;
+            animation: rainfall .65s linear infinite
+        }
+
+        .sky[data-weather="cloudy"],
+        .sky[data-weather="overcast"] {
+            background: linear-gradient(115deg, #bdccdc, #e8eff5 72%, #f7f7f3)
+        }
+
+        .sky[data-weather="cloudy"]:before,
+        .sky[data-weather="overcast"]:before {
+            opacity: 1;
+            background: #f9fbff;
+            box-shadow: 18px -17px 0 -3px #f9fbff, 43px -8px 0 -8px #f9fbff
+        }
+
+        .sky[data-weather="rainy"] {
+            background: linear-gradient(115deg, #7187a4, #aebfd1 72%, #d9e2e9)
+        }
+
+        .sky[data-weather="rainy"]:before {
+            opacity: 1;
+            background: #eaf1f8;
+            box-shadow: 18px -17px 0 -3px #eaf1f8, 43px -8px 0 -8px #eaf1f8
+        }
+
+        .sky[data-weather="rainy"]:after {
+            opacity: .55
+        }
+
+        .sky[data-weather="snowy"] {
+            background: linear-gradient(115deg, #b8d0e9, #e8f2fc 72%, #fff)
+        }
+
+        .sky[data-weather="snowy"]:after {
+            content: "❄　·　✦　❄　·　✧　❄　·　✦";
+            inset: -25px 0 0;
+            background: none;
+            color: white;
+            font-size: 18px;
+            line-height: 65px;
+            letter-spacing: 12px;
+            white-space: pre;
+            opacity: .8;
+            animation: snowfall 8s linear infinite
+        }
+
+        .sky[data-weather="stormy"] {
+            background: linear-gradient(115deg, #485a74, #899bb2 78%)
+        }
+
+        .sky[data-weather="stormy"]:after {
+            opacity: .55
+        }
+
+        .sky[data-weather="rainy"] h1,
+        .sky[data-weather="stormy"] h1,
+        .sky[data-weather="rainy"] p,
+        .sky[data-weather="stormy"] p {
+            color: #fff
+        }
+
+        .sun {
+            transition: opacity .6s, transform .6s
+        }
+
+        .sky[data-weather="cloudy"] .sun,
+        .sky[data-weather="overcast"] .sun,
+        .sky[data-weather="rainy"] .sun,
+        .sky[data-weather="snowy"] .sun,
+        .sky[data-weather="stormy"] .sun {
+            opacity: .23;
+            transform: scale(.82)
+        }
+
+        @keyframes rainfall {
+            to {
+                background-position: 0 150px
+            }
+        }
+
+        @keyframes snowfall {
+            to {
+                transform: translateY(150px)
+            }
+        }
+
+        .shell.slide-out-left {
+            animation: slideOutLeft .18s ease-in both
+        }
+
+        .shell.slide-out-right {
+            animation: slideOutRight .18s ease-in both
+        }
+
+        .shell.slide-in-left {
+            animation: slideInLeft .34s cubic-bezier(.2, .75, .25, 1) both
+        }
+
+        .shell.slide-in-right {
+            animation: slideInRight .34s cubic-bezier(.2, .75, .25, 1) both
+        }
+
+        .welcome.leaving {
+            animation: welcomeOut .3s ease-in both
+        }
+
+        @keyframes slideOutLeft {
+            to {
+                opacity: 0;
+                transform: translateX(-35px)
+            }
+        }
+
+        @keyframes slideOutRight {
+            to {
+                opacity: 0;
+                transform: translateX(35px)
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-40px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0)
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(40px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0)
+            }
+        }
+
+        @keyframes welcomeOut {
+            to {
+                opacity: 0;
+                transform: scale(.98)
+            }
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+
+            .shell.slide-out-left,
+            .shell.slide-out-right,
+            .shell.slide-in-left,
+            .shell.slide-in-right,
+            .welcome.leaving {
+                animation-duration: .01ms
+            }
+        }
+
+        .brand {
+            font-size: 35px;
+            font-weight: 900;
+            letter-spacing: -.6px
+        }
+
+        .nav button {
+            font-size: 15px;
+            font-weight: 800;
+            color: #777482;
+            transition: background .18s, color .18s, box-shadow .18s
+        }
+
+        .nav button.active {
+            background: #e8f1ff;
+            color: #4f79b1;
+            box-shadow: 0 3px 12px #729cd126
+        }
+
+        .heading {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 30px;
+            font-weight: 500;
+            letter-spacing: -.4px
+        }
+
+        .sub {
+            font-size: 14px;
+            line-height: 1.7
+        }
+
+        .feel legend,
+        .category legend {
+            font-size: 16px;
+            font-weight: 900
+        }
+
+        .field label {
+            font-size: 14px;
+            font-weight: 800
+        }
+
+        .choice {
+            font-size: 14px;
+            font-weight: 700
+        }
+
+        .primary {
+            font-size: 15px;
+            font-weight: 900
+        }
+
+        .look-title {
+            font-size: 17px;
+            font-weight: 900
+        }
+
+        .suggest h2 {
+            font-size: 23px;
+            font-weight: 900
+        }
+
+        .month {
+            font-size: 24px;
+            font-weight: 900
+        }
+
+        .nav button:focus-visible,
+        .primary:focus-visible {
+            outline: 3px solid #9bbce4;
+            outline-offset: 2px
+        }
+
+        .thinking {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 40;
+            place-items: center;
+            padding: 20px;
+            background: #f4f8fbdc;
+            backdrop-filter: blur(7px)
+        }
+
+        .thinking.visible {
+            display: grid;
+            animation: thinkFade .2s ease-out
+        }
+
+        .thinking-card {
+            width: min(420px, 100%);
+            padding: 30px 24px;
+            text-align: center;
+            border: 1px solid #e7edf6;
+            border-radius: 27px;
+            background: #fff;
+            box-shadow: 0 20px 65px #56739a26
+        }
+
+        .think-mascot {
+            position: relative;
+            width: 155px;
+            margin: 0 auto 8px;
+            animation: thinkFloat 1.5s ease-in-out infinite
+        }
+
+        .think-mascot svg,
+        .think-mascot img {
+            width: 100%;
+            filter: drop-shadow(0 8px 8px #7892b32b)
+        }
+
+        .thought {
+            position: absolute;
+            right: 4px;
+            top: 4px;
+            display: grid;
+            place-items: center;
+            width: 43px;
+            height: 34px;
+            border-radius: 50%;
+            background: #fff2bb;
+            color: #927638;
+            font-size: 16px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            box-shadow: 0 3px 10px #92763822
+        }
+
+        .thinking-card h2 {
+            margin: 7px 0;
+            font: 25px Jua;
+            color: #526f99
+        }
+
+        .thinking-card p {
+            font-size: 13px;
+            color: #8795a9;
+            margin: 0
+        }
+
+        .thinking-dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 18px
+        }
+
+        .thinking-dots i {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #8ba9d1;
+            animation: dotBounce .7s infinite alternate
+        }
+
+        .thinking-dots i:nth-child(2) {
+            animation-delay: .16s
+        }
+
+        .thinking-dots i:nth-child(3) {
+            animation-delay: .32s
+        }
+
+        @keyframes thinkFloat {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(-2deg)
+            }
+
+            50% {
+                transform: translateY(-8px) rotate(2deg)
+            }
+        }
+
+        @keyframes dotBounce {
+            to {
+                opacity: .35;
+                transform: translateY(-5px)
+            }
+        }
+
+        @keyframes thinkFade {
+            from {
+                opacity: 0
+            }
+
+            to {
+                opacity: 1
+            }
+        }
+
+        .suggest.show {
+            position: fixed;
+            inset: 0;
+            z-index: 35;
+            display: block;
+            overflow: auto;
+            margin: 0;
+            padding: 26px clamp(16px, 4vw, 52px);
+            border: 0;
+            border-radius: 0;
+            background: #f3f7fc
+        }
+
+        .suggest.show>* {
+            max-width: 1100px;
+            margin-left: auto;
+            margin-right: auto
+        }
+
+        .suggest.show h2 {
+            font-size: 30px;
+            margin-top: 18px
+        }
+
+        .suggest.show>p {
+            font-size: 14px;
+            margin-bottom: 20px
+        }
+
+        .results-head {
+            max-width: 1100px !important;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            color: #526d91;
+            font: 18px Jua
+        }
+
+        .result-back {
+            border: 0;
+            border-radius: 12px;
+            padding: 10px 14px;
+            background: #e7effa;
+            color: #5879a5;
+            font-weight: 800
+        }
+
+        .suggest.show .outfits {
+            gap: 15px
+        }
+
+        .suggest.show .look {
+            padding: 15px
+        }
+
+        .suggest.show .stage {
+            height: 220px
+        }
+
+        .suggest.show .date-row {
+            margin-top: 22px
+        }
+
+        .category-list {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .category-more {
+            width: 100%;
+            margin-top: 3px;
+            color: #7d8ca2;
+            font-size: 12px
+        }
+
+        .category-more summary {
+            cursor: pointer;
+            list-style: none;
+            width: max-content
+        }
+
+        .category-more summary::-webkit-details-marker {
+            display: none
+        }
+
+        .category-more summary:hover {
+            color: #5679a6
+        }
+
+        .custom-category {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            max-width: 460px
+        }
+
+        .custom-category input {
+            flex: 1;
+            min-width: 0;
+            border: 1px solid #e7eaf0;
+            border-radius: 11px;
+            padding: 10px 12px
+        }
+
+        .custom-category button {
+            border: 0;
+            border-radius: 10px;
+            padding: 8px 15px;
+            background: #e8f1ff;
+            color: #5679a6;
+            font-weight: 800
+        }
+
+        .category-note {
+            display: block;
+            margin-top: 6px;
+            color: #92909f;
+            font-size: 11px
+        }
+
+        .suggest.closing {
+            animation: resultClose .24s ease-in both;
+            pointer-events: none
+        }
+
+        @keyframes resultClose {
+            to {
+                opacity: 0;
+                transform: translateX(38px) scale(.985)
+            }
+        }
+
+        .category-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px
+        }
+
+        .delete-category {
+            border: 0;
+            border-radius: 50%;
+            width: 21px;
+            height: 21px;
+            padding: 0;
+            background: #fff0f2;
+            color: #d27689;
+            font-weight: 900;
+            line-height: 1
+        }
+
+        .delete-category:hover {
+            background: #ffdce4;
+            color: #aa5268
+        }
+
+        .category-more .category-item {
+            margin: 3px 5px 3px 0
+        }
+
+        .event {
+            white-space: normal;
+            line-height: 1.35;
+            max-height: 58px;
+            overflow: auto
+        }
+
+        .event-outfit {
+            display: block;
+            margin-top: 3px;
+            font-size: 9px;
+            font-weight: 500;
+            color: #71678a;
+            white-space: normal;
+            overflow-wrap: anywhere
+        }
+
+        .day {
+            display: block;
+            width: 100%;
+            border: 0;
+            text-align: left;
+            font: inherit;
+            cursor: pointer;
+            transition: transform .14s, box-shadow .14s
+        }
+
+        .day:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 14px #546a8514
+        }
+
+        .day:focus-visible {
+            outline: 3px solid #9bbce4;
+            outline-offset: 2px
+        }
+
+        .day-detail {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 60;
+            place-items: center;
+            padding: 18px;
+            background: #28364dcc;
+            backdrop-filter: blur(7px)
+        }
+
+        .day-detail.open {
+            display: grid;
+            animation: thinkFade .18s ease-out
+        }
+
+        .day-detail-card {
+            position: relative;
+            width: min(560px, 100%);
+            max-height: min(82vh, 760px);
+            overflow: auto;
+            padding: 28px;
+            border-radius: 24px;
+            background: #fff;
+            box-shadow: 0 22px 70px #17253840;
+            animation: detailRise .24s ease-out
+        }
+
+        .day-detail-close {
+            position: absolute;
+            right: 16px;
+            top: 12px;
+            width: 36px;
+            height: 36px;
+            border: 0;
+            border-radius: 50%;
+            background: #f1f4f8;
+            color: #61748e;
+            font-size: 25px
+        }
+
+        .detail-eyebrow {
+            margin: 0;
+            color: #7c9dc9;
+            font-size: 12px;
+            font-weight: 900
+        }
+
+        .day-detail-card h2 {
+            margin: 5px 0 18px;
+            font: 28px Jua;
+            color: #425d84
+        }
+
+        .detail-event {
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #e9edf5;
+            border-radius: 16px;
+            background: #fafbfe
+        }
+
+        .detail-event h3 {
+            margin: 0 0 9px;
+            font-size: 17px;
+            color: #4d5363
+        }
+
+        .detail-time {
+            display: inline-block;
+            margin-bottom: 9px;
+            padding: 5px 9px;
+            border-radius: 99px;
+            background: #eaf2ff;
+            color: #587bab;
+            font-size: 12px;
+            font-weight: 800
+        }
+
+        .detail-outfit {
+            margin: 0;
+            color: #6b6478;
+            font-size: 14px;
+            line-height: 1.8;
+            overflow-wrap: anywhere
+        }
+
+        .detail-empty {
+            padding: 22px;
+            border-radius: 16px;
+            background: #f8f9fc;
+            color: #8b93a2;
+            text-align: center;
+            line-height: 1.7
+        }
+
+        @keyframes detailRise {
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(.98)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1)
+            }
+        }
+
+        .saved-outfit {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 8px;
+            padding: 12px;
+            border-radius: 14px;
+            background: linear-gradient(140deg, #f6f8ff, #fff)
+        }
+
+        .saved-stage {
+            height: 150px;
+            width: 132px;
+            flex: none;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: linear-gradient(160deg, #eef3ff, #fff)
+        }
+
+        .saved-stage .person {
+            transform: scale(.88)
+        }
+
+        .saved-outfit-names {
+            font-size: 13px;
+            line-height: 1.8;
+            color: #675f75;
+            overflow-wrap: anywhere
+        }
+
+        .saved-outfit-names:first-line {
+            font-weight: 800;
+            color: #4d5363
+        }
+
+        @media(max-width:420px) {
+            .saved-outfit {
+                gap: 9px;
+                padding: 8px
+            }
+
+            .saved-stage {
+                width: 105px;
+                height: 140px
+            }
+
+            .saved-stage .person {
+                transform: scale(.76)
+            }
+        }
+
+        .think-mascot {
+            position: relative;
+            width: 190px;
+            height: 190px;
+            margin: 0 auto 8px
+        }
+
+        .think-mascot .thinking-pose {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0;
+            mix-blend-mode: normal;
+            filter: drop-shadow(0 8px 8px #7892b32b);
+            transition: opacity .48s ease
+        }
+
+        .think-mascot .thinking-pose.active {
+            opacity: 1
+        }
+
+        .character-setup {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 30;
+            overflow: auto;
+            padding: 24px;
+            background: radial-gradient(ellipse at 50% 20%, #fff, #eff5fd 75%)
+        }
+
+        .character-setup.visible {
+            display: grid;
+            place-items: center
+        }
+
+        .character-wizard {
+            width: min(950px, 100%);
+            padding: 30px;
+            border: 1px solid #e7edf6;
+            border-radius: 28px;
+            background: #ffffffed;
+            box-shadow: 0 18px 60px #687e9b1a
+        }
+
+        .wizard-head {
+            text-align: center;
+            margin-bottom: 22px
+        }
+
+        .wizard-step {
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            color: #82a2cf
+        }
+
+        .wizard-head h1 {
+            margin: 7px 0;
+            font: 34px Jua;
+            color: #496a96
+        }
+
+        .wizard-head p {
+            margin: 0;
+            color: #8795a9;
+            font-size: 13px
+        }
+
+        .wizard-grid {
+            display: grid;
+            grid-template-columns: minmax(270px, .9fr) 1.1fr;
+            gap: 22px;
+            align-items: stretch
+        }
+
+        .character-preview-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            border-radius: 22px;
+            background: linear-gradient(145deg, #eef4ff, #fff8f2)
+        }
+
+        .character-preview {
+            width: min(100%, 330px);
+            aspect-ratio: 320/440
+        }
+
+        .character-preview svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 12px 12px #667c9c20)
+        }
+
+        .character-preview-card p {
+            margin: 8px 0 0;
+            color: #8492a7;
+            font-size: 12px;
+            text-align: center
+        }
+
+        .character-fields {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 11px
+        }
+
+        .character-fields label {
+            display: grid;
+            gap: 7px;
+            color: #5d6472;
+            font-size: 12px;
+            font-weight: 800
+        }
+
+        .character-fields select {
+            width: 100%;
+            border: 1px solid #e4eaf2;
+            border-radius: 12px;
+            padding: 11px 10px;
+            background: #fff;
+            color: #4b5667
+        }
+
+        .underwear-note {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 7px 11px;
+            border-radius: 99px;
+            background: #edf4ff;
+            color: #6384b1;
+            font-size: 12px;
+            font-weight: 900
+        }
+
+        .underwear-copy {
+            font-size: 12px;
+            line-height: 1.7;
+            color: #8792a1;
+            margin: 8px 0
+        }
+
+        .wizard-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 22px
+        }
+
+        .wizard-back {
+            border: 0;
+            background: transparent;
+            color: #8792a1;
+            font-weight: 800;
+            padding: 12px
+        }
+
+        .wizard-actions .primary {
+            font-size: 15px;
+            padding: 13px 20px
+        }
+
+        .character-setup.leaving {
+            animation: welcomeOut .25s ease-in both
+        }
+
+        @media(max-width:640px) {
+            .character-setup {
+                padding: 12px
+            }
+
+            .character-wizard {
+                padding: 20px 16px;
+                border-radius: 22px
+            }
+
+            .wizard-grid {
+                grid-template-columns: 1fr;
+                gap: 14px
+            }
+
+            .character-preview {
+                width: min(225px, 65vw)
+            }
+
+            .wizard-head {
+                margin-bottom: 14px
+            }
+
+            .wizard-head h1 {
+                font-size: 29px
+            }
+
+            .character-fields {
+                gap: 9px
+            }
+
+            .character-fields select {
+                padding: 10px 8px
+            }
+
+            .underwear-note {
+                margin-top: 12px
+            }
+        }
+
+        .character-preview {
+            width: min(100%, 260px);
+            aspect-ratio: 13/30;
+            display: grid;
+            place-items: center
+        }
+
+        .reference-character {
+            width: 100%;
+            height: 100%;
+            background-image: url("캐릭터.png");
+            background-repeat: no-repeat;
+            background-size: 400% auto;
+            background-position: -4% 30%;
+            border-radius: 18px
+        }
+
+        .reference-character.male {
+            background-position: 68% 30%
+        }
+
+        .single-field {
+            grid-template-columns: 1fr
+        }
+
+        .stage {
+            height: 215px;
+            overflow: hidden
+        }
+
+        .look-avatar {
+            position: relative;
+            width: 130px;
+            height: 215px;
+            background-image: url("캐릭터.png");
+            background-repeat: no-repeat;
+            background-size: 315% auto;
+            background-position: -9% 70%;
+            overflow: hidden
+        }
+
+        .look-avatar.gender-male {
+            background-position: 68% 70%
+        }
+
+        .look-avatar svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: visible
+        }
+
+        .saved-stage {
+            min-height: 215px;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            border-radius: 14px;
+            background: #f0efee
+        }
+
+        .saved-stage .look-avatar {
+            width: 150px;
+            height: 250px;
+            background-size: 315% auto
+        }
+
+        .saved-stage .look-avatar.gender-male {
+            background-position: 68% 70%
+        }
+
+        @media(max-width:680px) {
+            .wizard-grid {
+                grid-template-columns: 1fr
+            }
+
+            .character-preview {
+                width: min(230px, 68vw)
+            }
+
+            .outfits {
+                grid-template-columns: repeat(2, minmax(0, 1fr))
+            }
+
+            .stage {
+                height: 210px
+            }
+
+            .look-avatar {
+                height: 210px
+            }
+
+            .saved-stage .look-avatar {
+                height: 230px
+            }
+        }
+
+        .feel-range {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px
+        }
+
+        .feel-current {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 800;
+            color: #737c8c
+        }
+
+        .feel-current strong {
+            display: grid;
+            place-items: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: color-mix(in srgb, var(--feel-tone, #84bde7) 18%, white);
+            color: var(--feel-tone, #84bde7);
+            font-size: 17px;
+            transition: background-color .25s ease, color .25s ease, transform .25s cubic-bezier(.2, .8, .2, 1)
+        }
+
+        .feel-slider {
+            width: 100%;
+            height: 10px;
+            margin: 7px 0 0;
+            appearance: none;
+            border-radius: 99px;
+            background: linear-gradient(90deg, #6fa5ed 0%, #9ec9e9 25%, #d9d8c9 50%, #f3b679 75%, #f18b8f 100%);
+            cursor: grab;
+            touch-action: pan-y;
+            transition: filter .2s ease
+        }
+
+        .feel-slider:hover {
+            filter: saturate(1.12)
+        }
+
+        .feel-slider:active {
+            cursor: grabbing
+        }
+
+        .feel-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border: 4px solid #fff;
+            border-radius: 50%;
+            background: var(--feel-tone, #84bde7);
+            box-shadow: 0 2px 10px color-mix(in srgb, var(--feel-tone, #84bde7) 45%, transparent);
+            transition: transform .18s ease, box-shadow .2s ease
+        }
+
+        .feel-slider:active::-webkit-slider-thumb {
+            transform: scale(1.12);
+            box-shadow: 0 3px 13px color-mix(in srgb, var(--feel-tone, #84bde7) 55%, transparent)
+        }
+
+        .feel-slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border: 4px solid #fff;
+            border-radius: 50%;
+            background: var(--feel-tone, #84bde7);
+            box-shadow: 0 2px 10px color-mix(in srgb, var(--feel-tone, #84bde7) 45%, transparent);
+            transition: transform .18s ease, box-shadow .2s ease
+        }
+
+        .feel-ticks {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            text-align: center;
+            color: #7a8290;
+            font-size: 12px;
+            font-weight: 800
+        }
+
+        .feel-ticks span {
+            transition: color .2s ease, transform .2s ease
+        }
+
+        .feel-ticks span.active {
+            color: var(--feel-tone);
+            transform: translateY(-1px)
+        }
+
+        .feel-end-labels {
+            display: flex;
+            justify-content: space-between;
+            color: #9a9eaa;
+            font-size: 10px;
+            margin-top: -3px
+        }
+
+        .feel-inputs {
+            display: none
+        }
+
+        @media(max-width:520px) {
+            .feel-ticks {
+                font-size: 11px
+            }
+        }
+
+        .field-custom {
+            width: 100%;
+            margin-top: 8px;
+            border: 1px solid #e7eaf1;
+            border-radius: 12px;
+            padding: 11px 12px;
+            background: #fbfcff;
+            color: #373344;
+            font-size: 13px;
+            outline: none
+        }
+
+        .field-custom:focus {
+            border-color: #91b1dc;
+            box-shadow: 0 0 0 3px #91b1dc22
+        }
+
+        .field-custom[hidden] {
+            display: none
+        }
+
+        .character-setup {
+            padding: clamp(12px, 3vw, 32px)
+        }
+
+        .character-wizard {
+            width: min(900px, 100%);
+            max-height: calc(100dvh - 32px);
+            overflow: auto;
+            margin: auto
+        }
+
+        .wizard-grid {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            align-items: center
+        }
+
+        .character-preview {
+            width: min(100%, 310px);
+            height: auto;
+            min-height: 0;
+            aspect-ratio: auto;
+            display: grid;
+            place-items: center;
+            overflow: visible;
+            border-radius: 18px;
+            background: linear-gradient(160deg, #edf3ff, #fff8f2)
+        }
+
+        .character-photo {
+            display: block;
+            width: auto;
+            height: min(62dvh, 560px);
+            max-width: 100%;
+            object-fit: contain;
+            object-position: center;
+            filter: drop-shadow(0 10px 12px #667c9c20)
+        }
+
+        @media(max-width:640px) {
+            .character-setup.visible {
+                place-items: center;
+                overflow-y: auto
+            }
+
+            .character-wizard {
+                width: min(480px, 100%);
+                max-height: calc(100dvh - 24px);
+                padding: 20px 16px
+            }
+
+            .wizard-grid {
+                grid-template-columns: 1fr;
+                gap: 12px
+            }
+
+            .character-preview {
+                width: min(100%, 240px);
+                height: min(43dvh, 360px)
+            }
+
+            .wizard-actions {
+                gap: 10px
+            }
+
+            .wizard-actions button {
+                padding: 11px 13px !important
+            }
+        }
+
+        .category-groups {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 9px
+        }
+
+        .category-open {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 7px;
+            min-height: 72px;
+            padding: 12px 14px;
+            border: 1px solid #e8edf5;
+            border-radius: 14px;
+            background: #fbfcff;
+            color: #4d596d;
+            text-align: left;
+            font-weight: 900
+        }
+
+        .category-open span {
+            color: #7599c9;
+            font-size: 12px;
+            font-weight: 700
+        }
+
+        .category-open:hover {
+            border-color: #a9c4e6;
+            background: #f5f8fd
+        }
+
+        .category-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 70;
+            place-items: center;
+            padding: 18px;
+            background: #28364dcc;
+            backdrop-filter: blur(7px)
+        }
+
+        .category-modal.open {
+            display: grid;
+            animation: thinkFade .18s ease-out
+        }
+
+        .category-modal-card {
+            position: relative;
+            width: min(480px, 100%);
+            max-height: min(80vh, 650px);
+            overflow: auto;
+            padding: 26px;
+            border: 1px solid #e7edf6;
+            border-radius: 24px;
+            background: #fff;
+            box-shadow: 0 22px 70px #17253840
+        }
+
+        .category-modal-card h2 {
+            margin: 0 35px 18px 0;
+            font: 24px Jua;
+            color: #496a96
+        }
+
+        .category-modal-card .category-list {
+            gap: 8px
+        }
+
+        .category-modal-card .choice {
+            padding: 11px 14px
+        }
+
+        .category-modal-close {
+            position: absolute;
+            right: 14px;
+            top: 12px;
+            width: 36px;
+            height: 36px;
+            border: 0;
+            border-radius: 50%;
+            background: #f1f4f8;
+            color: #61748e;
+            font-size: 25px
+        }
+
+        .category-done {
+            display: block;
+            margin: 20px 0 0 auto
+        }
+
+        .category-group {
+            display: none
+        }
+
+        @media(max-width:560px) {
+            .category-groups {
+                grid-template-columns: 1fr
+            }
+
+            .category-open {
+                min-height: 0;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between
+            }
+        }
+
+        .category-group {
+            margin: 0;
+            padding: 0 13px;
+            border: 1px solid #e8edf5;
+            border-radius: 14px;
+            background: #fbfcff
+        }
+
+        .category-group summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 2px;
+            cursor: pointer;
+            list-style: none;
+            color: #4d596d;
+            font-size: 14px;
+            font-weight: 900
+        }
+
+        .category-group summary::-webkit-details-marker {
+            display: none
+        }
+
+        .category-group summary:after {
+            content: "＋";
+            color: #8ba5c7;
+            font-size: 14px
+        }
+
+        .category-group[open] summary:after {
+            content: "－"
+        }
+
+        .category-group summary small {
+            margin-left: auto;
+            margin-right: 9px;
+            color: #9aa5b5;
+            font-size: 11px;
+            font-weight: 600
+        }
+
+        .category-group .category-list {
+            padding: 0 0 12px
+        }
+
+        .category-modal-card {
+            width: min(760px, 100%);
+            padding: 25px
+        }
+
+        .category-modal-layout {
+            display: grid;
+            grid-template-columns: minmax(180px, .75fr) minmax(0, 1.25fr);
+            gap: 22px;
+            align-items: stretch
+        }
+
+        .category-preview {
+            display: flex;
+            min-height: 250px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 20px;
+            border: 2px solid #e8edf5;
+            border-radius: 20px;
+            background: linear-gradient(145deg, #f5f8ff, #fff9f2);
+            text-align: center
+        }
+
+        .preview-caption {
+            align-self: flex-start;
+            color: #7d8ca2;
+            font-size: 12px;
+            font-weight: 800
+        }
+
+        .preview-icon {
+            display: grid;
+            place-items: center;
+            width: 120px;
+            height: 130px;
+            border-radius: 18px;
+            background: #fff;
+            font-size: 78px;
+            filter: drop-shadow(0 7px 8px #687e9b20)
+        }
+
+        .category-preview strong {
+            color: #4d596d
+        }
+
+        .category-preview small {
+            color: #8591a2;
+            font-size: 11px
+        }
+
+        .category-editor {
+            max-height: min(54vh, 430px);
+            overflow: auto;
+            padding: 3px 5px
+        }
+
+        .category-editor h3 {
+            margin: 0 0 10px;
+            color: #576982;
+            font-size: 14px
+        }
+
+        .category-modal-card .category-list {
+            margin-bottom: 14px
+        }
+
+        .preference-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 12px 0;
+            padding: 12px 0 0;
+            border: 0;
+            border-top: 1px solid #edf0f5
+        }
+
+        .preference-group legend {
+            padding: 0 0 8px;
+            color: #59677b;
+            font-size: 13px;
+            font-weight: 900
+        }
+
+        .preference-group>label {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 7px 10px;
+            border-radius: 10px;
+            background: #f7f8fb;
+            color: #687487;
+            font-size: 12px
+        }
+
+        .preference-group input {
+            accent-color: #7599c9
+        }
+
+        .color-options {
+            display: flex;
+            gap: 9px;
+            flex-wrap: wrap
+        }
+
+        .color-options label {
+            display: grid;
+            justify-items: center;
+            gap: 5px;
+            min-width: 54px;
+            color: #778294;
+            font-size: 10px;
+            cursor: pointer
+        }
+
+        .color-options input {
+            position: absolute;
+            opacity: 0
+        }
+
+        .color-options i {
+            display: grid;
+            place-items: center;
+            width: 28px;
+            height: 28px;
+            border: 2px solid #e5e9f0;
+            border-radius: 50%;
+            background: var(--swatch, #fff);
+            font-style: normal
+        }
+
+        .color-options input:checked+i {
+            outline: 3px solid #9bbce4;
+            outline-offset: 2px
+        }
+
+        .color-options .any-color {
+            background: linear-gradient(135deg, #fff0bd, #e8efff, #fbe6ed);
+            color: #7186a8
+        }
+
+        @media(max-width:600px) {
+            .category-modal-card {
+                padding: 21px 16px
+            }
+
+            .category-modal-layout {
+                grid-template-columns: 1fr;
+                gap: 12px
+            }
+
+            .category-preview {
+                min-height: 145px;
+                display: grid;
+                grid-template-columns: 70px 1fr;
+                grid-template-rows: auto auto;
+                justify-items: start;
+                text-align: left;
+                padding: 14px
+            }
+
+            .preview-caption {
+                grid-column: 1/3
+            }
+
+            .preview-icon {
+                grid-column: 1;
+                grid-row: 2;
+                width: 58px;
+                height: 58px;
+                font-size: 38px
+            }
+
+            .category-preview strong,
+            .category-preview small {
+                grid-column: 2
+            }
+
+            .category-editor {
+                max-height: 38vh
+            }
+        }
+
+        .category-preview {
+            border: 0;
+            background: transparent
+        }
+
+        .preview-icon {
+            width: 150px;
+            height: 150px;
+            background: transparent;
+            filter: none
+        }
+
+        .preview-icon svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible
+        }
+
+        .category-modal-card,
+        .category-editor,
+        .category-modal-layout {
+            background: transparent
+        }
+
+        .category-modal-card {
+            background: #fff
+        }
+
+        .category-modal-layout {
+            background: transparent
+        }
+
+        .stage,
+        .saved-stage {
+            background: transparent !important
+        }
+
+        .character-preview-card {
+            background: transparent !important
+        }
+
+        .character-preview {
+            background: transparent !important
+        }
+
+        .category-modal-card .category-list {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .category-modal-card .category-list .choice {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            min-width: 76px;
+            padding: 8px 7px;
+            background: transparent;
+            border-color: transparent
+        }
+
+        .category-modal-card .category-list .choice:has(input:checked) {
+            background: transparent;
+            border-color: #a9c4e6
+        }
+
+        .choice-icon {
+            display: grid;
+            place-items: center;
+            width: 62px;
+            height: 62px;
+            background: transparent
+        }
+
+        .choice-icon svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible
+        }
+
+        .category-modal-card .category-list .choice input {
+            align-self: center
+        }
+
+        .category-subgroup {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 7px;
+            width: 100%;
+            padding: 2px 0 11px;
+            border-bottom: 1px solid #edf0f5
+        }
+
+        .category-subgroup:last-child {
+            border-bottom: 0
+        }
+
+        .category-subgroup-title {
+            flex-basis: 100%;
+            padding: 2px 3px;
+            color: #7c8ca3;
+            font-size: 12px;
+            font-weight: 900
+        }
+
+        .custom-category-trigger {
+            display: block;
+            margin-top: 10px;
+            padding: 9px 13px;
+            border: 1px dashed #b8c8de;
+            border-radius: 11px;
+            background: transparent;
+            color: #6785ad;
+            font-size: 12px;
+            font-weight: 800
+        }
+
+        .custom-category-trigger:hover {
+            background: #f5f8fd
+        }
+
+        .custom-clothing-card {
+            width: min(560px, 100%)
+        }
+
+        .custom-clothing-fields {
+            display: grid;
+            gap: 13px
+        }
+
+        .custom-clothing-fields label {
+            display: grid;
+            gap: 6px;
+            color: #59677b;
+            font-size: 13px;
+            font-weight: 800
+        }
+
+        .custom-clothing-fields select,
+        .custom-clothing-fields input {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #e4eaf2;
+            border-radius: 12px;
+            background: #fff;
+            color: #373344
+        }
+
+        .custom-clothing-card .category-done {
+            margin-top: 18px
+        }
+
+        .feedback-modal {
+            z-index: 90
+        }
+
+        .feedback-card {
+            width: min(500px, 100%);
+            padding: 32px 26px;
+            text-align: center
+        }
+
+        .feedback-mascot {
+            display: grid;
+            place-items: center;
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 10px;
+            border-radius: 50%;
+            background: #eef5ff;
+            font-size: 32px
+        }
+
+        .feedback-eyebrow {
+            margin: 0;
+            color: #82a2cf;
+            font-size: 12px;
+            font-weight: 900
+        }
+
+        .feedback-card h2 {
+            margin: 7px 34px 8px 0;
+            font: 25px Jua;
+            color: #496a96
+        }
+
+        .feedback-copy {
+            margin: 0 0 20px;
+            color: #8792a1;
+            font-size: 13px;
+            line-height: 1.6
+        }
+
+        .feedback-choices {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 9px
+        }
+
+        .feedback-choices button {
+            display: grid;
+            justify-items: center;
+            gap: 7px;
+            padding: 14px 6px;
+            border: 1px solid #e8edf5;
+            border-radius: 15px;
+            background: #fbfcff;
+            color: #59677b;
+            font-size: 12px;
+            font-weight: 800
+        }
+
+        .feedback-choices button span {
+            font-size: 23px
+        }
+
+        .feedback-choices button:hover {
+            border-color: #a9c4e6;
+            background: #f3f7ff;
+            transform: translateY(-2px)
+        }
+
+        .feedback-skip {
+            margin-top: 17px;
+            padding: 8px 12px;
+            border: 0;
+            background: transparent;
+            color: #9aa3b1;
+            font-size: 12px;
+            font-weight: 700
+        }
+
+        @media(max-width:420px) {
+            .feedback-card {
+                padding: 30px 18px
+            }
+
+            .feedback-choices {
+                gap: 6px
+            }
+
+            .feedback-choices button {
+                font-size: 11px
+            }
+        }
+
+        .event-more {
+            display: block;
+            margin-top: 4px;
+            padding: 3px 5px;
+            border-radius: 6px;
+            background: #eaf2ff;
+            color: #587bab;
+            font-size: 10px;
+            font-weight: 900;
+            text-align: center
+        }
+
+        .account-area {
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .account-area span {
+            max-width: 170px;
+            overflow: hidden;
+            color: #71819a;
+            font-size: 11px;
+            text-overflow: ellipsis;
+            white-space: nowrap
+        }
+
+        .account-button {
+            padding: 8px 12px;
+            border: 1px solid #dce7f4;
+            border-radius: 11px;
+            background: #fff;
+            color: #5e7da7;
+            font-size: 12px;
+            font-weight: 900
+        }
+
+        .account-button:hover {
+            background: #eff5ff
+        }
+
+        @media(max-width:760px) {
+            .account-area {
+                margin-left: auto
+            }
+
+            .account-area span {
+                max-width: 120px
+            }
+        }
+
+        .character-preview {
+            position: relative;
+            aspect-ratio: 896/1792;
+            overflow: hidden
+        }
+
+        .character-preview .character-base {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain
+        }
+
+        .character-preview .character-hair {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+            opacity: 1;
+            mix-blend-mode: normal
+        }
+
+        .character-customization {
+            grid-template-columns: 1fr;
+            gap: 12px
+        }
+
+        .character-customization label {
+            font-size: 13px
+        }
+
+        .character-customization select {
+            padding: 12px
+        }
+
+        .onboarding {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 25;
+            place-items: center;
+            padding: 20px;
+            background: linear-gradient(155deg, #f5f8fd, #eaf2fc);
+            font-family: "Noto Sans KR", sans-serif
+        }
+
+        .onboarding.visible {
+            display: grid
+        }
+
+        .onboarding-card {
+            width: min(430px, 100%);
+            min-height: min(720px, calc(100dvh - 40px));
+            display: flex;
+            flex-direction: column;
+            padding: 24px 26px 22px;
+            border: 1px solid #e7edf6;
+            border-radius: 28px;
+            background: #fff;
+            box-shadow: 0 18px 55px #536b8a18
+        }
+
+        .onboarding-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #9ba8ba;
+            font-size: 12px;
+            font-weight: 800
+        }
+
+        .onboarding-top button {
+            border: 0;
+            background: transparent;
+            color: #9ba8ba;
+            font-size: 12px
+        }
+
+        .onboarding-slides {
+            flex: 1;
+            display: grid;
+            place-items: center
+        }
+
+        .onboarding-slide {
+            display: none;
+            width: 100%;
+            text-align: center;
+            animation: onboardIn .28s ease-out
+        }
+
+        .onboarding-slide.active {
+            display: block
+        }
+
+        .onboarding-art {
+            position: relative;
+            width: min(270px, 74vw);
+            height: 280px;
+            margin: 0 auto 20px;
+            display: grid;
+            place-items: center
+        }
+
+        .onboarding-art img {
+            width: 145px;
+            max-height: 180px;
+            object-fit: contain;
+            filter: drop-shadow(0 9px 12px #61799c20)
+        }
+
+        .onboarding-art>span {
+            position: absolute;
+            display: grid;
+            place-items: center;
+            width: 58px;
+            height: 58px;
+            border-radius: 20px;
+            background: #eef5ff;
+            font-size: 31px;
+            box-shadow: 0 6px 16px #63799b14
+        }
+
+        .onboarding-art>span:nth-of-type(1) {
+            left: 4px;
+            top: 42px
+        }
+
+        .onboarding-art>span:nth-of-type(2) {
+            right: 6px;
+            top: 68px
+        }
+
+        .onboarding-art>span:nth-of-type(3) {
+            left: 22px;
+            bottom: 34px
+        }
+
+        .temp-art>span:nth-of-type(3) {
+            right: 20px;
+            left: auto;
+            bottom: 26px
+        }
+
+        .outfit-art>span:nth-of-type(1) {
+            left: 2px;
+            top: 32px
+        }
+
+        .outfit-art>span:nth-of-type(2) {
+            right: 2px;
+            top: 28px
+        }
+
+        .outfit-art>span:nth-of-type(3) {
+            left: 2px;
+            bottom: 24px
+        }
+
+        .outfit-art>span:nth-of-type(4) {
+            right: 2px;
+            bottom: 24px
+        }
+
+        .occasion-art>span {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            font-size: 25px;
+            background: #eef5ff
+        }
+
+        .occasion-art>span small {
+            font-size: 10px;
+            color: #6d7d91
+        }
+
+        .onboarding-slide h2 {
+            margin: 0 0 10px;
+            color: #303542;
+            font-size: 23px;
+            font-weight: 900;
+            letter-spacing: -.5px
+        }
+
+        .onboarding-slide p {
+            margin: 0;
+            color: #858fa0;
+            font-size: 13px;
+            line-height: 1.9
+        }
+
+        .onboarding-dots {
+            display: flex;
+            justify-content: center;
+            gap: 7px;
+            margin: 14px 0 20px
+        }
+
+        .onboarding-dots i {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #d7deea
+        }
+
+        .onboarding-dots i.active {
+            width: 18px;
+            border-radius: 8px;
+            background: #7699ca
+        }
+
+        .onboarding-actions {
+            display: flex;
+            gap: 10px
+        }
+
+        .onboarding-actions button {
+            min-height: 48px;
+            border-radius: 13px
+        }
+
+        .onboarding-actions #onboardingBack {
+            width: 92px;
+            border: 1px solid #e5eaf1;
+            background: #fff;
+            color: #738096;
+            font-weight: 800
+        }
+
+        .onboarding-actions #onboardingBack[hidden] {
+            display: none
+        }
+
+        .onboarding-actions #onboardingNext {
+            flex: 1
+        }
+
+        @keyframes onboardIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        @media(max-width:520px) {
+            .onboarding {
+                padding: 12px
+            }
+
+            .onboarding-card {
+                min-height: calc(100dvh - 24px);
+                padding: 20px 20px 18px;
+                border-radius: 23px
+            }
+
+            .onboarding-art {
+                height: 260px
+            }
+
+            .onboarding-slide h2 {
+                font-size: 21px
+            }
+        }
+
+        .account-flow {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 27;
+            place-items: center;
+            padding: 20px;
+            background: linear-gradient(155deg, #f5f8fd, #eaf2fc);
+            font-family: "Noto Sans KR", sans-serif
+        }
+
+        .account-flow.visible {
+            display: grid
+        }
+
+        .account-card {
+            width: min(430px, 100%);
+            min-height: min(720px, calc(100dvh - 40px));
+            padding: 24px 28px;
+            background: #fff;
+            border: 1px solid #e7edf6;
+            border-radius: 28px;
+            box-shadow: 0 18px 55px #536b8a18
+        }
+
+        .account-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #5983bd;
+            font: 24px Jua
+        }
+
+        .account-brand img {
+            width: 37px;
+            height: 37px;
+            object-fit: contain
+        }
+
+        .account-view {
+            display: none;
+            min-height: 590px;
+            flex-direction: column;
+            justify-content: center
+        }
+
+        .account-view.active {
+            display: flex
+        }
+
+        .account-hero {
+            text-align: center;
+            margin: auto 0 30px
+        }
+
+        .account-cloud {
+            font-size: 64px
+        }
+
+        .account-hero h2 {
+            margin: 12px 0 8px;
+            font-size: 24px;
+            color: #373344
+        }
+
+        .account-hero p,
+        .account-caption {
+            color: #8b94a4;
+            font-size: 13px;
+            line-height: 1.8
+        }
+
+        .account-main-button,
+        .account-secondary {
+            width: 100%;
+            min-height: 48px;
+            margin: 5px 0
+        }
+
+        .account-secondary {
+            border: 1px solid #e4e9f0;
+            border-radius: 13px;
+            background: #fff;
+            color: #526174;
+            font-weight: 800
+        }
+
+        .account-later {
+            margin-top: 13px;
+            border: 0;
+            background: none;
+            color: #929baa;
+            font-size: 12px
+        }
+
+        .account-back {
+            align-self: flex-start;
+            margin: 2px 0 20px;
+            border: 0;
+            background: none;
+            color: #7e8ba0;
+            font-weight: 800
+        }
+
+        .account-view h2 {
+            margin: 0;
+            color: #303744;
+            font-size: 25px;
+            line-height: 1.45
+        }
+
+        .account-caption {
+            margin: 6px 0 22px
+        }
+
+        .account-view label {
+            display: grid;
+            gap: 7px;
+            margin: 0 0 14px;
+            color: #596578;
+            font-size: 12px;
+            font-weight: 800
+        }
+
+        .account-view input {
+            width: 100%;
+            height: 46px;
+            padding: 0 13px;
+            border: 1px solid #e1e7ef;
+            border-radius: 11px;
+            outline: none;
+            font-size: 13px
+        }
+
+        .account-view input:focus {
+            border-color: #88a9d3;
+            box-shadow: 0 0 0 3px #88a9d322
+        }
+
+        .account-view .account-main-button {
+            margin-top: 9px
+        }
+
+        .account-switch {
+            text-align: center;
+            color: #8c95a2;
+            font-size: 12px
+        }
+
+        .account-switch button {
+            border: 0;
+            background: none;
+            color: #6488ba;
+            font-weight: 900
+        }
+
+        .account-view#signupView {
+            justify-content: flex-start;
+            padding-top: 14px
+        }
+
+        .account-view#signupView h2 {
+            font-size: 23px
+        }
+
+        .account-view#signupView .account-back {
+            margin-bottom: 12px
+        }
+
+        .account-view#signupView .account-caption {
+            margin-bottom: 16px
+        }
+
+        .account-view#signupView label {
+            margin-bottom: 10px
+        }
+
+        .account-view#signupView input {
+            height: 43px
+        }
+
+        @media(max-width:520px) {
+            .account-flow {
+                padding: 12px
+            }
+
+            .account-card {
+                min-height: calc(100dvh - 24px);
+                padding: 20px;
+                border-radius: 23px
+            }
+
+            .account-view {
+                min-height: calc(100dvh - 130px)
+            }
+        }
+
+        #accountFlow {
+            padding: 0;
+            background: #fff
+        }
+
+        #accountFlow .account-card {
+            width: 100%;
+            height: 100dvh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            padding: 24px max(24px, calc((100vw - 430px)/2));
+            border: 0;
+            border-radius: 0;
+            box-shadow: none
+        }
+
+        #accountFlow .account-view {
+            width: min(430px, 100%);
+            margin: auto
+        }
+
+        /* Keep clothing settings in one bounded dialog with one scrolling editor. */
+        #categoryModal .category-modal-card {
+            display: flex;
+            flex-direction: column;
+            height: min(80vh, 650px);
+            height: min(80dvh, 650px);
+            max-height: 100%;
+            min-height: 0;
+            overflow: hidden
+        }
+
+        #categoryModalTitle {
+            flex: none
+        }
+
+        #categoryModal .category-modal-layout {
+            flex: 1;
+            min-height: 0;
+            overflow: hidden
+        }
+
+        #categoryModal .category-preview {
+            min-height: 0;
+            min-width: 0
+        }
+
+        #categoryModal .category-editor {
+            min-height: 0;
+            min-width: 0;
+            max-height: none;
+            overflow-x: hidden;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            scrollbar-gutter: stable
+        }
+
+        #categoryModal .category-done {
+            flex: none;
+            align-self: flex-end
+        }
+
+        @media(max-width:640px) {
+            #categoryModal .category-modal-card {
+                height: min(88vh, 720px);
+                height: min(88dvh, 720px);
+                padding: 21px 16px
+            }
+
+            #categoryModal .category-modal-layout {
+                grid-template-rows: auto minmax(0, 1fr)
+            }
+
+            #categoryModal .category-preview {
+                gap: 4px 12px;
+                padding: 6px 10px;
+                grid-template-columns: 60px 1fr
+            }
+
+            #categoryModal .category-preview .preview-icon {
+                max-height: 70px
+            }
+
+            #categoryModal .category-done {
+                margin-top: 12px
+            }
+        }
+
+        /* Align the real start button with the title and mascot in the supplied artwork. */
+        #welcome {
+            min-height: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #d8eaff url("첫시작_베경.png") center center/cover no-repeat
+        }
+
+        #welcome .welcome-box {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: max(100vw, 211.717vh);
+            height: max(100vh, 47.233vw);
+            width: max(100vw, 211.717dvh);
+            height: max(100dvh, 47.233vw)
+        }
+
+        #welcome .welcome-accessible {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip-path: inset(50%);
+            white-space: nowrap
+        }
+
+        #welcome .start-button {
+            position: absolute;
+            left: 50%;
+            top: 55.5%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            width: clamp(180px, 11%, 240px);
+            min-height: 52px;
+            padding: 13px 23px;
+            border: 1px solid #ffffff38;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #5a9ee7, #4c91dd);
+            color: #fff;
+            font: 700 clamp(17px, 1.2vw, 22px)/1.35 'Noto Sans KR', sans-serif;
+            white-space: nowrap;
+            box-shadow: 0 8px 20px #4688ca26;
+            transition: background .2s, box-shadow .2s
+        }
+
+        #welcome .start-button span {
+            font-size: 1.4em;
+            line-height: 1
+        }
+
+        #welcome .start-button:hover {
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #478cdb, #367dcc);
+            box-shadow: 0 10px 25px #397abe40
+        }
+
+        #welcome .start-button:focus-visible {
+            outline: 3px solid #fff;
+            outline-offset: 5px
+        }
+
+        #welcome .start-button:active {
+            transform: translate(-50%, -50%) scale(.97)
+        }
+
+        /* Artwork onboarding and the following welcome screen. */
+        #onboarding {
+            padding: 0;
+            overflow: auto;
+            background: linear-gradient(135deg, #bfdcff, #edf6ff);
+            color: #468bd9
+        }
+
+        #onboarding .onboarding-card {
+            position: relative;
+            width: 100%;
+            height: 100dvh;
+            min-height: 520px;
+            overflow: hidden;
+            padding: 0;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            box-shadow: none
+        }
+
+        #onboarding .onboarding-top {
+            position: absolute;
+            inset: 24px 4% auto;
+            z-index: 3;
+            font-size: clamp(16px, 2vw, 29px);
+            color: #4486cc
+        }
+
+        #onboarding .onboarding-top button {
+            min-height: 44px;
+            padding: 8px 14px;
+            border-radius: 30px;
+            background: #e4f1ffe8;
+            color: #4486cc;
+            font-size: clamp(14px, 1.6vw, 24px);
+            font-weight: 800
+        }
+
+        #onboarding .onboarding-slides {
+            position: absolute;
+            inset: 0;
+            display: block
+        }
+
+        #onboarding .onboarding-slide {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            animation: artReveal .4s ease-out both
+        }
+
+        .onboard-full-art {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center
+        }
+
+        #onboarding .onboarding-dots {
+            position: absolute;
+            bottom: 26px;
+            left: 50%;
+            transform: translateX(-50%);
+            margin: 0;
+            z-index: 4;
+            gap: 12px
+        }
+
+        #onboarding .onboarding-dots button {
+            width: 12px;
+            height: 12px;
+            padding: 0;
+            border: 0;
+            border-radius: 50%;
+            background: #afcdef;
+            transition: transform .3s, background .3s
+        }
+
+        #onboarding .onboarding-dots button.active {
+            background: #4289df;
+            transform: scale(1.25)
+        }
+
+        #onboarding .onboarding-actions {
+            position: absolute;
+            bottom: 18px;
+            right: 4%;
+            left: 4%;
+            justify-content: space-between;
+            pointer-events: none;
+            z-index: 3
+        }
+
+        #onboarding .onboarding-actions button {
+            pointer-events: auto;
+            flex: none;
+            width: auto;
+            min-width: 100px;
+            padding: 10px 24px;
+            border-radius: 99px;
+            box-shadow: 0 8px 25px #4385ca25
+        }
+
+        #onboarding #onboardingNext {
+            margin-left: auto;
+            background: #4c91dd;
+            color: white
+        }
+
+        #onboarding #onboardingBack {
+            background: #f1f8ff;
+            color: #5487bd
+        }
+
+        .scene-three {
+            height: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            padding: 90px 5% 100px;
+            background: radial-gradient(ellipse at 70% 35%, #eef7ff99, transparent 65%), linear-gradient(125deg, #bbd9ff, #e3f1ff)
+        }
+
+        .scene-three:before,
+        .scene-three:after {
+            content: '';
+            position: absolute;
+            width: 30vw;
+            height: 15vw;
+            bottom: -7vw;
+            left: -6vw;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 8vw -4vw 30px #fff, 16vw 2vw 25px #fff;
+            filter: blur(5px);
+            opacity: .85;
+            pointer-events: none
+        }
+
+        .scene-three:after {
+            left: auto;
+            right: 0;
+            bottom: auto;
+            top: 14%;
+            width: 11vw;
+            height: 7vw;
+            box-shadow: 4vw 1vw 20px #fff;
+            animation: cloudDrift 8s ease-in-out infinite alternate
+        }
+
+        .scene-mascot {
+            position: relative;
+            max-width: 620px;
+            width: 100%;
+            aspect-ratio: 1;
+            display: grid;
+            place-items: center
+        }
+
+        .scene-mascot img {
+            width: 78%;
+            mix-blend-mode: multiply;
+            animation: happyFloat 3s ease-in-out infinite;
+            filter: drop-shadow(0 18px 15px #699bd32a)
+        }
+
+        .scene-icon {
+            position: absolute;
+            display: grid;
+            place-items: center;
+            width: 21%;
+            aspect-ratio: 1;
+            border: 3px solid #ffffff99;
+            border-radius: 25%;
+            background: linear-gradient(135deg, #f6f8ff, #dfeaff);
+            font-size: clamp(25px, 4vw, 62px);
+            box-shadow: 0 14px 20px #739dcc25;
+            animation: iconFloat 4s ease-in-out infinite
+        }
+
+        .scene-icon:nth-of-type(1) {
+            top: 0;
+            left: 5%;
+            rotate: -20deg
+        }
+
+        .scene-icon:nth-of-type(2) {
+            top: 0;
+            right: 2%;
+            rotate: 20deg;
+            animation-delay: -1s
+        }
+
+        .scene-icon:nth-of-type(3) {
+            bottom: 3%;
+            left: 3%;
+            rotate: -20deg;
+            animation-delay: -2s
+        }
+
+        .scene-icon:nth-of-type(4) {
+            bottom: 2%;
+            right: 0;
+            rotate: 20deg;
+            animation-delay: -3s
+        }
+
+        #onboarding .scene-copy {
+            position: relative;
+            z-index: 1;
+            text-align: center
+        }
+
+        #onboarding .scene-copy h2 {
+            font-family: Jua, sans-serif;
+            font-size: clamp(28px, 4.4vw, 72px);
+            color: #4388d8;
+            line-height: 1.3;
+            margin-bottom: 24px
+        }
+
+        #onboarding .scene-copy p {
+            font-size: clamp(16px, 2vw, 31px);
+            line-height: 1.8;
+            color: #4c90db
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #onboarding button:focus-visible,
+
+
+        @keyframes artReveal {
+            from {
+                opacity: 0
+            }
+
+            to {
+                opacity: 1
+            }
+        }
+
+        @keyframes happyFloat {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(-2deg)
+            }
+
+            50% {
+                transform: translateY(-12px) rotate(2deg)
+            }
+        }
+
+        @keyframes iconFloat {
+            50% {
+                transform: translateY(-10px)
+            }
+        }
+
+        @keyframes cloudDrift {
+            to {
+                transform: translateX(-25px)
+            }
+        }
+
+        @media(max-width:650px) {
+            #onboarding .onboarding-card {
+                min-height: 600px
+            }
+
+            #onboarding .onboarding-top {
+                top: 14px
+            }
+
+            #onboarding .onboarding-slide .onboard-full-art {
+                object-fit: cover;
+                object-position: 22% center;
+                opacity: .24
+            }
+
+            #onboarding .mobile-copy {
+                position: absolute;
+                inset: 100px 24px 100px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center
+            }
+
+            #onboarding .mobile-copy img {
+                width: min(65vw, 270px);
+                height: 260px;
+                object-fit: contain;
+                mix-blend-mode: multiply;
+                animation: happyFloat 4s infinite
+            }
+
+            #onboarding .mobile-copy h2 {
+                font: 29px Jua;
+                color: #4286ce
+            }
+
+            #onboarding .mobile-copy p {
+                font-size: 15px;
+                color: #5489bf
+            }
+
+            .scene-three {
+                grid-template-columns: 1fr;
+                padding: 85px 24px 100px;
+                align-content: center;
+                gap: 20px
+            }
+
+            .scene-mascot {
+                width: min(70vw, 300px);
+                margin: auto
+            }
+
+            .scene-three:after {
+                display: none
+            }
+
+            #onboarding .scene-copy h2 {
+                font-size: 29px;
+                margin-bottom: 14px
+            }
+
+            #onboarding .scene-copy p {
+                font-size: 15px
+            }
+
+            #onboarding .onboarding-actions button {
+                min-width: 80px;
+                padding: 10px 18px
+            }
+
+
+
+
+
+
+
+
+        }
+
+        @media(min-width:651px) {
+            .mobile-copy {
+                display: none
+            }
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+
+            #onboarding *,
+
+        }
+
+        /* Hide progress labels, including labels printed in the supplied artwork. */
+        #onboardingStep {
+            display: none
+        }
+
+        #onboarding .onboarding-top {
+            justify-content: flex-end
+        }
+
+        #onboarding .onboard-full-art {
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 11%, #000 17%, #000 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, transparent 11%, #000 17%, #000 100%)
+        }
+    
+/* Keep both slide layers mounted so the outgoing artwork can fade out. */
+#onboarding .onboarding-slide{display:block;opacity:0;visibility:hidden;pointer-events:none;animation:none;transition:opacity .5s ease,visibility 0s linear .5s;z-index:0}
+#onboarding .onboarding-slide.active{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .5s ease,visibility 0s;z-index:1}
+@media(prefers-reduced-motion:reduce){#onboarding .onboarding-slide{transition:none}}
+
+/* Match clickable controls to the supplied login artwork at every screen size. */
+#accountFlow:has(#accountChoice.active) .account-brand{visibility:hidden}
+#accountFlow #accountChoice{position:absolute;inset:0;width:100%;height:100dvh;min-height:0;margin:0;padding:0;overflow:hidden;background:#d3e7ff}
+#accountFlow #accountChoice.active{display:block}
+.login-artboard{position:absolute;left:50%;top:50%;width:max(100vw,177.6833dvh);height:max(100dvh,56.2799vw);transform:translate(-50%,-50%)}
+.login-choice-art{display:block;width:100%;height:100%;object-fit:fill}
+.login-art-hit{position:absolute;left:36.1%;width:27.8%;height:6.7%;padding:0;border:0;border-radius:999px;background:transparent;cursor:pointer;transition:background .2s,box-shadow .2s}
+.login-hit{top:61.7%}.signup-hit{top:70.2%}
+.login-art-hit:hover{background:#ffffff20;box-shadow:0 6px 20px #508bd32b}
+.login-art-hit:focus-visible{outline:3px solid #245fae;outline-offset:4px}
+.login-art-hit:active{background:#376db522}
+.login-guest{position:absolute;bottom:7%;left:50%;transform:translateX(-50%);padding:12px 20px;white-space:nowrap;border:0;border-radius:99px;background:#ffffffb8;color:#547eae;font:500 13px 'Noto Sans KR',sans-serif}
+.login-guest:focus-visible{outline:3px solid #245fae;outline-offset:4px}
+
+/* Visible controls below the logo in the revised artwork. */
+.login-art-hit{left:50%;transform:translateX(-50%);width:28%;min-width:230px;max-width:460px;height:6.8%;min-height:46px;font:800 clamp(16px,2.1dvh,23px)/1.3 'Noto Sans KR',sans-serif;box-shadow:0 8px 22px #4b80bd22}
+.login-hit{top:55%;background:linear-gradient(135deg,#75a8ed,#548fda);color:#fff;border:1px solid #ffffff30}
+.signup-hit{top:64%;background:#ffffffdb;color:#477fc3;border:1px solid #ffffffbf}
+.login-hit:hover{background:#548cda;box-shadow:0 10px 25px #4b80bd40}
+.signup-hit:hover{background:#fff;box-shadow:0 10px 25px #4b80bd30}
+.login-guest{top:73%;bottom:auto;background:transparent;color:#507eb5;font-size:clamp(12px,1.6dvh,16px)}
+.login-guest:hover{background:#ffffff60}
+</style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body><svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden">
+        <defs>
+            <linearGradient id="cloudFill" x1="0" y1="0" x2=".8" y2="1">
+                <stop stop-color="#fff" />
+                <stop offset="1" stop-color="#f3f5fa" />
+            </linearGradient>
+            <linearGradient id="bluePuff" x1="0" y1="0" x2="1" y2="1">
+                <stop stop-color="#dce9ff" />
+                <stop offset="1" stop-color="#a9c4ef" />
+            </linearGradient>
+            <linearGradient id="sunFill" x1="0" y1="0" x2="0" y2="1">
+                <stop stop-color="#ffe99b" />
+                <stop offset="1" stop-color="#ffd36a" />
+            </linearGradient>
+            <filter id="softShadow" x="-30%" y="-30%" width="160%" height="170%">
+                <feDropShadow dx="0" dy="7" stdDeviation="6" flood-color="#60718b" flood-opacity=".18" />
+            </filter>
+            <symbol id="codini-mark" viewBox="0 0 320 270">
+                <ellipse cx="160" cy="247" rx="91" ry="12" fill="#dfe8f5" />
+                <g filter="url(#softShadow)">
+                    <path
+                        d="M62 183c-32-10-48-36-44-66 3-26 21-45 49-53 11-39 43-64 84-64 32 0 58 15 72 40 13-10 28-13 43-8 24 8 37 29 35 52 25 9 41 29 40 55-1 29-24 51-57 53H75c-5 0-9-3-13-9z"
+                        fill="url(#cloudFill)" />
+                    <path d="M119 174c11-23 37-29 59-21 17 6 27 20 29 39l-6 34c-2 17-17 27-39 27h-30c-24 0-39-14-36-36z"
+                        fill="url(#cloudFill)" />
+                    <ellipse cx="124" cy="218" rx="25" ry="16" fill="url(#cloudFill)" />
+                    <ellipse cx="196" cy="218" rx="25" ry="16" fill="url(#cloudFill)" />
+                    <path
+                        d="M94 181c-16 7-23 23-15 35 8 12 23 10 35-2l14-15-17-19zM220 180c17 6 24 21 17 33-7 12-22 11-35 0l-15-14 16-20z"
+                        fill="url(#cloudFill)" />
+                    <circle cx="239" cy="48" r="32" fill="url(#bluePuff)" />
+                    <circle cx="269" cy="68" r="29" fill="url(#bluePuff)" />
+                    <circle cx="237" cy="77" r="27" fill="url(#bluePuff)" />
+                </g>
+                <ellipse cx="111" cy="135" rx="15" ry="22" fill="#424a65" />
+                <ellipse cx="198" cy="135" rx="15" ry="22" fill="#424a65" />
+                <ellipse cx="116" cy="127" rx="5" ry="7" fill="#fff" />
+                <ellipse cx="203" cy="127" rx="5" ry="7" fill="#fff" />
+                <ellipse cx="79" cy="160" rx="20" ry="12" fill="#ffc9ca" opacity=".72" />
+                <ellipse cx="230" cy="160" rx="20" ry="12" fill="#ffc9ca" opacity=".72" />
+                <path d="M145 145q15-5 30 0v9q-1 12-15 13-14-1-15-13z" fill="#ff9b9e" stroke="#46506b" stroke-width="4"
+                    stroke-linejoin="round" />
+                <g fill="url(#sunFill)" filter="url(#softShadow)">
+                    <circle cx="160" cy="203" r="27" />
+                    <ellipse cx="160" cy="165" rx="6" ry="11" />
+                    <ellipse cx="160" cy="241" rx="6" ry="10" />
+                    <ellipse cx="124" cy="202" rx="10" ry="6" transform="rotate(32 124 202)" />
+                    <ellipse cx="196" cy="202" rx="10" ry="6" transform="rotate(-32 196 202)" />
+                    <ellipse cx="135" cy="177" rx="9" ry="6" transform="rotate(45 135 177)" />
+                    <ellipse cx="185" cy="177" rx="9" ry="6" transform="rotate(-45 185 177)" />
+                </g>
+            </symbol>
+        </defs>
+    </svg>
+    <section class="welcome" id="welcome" aria-label="온도차 시작 화면">
+        <div class="welcome-box">
+            <h1 class="welcome-accessible">온도차</h1><button type="button" class="start-button" onclick="startApp()">옷장 문
+                열기 <span aria-hidden="true">›</span></button>
+        </div>
+    </section>
+    <section class="onboarding" id="onboarding" aria-hidden="true" aria-label="온도차 사용 안내">
+        <div class="onboarding-card">
+            <div class="onboarding-top"><span id="onboardingStep" aria-live="polite">01 / 03</span></div>
+            <div class="onboarding-slides">
+                <article class="onboarding-slide active" aria-label="오늘의 체감온도"><img class="onboard-full-art"
+                        src="온보딩/창 1.png" alt="오늘의 체감온도. 같은 날씨에도 사람마다 느끼는 온도는 달라요. 나에게 맞는 옷차림을 추천해 드려요.">
+                    <div class="mobile-copy" aria-hidden="true"><img src="온보딩/생각_마스코트.png" alt="">
+                        <h2>오늘의 체감온도</h2>
+                        <p>같은 날씨에도 사람마다 느끼는 온도는 달라요.<br>나에게 맞는 옷차림을 추천해 드려요.</p>
+                    </div>
+                </article>
+                <article class="onboarding-slide" aria-label="내 취향에 맞는 옷차림"><img class="onboard-full-art"
+                        src="온보딩/창 2.png" alt="내 취향에 맞는 옷차림. 원하는 스타일과 옷을 고르면 취향에 맞게 코디를 추천해 드려요.">
+                    <div class="mobile-copy" aria-hidden="true"><img src="온보딩/궁금_마스코트.png" alt="">
+                        <h2>내 취향에 맞는 옷차림</h2>
+                        <p>원하는 스타일과 옷을 고르면<br>취향에 맞게 코디를 추천해 드려요.</p>
+                    </div>
+                </article>
+                <article class="onboarding-slide" aria-label="오늘의 상황에 꼭 맞게"><img class="onboard-full-art"
+                        src="온보딩/창 3.png" alt="오늘의 상황에 꼭 맞게. 날씨와 일정, 체감온도를 반영해 오늘 입기 좋은 옷을 골라드려요.">
+                    <div class="mobile-copy" aria-hidden="true"><img src="온보딩/신남_마스코트.png" alt="">
+                        <h2>오늘의 상황에 꼭 맞게</h2>
+                        <p>날씨와 일정, 체감온도를 반영해<br>오늘 입기 좋은 옷을 골라드려요.</p>
+                    </div>
+                </article>
+            </div>
+            <div class="onboarding-dots" aria-label="안내 화면 선택"><button type="button" aria-label="1번째 안내"
+                    onclick="goOnboarding(0)"></button><button type="button" aria-label="2번째 안내"
+                    onclick="goOnboarding(1)"></button><button type="button" aria-label="3번째 안내"
+                    onclick="goOnboarding(2)"></button></div>
+            <div class="onboarding-actions"><button type="button" id="onboardingBack" onclick="previousOnboarding()"
+                    hidden>이전</button><button type="button" class="primary" id="onboardingNext"
+                    onclick="nextOnboarding()">다음</button></div>
+        </div>
+    </section>
+    <section class="account-flow" id="accountFlow" aria-hidden="true">
+        <div class="account-card">
+            
+            <section class="account-view active" id="accountChoice" aria-label="로그인 및 회원가입"><div class="login-artboard"><img class="login-choice-art" src="로그인 창 1.png" alt="온도차. 오늘의 체감온도. 내 취향에 맞는 코디를 저장하고 언제든 다시 확인해 보세요."><button type="button" class="login-art-hit login-hit" aria-label="로그인" onclick="showAccountView('loginView')">로그인</button><button type="button" class="login-art-hit signup-hit" aria-label="회원가입" onclick="showAccountView('signupView')">회원가입</button><button type="button" class="login-guest" onclick="continueWithoutAccount()">로그인 없이 둘러보기</button></div></section><section class="account-view" id="loginView"><button type="button" class="account-back"
+                    onclick="showAccountView('accountChoice')">‹ 이전</button>
+                <h2>로그인 정보를<br>입력하세요</h2>
+                <p class="account-caption">로그인 후 내 코디를 저장할 수 있어요.</p><label>이메일<input type="email" autocomplete="email"
+                        placeholder="이메일을 입력하세요"></label><label>비밀번호<input type="password"
+                        autocomplete="current-password" placeholder="비밀번호를 입력하세요"></label><button type="button"
+                    class="primary account-main-button" onclick="authComingSoon()">로그인</button>
+                <p class="account-switch">계정이 없으신가요? <button type="button"
+                        onclick="showAccountView('signupView')">회원가입</button></p>
+            </section>
+            <section class="account-view" id="signupView"><button type="button" class="account-back"
+                    onclick="showAccountView('accountChoice')">‹ 이전</button>
+                <h2>새 계정 만들기</h2>
+                <p class="account-caption">가입해서 나만의 코디를 모아보세요.</p><label>이메일<input type="email" autocomplete="email"
+                        placeholder="이메일을 입력하세요"></label><label>비밀번호<input type="password" autocomplete="new-password"
+                        placeholder="비밀번호를 입력하세요"></label><label>비밀번호 확인<input type="password"
+                        autocomplete="new-password" placeholder="비밀번호를 다시 입력하세요"></label><button type="button"
+                    class="primary account-main-button" onclick="authComingSoon()">회원가입</button>
+                <p class="account-switch">이미 계정이 있으신가요? <button type="button"
+                        onclick="showAccountView('loginView')">로그인</button></p>
+            </section>
+        </div>
+    </section>
+    <section class="character-setup" id="characterSetup" aria-hidden="true">
+        <div class="character-wizard">
+            <header class="wizard-head"><span class="wizard-step">STEP 1 · 나만의 캐릭터</span>
+                <h1>캐릭터 설정</h1>
+            </header>
+            <div class="wizard-grid">
+                <section class="character-preview-card">
+                    <div id="characterPreview" class="character-preview" aria-label="기본 스탠딩 캐릭터 미리보기"><img
+                            class="character-base" src="기본스탠딩.png" alt="기본 스탠딩 캐릭터"><img class="character-hair"
+                            src="덮은머리.png?v=2" alt="덮은머리"></div>
+                    <p>원본 사진의 얼굴과 디자인은 바꾸지 않아요.</p>
+                </section>
+                <section class="character-options">
+                    <div class="character-fields character-customization"><label>머리카락<select id="charHair"
+                                onchange="renderCharacter()">
+                                <option value="tied">깐머리</option>
+                                <option value="open" selected>덮은머리</option>
+                                <option value="tiedBob">깐단발머리</option>
+                                <option value="openBob">덮은단발머리</option>
+                                <option value="tiedLong">깐긴머리</option>
+                                <option value="openLong">덮은긴머리</option>
+                            </select></label><label>피부색<select id="charSkin" onchange="renderCharacter()">
+                                <option value="default">기본 피부톤</option>
+                                <option value="toneA">밝은 피부톤</option>
+                                <option value="toneB">어두운 피부톤</option>
+                            </select></label><label>눈<select id="charEyes" onchange="renderCharacter()">
+                                <option value="default">기본</option>
+                            </select></label></div>
+                    <div class="underwear-note">기본스탠딩 · 기본 모습</div>
+                    <p class="underwear-copy">머리카락, 피부색, 눈 설정은 캐릭터 미리보기에 적용됩니다.</p>
+                </section>
+            </div>
+            <footer class="wizard-actions"><button type="button" class="wizard-back"
+                    onclick="backToWelcome()">처음으로</button><button type="button" class="primary"
+                    onclick="completeCharacterSetup()">이 캐릭터로 시작하기</button></footer>
+        </div>
+    </section>
+    <main class="shell" id="app" style="display:none">
+        <header class="top">
+            <div class="brand">☁ 오늘의 코디 온도차</div>
+            <nav class="nav"><button class="active" id="navHome" onclick="showHome()">코디 추천</button><button
+                    id="navCalendar" onclick="showCalendar()">코디 캘린더</button></nav>
+            <div class="account-area"><span id="accountLabel" hidden></span><button type="button" class="account-button"
+                    id="accountButton" onclick="handleAccountButton()">Google 로그인</button></div><span class="today"
+                id="today"></span>
+        </header>
+        <section class="sky">
+            <div class="sun"></div>
+            <h1 id="skyTitle">오늘 하늘을 살펴보고 있어요</h1>
+            <p id="skyDetail">내 위치의 기상청 예보를 확인합니다</p><button class="settings"
+                onclick="document.getElementById('weatherConfig').classList.toggle('open')">날씨 연결 설정</button>
+            <div class="weather-config" id="weatherConfig"><input id="kmaKey" type="password"
+                    placeholder="기상청 API 인증키"><button onclick="saveKmaKey()">저장</button></div><span
+                class="weather-badge" id="weatherBadge">위치 확인 중</span>
+        </section>
+        <section class="card" id="recommendCard">
+            <h2 class="heading">오늘 뭐 입을까?</h2>
+            <div class="sub">원하는 체감온도와 약속을 고르면 날씨에 맞춰 코디를 입혀볼게요.</div>
+            <fieldset class="feel feel-range">
+                <legend>오늘 체감온도는 어느 단계인가요?</legend>
+                <div class="feel-current">체감온도 <strong id="feelLabel">2</strong></div><input id="feelSlider"
+                    class="feel-slider" type="range" min="0" max="4" step="0.01" value="1" aria-label="체감온도 1에서 5단계"
+                    oninput="updateFeelFromSlider()">
+                <div class="feel-ticks" aria-hidden="true">
+                    <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+                <div class="feel-end-labels"><span>차가워요</span><span>따뜻해요</span></div>
+                <div class="feel-inputs" aria-hidden="true"><input type="radio" name="feel" value="매우 추워요"><input
+                        type="radio" name="feel" value="쌀쌀해요" checked><input type="radio" name="feel"
+                        value="괜찮아요"><input type="radio" name="feel" value="따뜻해요"><input type="radio" name="feel"
+                        value="더워요"></div>
+            </fieldset>
+            <div class="fields">
+                <div class="field"><label for="time">언제 입나요?</label><select id="time"
+                        onchange="toggleCustomField('time')">
+                        <option>아침</option>
+                        <option>점심</option>
+                        <option>저녁</option>
+                        <option>밤</option>
+                        <option value="custom">직접 입력</option>
+                    </select><input class="field-custom" id="timeCustom" type="text" maxlength="30"
+                        placeholder="시간대를 입력해 주세요" hidden></div>
+                <div class="field"><label for="place">어디로 가나요?</label><select id="place"
+                        onchange="toggleCustomField('place')">
+                        <option>학교</option>
+                        <option>회사</option>
+                        <option>카페</option>
+                        <option>데이트 장소</option>
+                        <option>야외</option>
+                        <option>모임 장소</option>
+                        <option value="custom">직접 입력</option>
+                    </select><input class="field-custom" id="placeCustom" type="text" maxlength="40"
+                        placeholder="장소를 입력해 주세요" hidden></div>
+                <div class="field"><label for="occasion">어떤 약속인가요?</label><select id="occasion"
+                        onchange="toggleCustomField('occasion')">
+                        <option>평범한 하루</option>
+                        <option>친구 만나기</option>
+                        <option>데이트</option>
+                        <option>발표·면접</option>
+                        <option>결혼식</option>
+                        <option>산책</option>
+                        <option value="custom">직접 입력</option>
+                    </select><input class="field-custom" id="occasionCustom" type="text" maxlength="40"
+                        placeholder="약속 내용을 입력해 주세요" hidden></div>
+            </div>
+            <fieldset class="category">
+                <legend>오늘 입고 싶은 옷</legend>
+                <div class="category-groups"><button type="button" class="category-open"
+                        onclick="openCategoryModal('topCategory')">상의 설정하기 <span id="topCategoryValue">상의
+                            추천받기</span></button><button type="button" class="category-open"
+                        onclick="openCategoryModal('category')">하의 설정하기 <span
+                            id="categoryValue">긴치마</span></button><button type="button" class="category-open"
+                        onclick="openCategoryModal('accessoryCategory')">액세서리 설정하기 <span id="accessoryCategoryValue">선택
+                            안 함</span></button></div><button type="button" class="custom-category-trigger"
+                    onclick="openCustomClothingModal()">＋ 입고 싶은 옷 직접 추가</button><small class="category-note">원하는 옷 이름과
+                    종류를 골라 추가할 수 있어요.</small>
+            </fieldset>
+            <div class="date-row"><label>날짜 <input id="eventDate" type="date"></label><label>시간 <input id="eventTime"
+                        type="time"></label></div>
+            <button class="primary" onclick="recommend()">확인하고 코디 추천받기</button>
+            <div class="suggest" id="suggest">
+                <div class="results-head"><button class="result-back" onclick="closeResults()">← 코디 입력으로
+                        돌아가기</button><span>코디니의 추천</span></div>
+                <h2>마음에 드는 코디를 골라봐요</h2>
+                <p id="suggestCopy">작은 아바타에게 코디를 입혀봤어요.</p>
+                <div class="outfits" id="outfits"></div>
+                <div class="date-row"><label>일정 이름 <input id="eventName" type="text"
+                            placeholder="예: 친구와 저녁 약속"></label><button class="primary" onclick="saveLook()">선택한 코디를 캘린더에
+                        저장</button></div>
+            </div>
+        </section>
+        <section class="card calendar" id="calendarCard">
+            <div class="calhead"><button onclick="shiftMonth(-1)">‹</button><span class="month"
+                    id="monthTitle"></span><button onclick="shiftMonth(1)">›</button></div>
+            <div class="grid" id="calendarGrid"></div>
+        </section>
+    </main>
+    <section class="thinking" id="thinking" aria-live="polite">
+        <div class="thinking-card">
+            <div class="think-mascot"><img class="thinking-pose active" src="codini-thinking-1.png" alt="생각하는 코디니"><img
+                    class="thinking-pose" src="codini-thinking-2.png" alt="고민하는 코디니"></div>
+            <h2>코디니가 생각하고 있어요</h2>
+            <p>날씨와 약속에 딱 맞는 코디를 고르는 중이에요</p>
+            <div class="thinking-dots"><i></i><i></i><i></i></div>
+        </div>
+    </section>
+    <section class="day-detail" id="dayDetail" aria-hidden="true" onclick="if(event.target===this)closeCalendarDay()">
+        <div class="day-detail-card" role="dialog" aria-modal="true" aria-labelledby="detailDate"><button
+                class="day-detail-close" onclick="closeCalendarDay()" aria-label="닫기">×</button>
+            <p class="detail-eyebrow">코디 캘린더</p>
+            <h2 id="detailDate"></h2>
+            <div id="detailEvents"></div>
+        </div>
+    </section>
+    <section class="category-modal custom-clothing-modal" id="customClothingModal" aria-hidden="true"
+        onclick="if(event.target===this)closeCustomClothingModal()">
+        <div class="category-modal-card custom-clothing-card" role="dialog" aria-modal="true"
+            aria-labelledby="customClothingTitle"><button type="button" class="category-modal-close"
+                onclick="closeCustomClothingModal()" aria-label="닫기">×</button>
+            <h2 id="customClothingTitle">입고 싶은 옷 추가</h2>
+            <div class="custom-clothing-fields"><label>구분<select id="customClothingGroup"
+                        onchange="updateCustomClothingSubtypes()">
+                        <option value="topCategory">상의</option>
+                        <option value="category">하의</option>
+                        <option value="accessoryCategory">액세서리</option>
+                    </select></label><label>옷 종류<select id="customClothingSubtype"></select></label><label>옷 이름<input
+                        id="customClothingName" maxlength="30" placeholder="예: 스트라이프 티셔츠"></label></div><button
+                type="button" class="primary category-done" onclick="addCustomClothing()">이 종류에 추가</button>
+        </div>
+    </section>
+    <section class="category-modal" id="categoryModal" aria-hidden="true"
+        onclick="if(event.target===this)closeCategoryModal()">
+        <div class="category-modal-card" role="dialog" aria-modal="true" aria-labelledby="categoryModalTitle"><button
+                type="button" class="category-modal-close" onclick="closeCategoryModal()" aria-label="닫기">×</button>
+            <h2 id="categoryModalTitle">옷 종류 선택</h2>
+            <div class="category-modal-layout">
+                <aside class="category-preview"><span class="preview-caption">미리보기</span>
+                    <div class="preview-icon" id="categoryPreviewIcon">👚</div><strong id="categoryPreviewName">상의
+                        추천받기</strong><small id="categoryPreviewStyle">무늬 없음 · 색상 미선택</small>
+                </aside>
+                <div class="category-editor">
+                    <h3>옷 선택</h3>
+                    <div class="category-list" id="topCategoryList"></div>
+                    <div class="category-list" id="categoryList"></div>
+                    <div class="category-list" id="accessoryCategoryList"></div>
+                    <fieldset class="preference-group">
+                        <legend>무늬</legend><label><input type="radio" name="clothingPattern" value="없음" checked>
+                            없음</label><label><input type="radio" name="clothingPattern" value="있음"> 있음</label>
+                    </fieldset>
+                    <fieldset class="preference-group">
+                        <legend>색깔</legend>
+                        <div class="color-options"><label style="--swatch:#f7f5ef"><input type="radio"
+                                    name="clothingColor" value="아이보리"><i></i><span>아이보리</span></label><label
+                                style="--swatch:#e8a9b2"><input type="radio" name="clothingColor"
+                                    value="핑크"><i></i><span>핑크</span></label><label style="--swatch:#9cb7de"><input
+                                    type="radio" name="clothingColor" value="하늘색"><i></i><span>하늘색</span></label><label
+                                style="--swatch:#93c4a5"><input type="radio" name="clothingColor"
+                                    value="초록"><i></i><span>초록</span></label><label style="--swatch:#373344"><input
+                                    type="radio" name="clothingColor" value="검정"><i></i><span>검정</span></label><label
+                                style="--swatch:#d4a46d"><input type="radio" name="clothingColor"
+                                    value="베이지"><i></i><span>베이지</span></label><label><input type="radio"
+                                    name="clothingColor" value="상관없음" checked><i
+                                    class="any-color">✦</i><span>상관없음</span></label></div>
+                    </fieldset>
+                </div>
+            </div><button type="button" class="primary category-done" onclick="closeCategoryModal()">선택 완료</button>
+        </div>
+    </section>
+    <section class="category-modal feedback-modal" id="outfitFeedback" aria-hidden="true"
+        onclick="if(event.target===this)closeOutfitFeedback()">
+        <div class="category-modal-card feedback-card" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
+            <button type="button" class="category-modal-close" onclick="closeOutfitFeedback()"
+                aria-label="닫기">×</button>
+            <div class="feedback-mascot">☁️</div>
+            <p class="feedback-eyebrow">코디니에게 알려주세요</p>
+            <h2 id="feedbackTitle">코디니가 추천한 코디는 어땠나요?</h2>
+            <p class="feedback-copy">남겨주신 평가는 다음 코디를 추천하는 데 참고할게요.</p>
+            <div class="feedback-choices"><button type="button"
+                    onclick="rateOutfit('좋았어요')"><span>💗</span>좋았어요</button><button type="button"
+                    onclick="rateOutfit('보통이에요')"><span>🙂</span>보통이에요</button><button type="button"
+                    onclick="rateOutfit('아쉬웠어요')"><span>🛠️</span>아쉬웠어요</button></div><button type="button"
+                class="feedback-skip" onclick="closeOutfitFeedback()">다음에 할게요</button>
+        </div>
+    </section>
+    <div class="toast" id="toast"></div>
+    <script>
+        const grids = { 서울: [60, 127], 인천: [55, 124], 대전: [67, 100], 대구: [89, 90], 부산: [98, 76], 광주: [58, 74], 제주: [52, 38] };
+        const coords = [['서울', 37.5665, 126.978], ['인천', 37.4563, 126.7052], ['대전', 36.3504, 127.3845], ['대구', 35.8714, 128.6014], ['부산', 35.1796, 129.0756], ['광주', 35.1595, 126.8526], ['제주', 33.4996, 126.5312]];
+        let city = '서울', weatherTemp = null, looks = [], selected = 0, events = JSON.parse(localStorage.getItem('ootd-events') || '{}'), view = new Date();
+        const $ = id => document.getElementById(id);
+        const baseCategories = ['긴치마', '짧은치마', '짧은바지', '긴바지', '원피스']; let customCategories = JSON.parse(localStorage.getItem('custom-clothing-types') || '[]'); let customTopCategories = JSON.parse(localStorage.getItem('custom-top-types') || '[]'), customAccessoryCategories = JSON.parse(localStorage.getItem('custom-accessory-types') || '[]'); let categoryOptions = [...baseCategories, ...customCategories];
+        function updateFeelFromSlider() { let values = ['매우 추워요', '쌀쌀해요', '괜찮아요', '따뜻해요', '더워요'], tones = ['#6fa5ed', '#9ec9e9', '#b7c9af', '#f3b679', '#f18b8f'], slider = $('feelSlider'), position = Math.max(0, Math.min(4, Number(slider.value))), index = Math.round(position), value = values[index]; document.querySelectorAll('input[name="feel"]').forEach(input => input.checked = input.value === value); let label = $('feelLabel'); label.textContent = String(index + 1); let tone = tones[index]; slider.style.setProperty('--feel-tone', tone); label.style.setProperty('--feel-tone', tone); slider.parentElement.querySelectorAll('.feel-ticks span').forEach((tick, i) => tick.classList.toggle('active', i === index)); } function renderCategoryChoices(selectValue, selectedGroup) { let keep = selectedGroup === 'category' && selectValue ? selectValue : document.querySelector('input[name="category"]:checked')?.value || '긴치마', topKeep = selectedGroup === 'topCategory' && selectValue ? selectValue : document.querySelector('input[name="topCategory"]:checked')?.value || '상의 추천받기', accessoryKeep = selectedGroup === 'accessoryCategory' && selectValue ? selectValue : document.querySelector('input[name="accessoryCategory"]:checked')?.value || '없음', bottomBox = document.getElementById('categoryList'), topBox = document.getElementById('topCategoryList'), accessoryBox = document.getElementById('accessoryCategoryList'); function makeChoice(name, group, checked) { let item = document.createElement('span'); item.className = 'category-item'; let label = document.createElement('label'); label.className = 'choice'; let radio = document.createElement('input'); radio.type = 'radio'; radio.name = group; radio.value = name; radio.checked = name === checked; let icon = document.createElement('span'); icon.className = 'choice-icon'; icon.innerHTML = clothingIconMarkup(name); let text = document.createElement('span'); text.textContent = name; label.append(radio, icon, text); item.appendChild(label); let customList = group === 'topCategory' ? customTopCategories : group === 'accessoryCategory' ? customAccessoryCategories : customCategories; if (customList.includes(name)) { let remove = document.createElement('button'); remove.type = 'button'; remove.className = 'delete-category'; remove.textContent = '×'; remove.title = name + ' 삭제'; remove.setAttribute('aria-label', name + ' 삭제'); remove.onclick = function (e) { e.preventDefault(); e.stopPropagation(); removeCategory(name, group) }; item.appendChild(remove) } return item } function makeGroup(title, names, group, checked) { let section = document.createElement('div'); section.className = 'category-subgroup'; let heading = document.createElement('strong'); heading.className = 'category-subgroup-title'; heading.textContent = title; section.appendChild(heading); names.forEach(name => section.appendChild(makeChoice(name, group, checked))); return section } let customShort = customTopCategories.filter(x => x.startsWith('반팔 · ')), customLong = customTopCategories.filter(x => x.startsWith('긴팔 · ')), customOuter = customTopCategories.filter(x => x.startsWith('겉옷 · ')); topBox.replaceChildren(makeChoice('상의 추천받기', 'topCategory', topKeep), makeGroup('반팔', ['반팔', '티셔츠', '블라우스', ...customShort], 'topCategory', topKeep), makeGroup('긴팔', ['긴팔', '니트', '맨투맨', '셔츠', ...customLong], 'topCategory', topKeep), makeGroup('겉옷', ['가디건', '민소매', ...customOuter], 'topCategory', topKeep)); let shorts = categoryOptions.filter(name => /짧은바지|반바지|쇼츠/.test(name)), longPants = categoryOptions.filter(name => /긴바지|긴 팬츠|바지/.test(name) && !shorts.includes(name)), skirts = categoryOptions.filter(name => /치마|스커트/.test(name)), dresses = categoryOptions.filter(name => /원피스/.test(name)), custom = categoryOptions.filter(name => !shorts.includes(name) && !longPants.includes(name) && !skirts.includes(name) && !dresses.includes(name)); bottomBox.replaceChildren(...[makeGroup('반바지', shorts, 'category', keep), makeGroup('긴바지', longPants, 'category', keep), makeGroup('치마', skirts, 'category', keep), makeGroup('원피스', dresses, 'category', keep), ...(custom.length ? [makeGroup('기타', custom, 'category', keep)] : [])].filter(group => group.querySelectorAll('.category-item').length)); let accessories = ['없음', '가방', '모자', '스카프', '목걸이', '귀걸이', '시계', ...customAccessoryCategories]; accessoryBox.replaceChildren(...accessories.map(name => makeChoice(name, 'accessoryCategory', accessoryKeep))) } function removeCategory(name, group = 'category') { if (group === 'topCategory') { customTopCategories = customTopCategories.filter(item => item !== name); localStorage.setItem('custom-top-types', JSON.stringify(customTopCategories)) } else if (group === 'accessoryCategory') { customAccessoryCategories = customAccessoryCategories.filter(item => item !== name); localStorage.setItem('custom-accessory-types', JSON.stringify(customAccessoryCategories)) } else { customCategories = customCategories.filter(item => item !== name); categoryOptions = categoryOptions.filter(item => item !== name); localStorage.setItem('custom-clothing-types', JSON.stringify(customCategories)) } let fallback = group === 'topCategory' ? '상의 추천받기' : group === 'accessoryCategory' ? '없음' : '긴치마'; renderCategoryChoices(document.querySelector('input[name="' + group + '"]:checked')?.value === name ? fallback : undefined, group) } function updateCustomClothingSubtypes() { let group = document.getElementById('customClothingGroup').value, options = { topCategory: ['반팔', '긴팔', '겉옷'], category: ['반바지', '긴바지', '치마', '원피스'], accessoryCategory: ['가방', '모자', '스카프', '목걸이', '귀걸이', '시계'] }, select = document.getElementById('customClothingSubtype'); select.replaceChildren(...options[group].map(name => { let option = document.createElement('option'); option.value = name; option.textContent = name; return option })) } function openCustomClothingModal() { let modal = document.getElementById('customClothingModal'); document.getElementById('customClothingGroup').value = 'topCategory'; document.getElementById('customClothingName').value = ''; updateCustomClothingSubtypes(); modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; document.getElementById('customClothingName').focus() } function closeCustomClothingModal() { let modal = document.getElementById('customClothingModal'); modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); document.body.style.overflow = '' } function addCustomClothing() { let group = document.getElementById('customClothingGroup').value, subtype = document.getElementById('customClothingSubtype').value, name = document.getElementById('customClothingName').value.trim(); if (!name) { document.getElementById('customClothingName').focus(); toast('추가할 옷 이름을 적어 주세요'); return } let value = subtype + ' · ' + name, list = group === 'topCategory' ? customTopCategories : group === 'accessoryCategory' ? customAccessoryCategories : customCategories; if (list.includes(value)) { toast('이미 추가된 종류예요'); return } list.push(value); if (group === 'topCategory') localStorage.setItem('custom-top-types', JSON.stringify(customTopCategories)); else if (group === 'accessoryCategory') localStorage.setItem('custom-accessory-types', JSON.stringify(customAccessoryCategories)); else { categoryOptions.push(value); localStorage.setItem('custom-clothing-types', JSON.stringify(customCategories)) } renderCategoryChoices(value, group); closeCustomClothingModal(); toast('옷 종류를 선택 목록에 추가했어요') } function addCategory() { openCustomClothingModal() } function localDate(d) { return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-') }
+        let clothingPreferences = JSON.parse(localStorage.getItem("clothing-preferences") || "{}"); function categoryPreferenceText(group) { let pref = clothingPreferences[group] || {}; return "무늬 " + (pref.pattern || "없음") + ", 색상 " + (pref.color || "상관없음") } function clothingIconMarkup(name, color = "#f7f5ef") {
+            let ink = "#343448", fill = color, detail = "#c8bfd9", shape; if (/상의 추천받기|반팔|티셔츠|블라우스/.test(name)) shape = '<path d="M36 31L48 25Q60 33 72 25L84 31L101 53L88 63L80 55V91Q60 97 40 91V55L32 63L19 53Z" fill="' + fill + '" stroke="' + ink + '" stroke-width="3.2" stroke-linejoin="round"/><path d="M49 27Q60 43 71 27" fill="none" stroke="' + detail + '" stroke-width="3" stroke-linecap="round"/>';
+            else if (/민소매/.test(name)) shape = '<path d="M44 25Q60 35 76 25L82 43L91 50L87 92Q60 98 33 92L29 50L38 43Z" fill="' + fill + '" stroke="' + ink + '" stroke-width="3.2" stroke-linejoin="round"/><path d="M44 27Q45 44 60 46Q75 44 76 27" fill="none" stroke="' + detail + '" stroke-width="3.4"/>';
+            else if (/가디건|겉옷/.test(name)) shape = '<path d="M43 24L51 21L60 29L69 21L77 24L91 36L100 81L87 85L82 59V94H38V59L33 85L20 81L29 36Z" fill="' + fill + '" stroke="' + ink + '" stroke-width="3.2" stroke-linejoin="round"/><path d="M60 30V93M51 23L60 37L69 23" fill="none" stroke="' + detail + '" stroke-width="3"/>';
+            else if (/긴팔|니트|맨투맨|셔츠/.test(name)) shape = '<path d="M43 24L51 21Q60 27 69 21L77 24L87 31L100 74L88 79L80 52V94Q60 99 40 94V52L32 79L20 74L33 31Z" fill="' + fill + '" stroke="' + ink + '" stroke-width="3.2" stroke-linejoin="round"/><path d="M51 24Q60 39 69 24M42 84Q60 89 78 84" fill="none" stroke="' + detail + '" stroke-width="3"/>';
+            else if (/치마|스커트/.test(name)) shape = '<path d="M42 27H78L83 39L96 89Q60 99 24 89L37 39Z" fill="' + fill + '" stroke="' + ink + '" stroke-width="3.2" stroke-linejoin="round"/><path d="M43 42L38 83M60 42V91M77 42L83 83M42 34H78" fill="none" stroke="' + detail + '" stroke-width="2.5"/>';
+            else if (/짧은바지|쇼츠|반바지/.test(name)) shape = '<path d="M37 27H83L91 78L67 82L60 62L53 82L29 78Z" fill="' + fill + '" stroke="' + ink + '" stroke-width="3.2" stroke-linejoin="round"/><path d="M37 36H83M60 31V62M36 42L46 55M84 42L74 55" fill="none" stroke="' + detail + '" stroke-width="2.5"/>';
+            else if (/긴바지|바지|팬츠/.test(name)) shape = '<path d="M39 25H81L88 94L65 97L60 51L55 97L32 94Z" fill="' + fill + '" stroke="' + ink + '" stroke-width="3.2" stroke-linejoin="round"/><path d="M40 34H80M60 30V51M42 42Q53 46 60 41M78 42Q67 46 60 41" fill="none" stroke="' + detail + '" stroke-width="2.5"/>';
+            else if (/원피스/.test(name)) shape = '<path d="M47 24Q60 32 73 24L78 42L86 49L96 92Q60 99 24 92L34 49L42 42Z" fill="' + fill + '" stroke="' + ink + '" stroke-width="3.2" stroke-linejoin="round"/><path d="M47 27Q48 43 60 45Q72 43 73 27M34 50Q60 56 86 50M60 56V94" fill="none" stroke="' + detail + '" stroke-width="2.5"/>';
+            else if (/가방/.test(name)) shape = '<path d="M34 43H86L91 91H29Z" fill="' + fill + '" stroke="' + ink + '" stroke-width="3.2" stroke-linejoin="round"/><path d="M44 44V36Q44 22 60 22Q76 22 76 36V44" fill="none" stroke="' + ink + '" stroke-width="3.2"/>';
+            else if (/모자/.test(name)) shape = '<path d="M27 66Q31 35 59 29Q82 30 88 64L96 72Q61 81 24 72Z" fill="' + fill + '" stroke="' + ink + '" stroke-width="3.2" stroke-linejoin="round"/><path d="M36 59Q60 53 83 61" fill="none" stroke="' + detail + '" stroke-width="3"/>';
+            else if (/목걸이/.test(name)) shape = '<path d="M35 27Q39 75 60 78Q81 75 85 27" fill="none" stroke="' + ink + '" stroke-width="4" stroke-linecap="round"/><path d="M60 72L69 83L60 96L51 83Z" fill="' + fill + '" stroke="' + ink + '" stroke-width="3" stroke-linejoin="round"/><circle cx="60" cy="84" r="2.5" fill="' + detail + '"/>';
+            else if (/귀걸이/.test(name)) shape = '<path d="M38 35V44M82 35V44" stroke="' + ink + '" stroke-width="3.5" stroke-linecap="round"/><path d="M29 60C29 48 47 48 47 60V78C47 90 29 90 29 78Z" fill="none" stroke="' + ink + '" stroke-width="3.5"/><path d="M73 60C73 48 91 48 91 60V78C91 90 73 90 73 78Z" fill="none" stroke="' + ink + '" stroke-width="3.5"/><circle cx="38" cy="83" r="4" fill="' + fill + '" stroke="' + ink + '" stroke-width="2"/><circle cx="82" cy="83" r="4" fill="' + fill + '" stroke="' + ink + '" stroke-width="2"/>';
+            else if (/시계/.test(name)) shape = '<path d="M49 23H71L75 40Q88 48 88 60Q88 73 75 80L71 98H49L45 80Q32 73 32 60Q32 48 45 40Z" fill="' + fill + '" stroke="' + ink + '" stroke-width="3.2" stroke-linejoin="round"/><circle cx="60" cy="60" r="17" fill="#fff" stroke="' + ink + '" stroke-width="3"/><path d="M60 49V60L68 65" fill="none" stroke="' + ink + '" stroke-width="2.5" stroke-linecap="round"/>';
+            else if (/없음/.test(name)) shape = '<circle cx="60" cy="56" r="27" fill="none" stroke="' + ink + '" stroke-width="3.5"/><path d="M42 76L78 36" stroke="' + ink + '" stroke-width="4" stroke-linecap="round"/>';
+            else if (/스카프/.test(name)) shape = '<path d="M39 24L81 24L77 47L89 89L67 94L61 59L52 92L32 87L45 47Z" fill="' + fill + '" stroke="' + ink + '" stroke-width="3.2" stroke-linejoin="round"/>';
+            else shape = '<path d="M60 19L70 45L98 46L76 63L84 91L60 75L36 91L44 63L22 46L50 45Z" fill="' + fill + '" stroke="' + ink + '" stroke-width="3.2" stroke-linejoin="round"/>'; return '<svg viewBox="0 0 120 112" aria-hidden="true" focusable="false">' + shape + '</svg>'
+        }
+        function updateCategoryPreview() { let modal = $("categoryModal"), group = modal.dataset.group, names = { topCategory: ["상의", "topCategoryList"], category: ["하의", "categoryList"], accessoryCategory: ["액세서리", "accessoryCategoryList"] }, selected = document.querySelector('input[name="' + group + '"]:checked'), name = selected?.value || (group === "category" ? "긴치마" : group === "accessoryCategory" ? "없음" : "상의 추천받기"), icons = { "상의 추천받기": "👚", "니트": "🧶", "가디건": "🧥", "블라우스": "👚", "맨투맨": "👕", "셔츠": "👔", "티셔츠": "👕", "긴치마": "👗", "짧은치마": "👗", "짧은바지": "🩳", "긴바지": "👖", "원피스": "👗", "없음": "✨", "가방": "👜", "모자": "🧢", "스카프": "🧣", "목걸이": "📿", "귀걸이": "💎", "시계": "⌚" }; $("categoryPreviewIcon").innerHTML = clothingIconMarkup(name, ({ 아이보리: "#f7f5ef", 핑크: "#e8a9b2", 하늘색: "#9cb7de", 초록: "#93c4a5", 검정: "#50536b", 베이지: "#d4a46d" })[(clothingPreferences[group] || {}).color] || "#f7f5ef"); $("categoryPreviewName").textContent = name; $("categoryPreviewStyle").textContent = categoryPreferenceText(group); $("categoryModalTitle").textContent = names[group][0] + " 설정" } function openCategoryModal(group) { let modal = $("categoryModal"), names = { topCategory: ["상의", "topCategoryList"], category: ["하의", "categoryList"], accessoryCategory: ["액세서리", "accessoryCategoryList"] }, pref = clothingPreferences[group] || {}; modal.dataset.group = group; $("categoryModalTitle").textContent = names[group][0] + " 설정";["topCategoryList", "categoryList", "accessoryCategoryList"].forEach(id => $(id).style.display = id === names[group][1] ? "flex" : "none"); document.querySelectorAll('input[name="clothingPattern"]').forEach(x => x.checked = x.value === (pref.pattern || "없음")); document.querySelectorAll('input[name="clothingColor"]').forEach(x => x.checked = x.value === (pref.color || "상관없음")); updateCategoryPreview(); modal.scrollTop = 0; modal.querySelector(".category-modal-card").scrollTop = 0; modal.querySelector(".category-editor").scrollTop = 0; modal.classList.add("open"); modal.setAttribute("aria-hidden", "false"); document.body.style.overflow = "hidden" } function closeCategoryModal() { let modal = $("categoryModal"); modal.classList.remove("open"); modal.setAttribute("aria-hidden", "true"); document.body.style.overflow = "" } document.getElementById("categoryModal").addEventListener("change", event => { let group = document.getElementById("categoryModal").dataset.group; if (event.target.matches('input[name="clothingPattern"],input[name="clothingColor"]')) { let pref = clothingPreferences[group] || {}; if (event.target.name === "clothingPattern") pref.pattern = event.target.value; else pref.color = event.target.value; clothingPreferences[group] = pref; localStorage.setItem("clothing-preferences", JSON.stringify(clothingPreferences)); updateCategoryPreview(); return } if (!event.target.matches('input[type="radio"]')) return; let labels = { topCategory: "topCategoryValue", category: "categoryValue", accessoryCategory: "accessoryCategoryValue" }, value = event.target.value; if (group === "accessoryCategory" && value === "없음") value = "선택 안 함"; $(labels[group]).textContent = value; updateCategoryPreview() }); const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL", SUPABASE_PUBLISHABLE_KEY = "YOUR_SUPABASE_PUBLISHABLE_KEY", CLOUD_DATA_KEYS = ["ootd-events", "codini-character", "feel-level", "custom-clothing-types", "custom-top-types", "custom-accessory-types", "clothing-preferences", "weather-city"]; let supabaseClient = null, currentAuthUser = null, cloudSaveTimer = null, suspendCloudSync = false, processingAuthId = null; function setAccountUi(user) { let button = document.getElementById("accountButton"), label = document.getElementById("accountLabel"); if (!button) return; button.textContent = user ? "로그아웃" : "Google 로그인"; label.hidden = !user; label.textContent = user?.email || "" } function localAppData() { let data = {}; CLOUD_DATA_KEYS.forEach(key => { let value = localStorage.getItem(key); if (value !== null) data[key] = value }); return data } async function saveCloudState() { if (!supabaseClient || !currentAuthUser || suspendCloudSync) return; let { error } = await supabaseClient.from("user_app_data").upsert({ user_id: currentAuthUser.id, data: localAppData(), updated_at: new Date().toISOString() }, { onConflict: "user_id" }); if (error) { console.error("Cloud save failed", error); toast("계정 저장에 실패했어요. 연결 설정을 확인해 주세요.") } } function queueCloudSave() { if (!supabaseClient || !currentAuthUser || suspendCloudSync) return; clearTimeout(cloudSaveTimer); cloudSaveTimer = setTimeout(saveCloudState, 500) } const originalStorageSetItem = Storage.prototype.setItem, originalStorageRemoveItem = Storage.prototype.removeItem; Storage.prototype.setItem = function (key, value) { originalStorageSetItem.call(this, key, value); if (this === localStorage && CLOUD_DATA_KEYS.includes(String(key))) queueCloudSave() }; Storage.prototype.removeItem = function (key) { originalStorageRemoveItem.call(this, key); if (this === localStorage && CLOUD_DATA_KEYS.includes(String(key))) queueCloudSave() }; async function processAuthUser(user) { if (!user) { let hadUser = !!currentAuthUser; currentAuthUser = null; setAccountUi(null); if (hadUser) { suspendCloudSync = true; CLOUD_DATA_KEYS.forEach(key => localStorage.removeItem(key)); suspendCloudSync = false; location.reload() } return } if (processingAuthId === user.id) return; processingAuthId = user.id; currentAuthUser = user; try { let { data, error } = await supabaseClient.from("user_app_data").select("data").eq("user_id", user.id).maybeSingle(); if (error) throw error; if (data?.data && typeof data.data === "object") { let changed = false; suspendCloudSync = true; for (let key of CLOUD_DATA_KEYS) { let local = localStorage.getItem(key), remote = data.data[key] ?? null; if (local !== remote) { changed = true; if (remote === null) localStorage.removeItem(key); else localStorage.setItem(key, remote) } } suspendCloudSync = false; setAccountUi(user); if (changed) { location.reload(); return } } else { setAccountUi(user); await saveCloudState() } } catch (error) { suspendCloudSync = false; console.error("Account data sync failed", error); setAccountUi(user); toast("계정 데이터 연결에 실패했어요. 데이터베이스 설정을 확인해 주세요.") } finally { processingAuthId = null } } async function initSupabaseAuth() { setAccountUi(null); if (!window.supabase || SUPABASE_URL.startsWith("YOUR_") || SUPABASE_PUBLISHABLE_KEY.startsWith("YOUR_")) return; try { supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY); supabaseClient.auth.onAuthStateChange((_event, session) => setTimeout(() => processAuthUser(session?.user || null), 0)); let { data, error } = await supabaseClient.auth.getSession(); if (error) throw error; if (data.session) await processAuthUser(data.session.user) } catch (error) { console.error("Supabase initialization failed", error); toast("로그인 서비스를 연결하지 못했어요.") } } async function handleAccountButton() { if (!supabaseClient) { toast("Supabase URL과 공개 키 설정이 필요해요."); return } if (currentAuthUser) { let { error } = await supabaseClient.auth.signOut(); if (error) { console.error(error); toast("로그아웃에 실패했어요.") } return } let { error } = await supabaseClient.auth.signInWithOAuth({ provider: "google", options: { redirectTo: window.location.origin + window.location.pathname } }); if (error) { console.error(error); toast("Google 로그인에 실패했어요.") } } function toast(text) { $('toast').textContent = text; $('toast').classList.add('show'); setTimeout(() => $('toast').classList.remove('show'), 2100) }
+        function startApp() { let welcome = $("welcome"); welcome.classList.add("leaving"); setTimeout(() => { welcome.style.display = "none"; $("app").style.display = "block"; $("app").classList.add("slide-in-right"); autoDate(); setTimeout(() => $("app").classList.remove("slide-in-right"), 360) }, 280) }
+        function autoDate() { let d = new Date(); $("eventDate").value = localDate(d); $("eventTime").value = String(d.getHours()).padStart(2, "0") + ":00" }
+        function showHome() { $('calendarCard').classList.remove('visible'); $('recommendCard').style.display = 'block'; document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active')); $('navHome').classList.add('active') }
+        function showCalendar() { $('recommendCard').style.display = 'none'; $('calendarCard').classList.add('visible'); document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active')); renderCalendar() }
+        function saveKmaKey() { let key = $('kmaKey').value.trim(); if (!key) return; sessionStorage.setItem('kma-key', key); $('weatherConfig').classList.remove('open'); getWeather(city, key) }
+        function locate() { const cached = localStorage.getItem('weather-city'); if (cached) city = cached; if (!navigator.geolocation) { weatherStatus('위치 권한을 켜면 지역별 예보를 볼 수 있어요'); return } navigator.geolocation.getCurrentPosition(p => { city = coords.slice().sort((a, b) => Math.hypot(a[1] - p.coords.latitude, a[2] - p.coords.longitude) - Math.hypot(b[1] - p.coords.latitude, b[2] - p.coords.longitude))[0][0]; localStorage.setItem('weather-city', city); const key = sessionStorage.getItem('kma-key'); if (key) getWeather(city, key); else weatherStatus(city + ' 위치 확인 · 기상청 인증키 연결 필요') }, () => weatherStatus(city + ' · 위치 권한을 확인해 주세요'), { timeout: 8000, maximumAge: 3600000 }) }
+        function weatherStatus(text) { $('weatherBadge').textContent = text; $('skyTitle').textContent = city + ' 오늘의 날씨'; $('skyDetail').textContent = '기상청 예보를 연결해 체감온도와 함께 코디에 반영해요.' }
+        function baseTime() { let d = new Date(Date.now() - 20 * 60000), h = d.getHours(), slots = [2, 5, 8, 11, 14, 17, 20, 23], slot = slots.filter(x => x <= h).pop(); if (slot === undefined) { d.setDate(d.getDate() - 1); slot = 23 } return { date: localDate(d).replaceAll('-', ''), time: String(slot).padStart(2, '0') + '00' } }
+        async function getWeather(which, key) { city = which; let g = grids[city] || grids.서울, b = baseTime(), q = new URLSearchParams({ pageNo: '1', numOfRows: '1000', dataType: 'JSON', base_date: b.date, base_time: b.time, nx: g[0], ny: g[1], authKey: key }); try { let r = await fetch('https://apihub.kma.go.kr/api/typ02/openApi/VilageFcstInfoService_2.0/getVilageFcst?' + q), j = await r.json(), root = j.response || j, items = root.body.items.item, now = new Date(), stamp = localDate(now).replaceAll('-', '') + String(now.getHours()).padStart(2, '0'), times = [...new Set(items.map(x => x.fcstDate + x.fcstTime))].filter(x => x >= stamp).sort(), t = times[0] || items[0].fcstDate + items[0].fcstTime, hour = items.filter(x => x.fcstDate + x.fcstTime === t), get = c => hour.find(x => x.category === c)?.fcstValue; weatherTemp = Number(get('TMP')); let sky = Number(get('SKY')), pty = Number(get('PTY')), state = pty ? '비/눈 예보' : sky === 1 ? '맑음' : sky === 3 ? '구름 많음' : '흐림'; $('skyTitle').textContent = city + ' ' + state; $('skyDetail').textContent = '기상청 예보 기온 ' + weatherTemp + '°C · ' + t.slice(8, 10) + '시 예보'; $('weatherBadge').textContent = '기상청 · ' + city + ' ' + weatherTemp + '°C' } catch (e) { weatherStatus(city + ' · 기상청 연결 실패, 인증키를 확인해 주세요') } }
+        function avatarClothesMarkup(x, i) { let colors = ['#e8a9b2', '#9cb7de', '#93c4a5', '#d4a46d'], color = colors[i % colors.length], bottomColor = ['#7388ac', '#8e789e', '#799984', '#a77f63'][i % 4], lower = (x.bottom?.[0] || '').toLowerCase(), isDress = !!x.onepiece, isSkirt = /치마|스커트/.test(lower), isShort = /짧은|쇼츠|반바지/.test(lower), top = isDress ? '<path d="M51 69Q65 62 79 69L83 104Q65 112 47 104Z" fill="' + color + '" stroke="#fff" stroke-opacity=".65" stroke-width="1.5"/><path d="M51 101L79 101Q85 126 94 151Q65 158 36 151Z" fill="' + color + '" stroke="#fff" stroke-opacity=".65" stroke-width="1.5"/>' : '<path d="M50 70L56 66H74L80 70L84 105Q65 111 46 105Z" fill="' + color + '" stroke="#fff" stroke-opacity=".65" stroke-width="1.5"/><path d="M50 72L44 75L38 94L44 97L51 84M80 72L86 75L92 94L86 97L79 84Z" fill="' + color + '" stroke="#fff" stroke-opacity=".65" stroke-width="1.5"/>', bottom = isDress ? '' : isSkirt ? '<path d="M47 104L83 104L91 148Q65 155 39 148Z" fill="' + bottomColor + '" stroke="#fff" stroke-opacity=".7" stroke-width="1.5"/>' : isShort ? '<path d="M47 104L83 104L82 127L67 126L65 120L62 126L48 127Z" fill="' + bottomColor + '" stroke="#fff" stroke-opacity=".7" stroke-width="1.5"/>' : '<path d="M47 104L83 104L80 151L66 151L65 121L62 151L48 151Z" fill="' + bottomColor + '" stroke="#fff" stroke-opacity=".7" stroke-width="1.5"/>'; return '<svg viewBox="0 0 130 215" aria-label="추천 코디를 입은 캐릭터">' + top + bottom + '</svg>' } function toggleCustomField(id) { let input = $(id + 'Custom'), select = $(id), show = select.value === 'custom'; input.hidden = !show; if (show) input.focus() }
+        function getFieldValue(id) { let select = $(id); return select.value === 'custom' ? $(id + 'Custom').value.trim() : select.value } function fetchAiRecommendations() { let feel = document.querySelector('input[name=feel]:checked')?.value, bottomCategory = document.querySelector('input[name=category]:checked')?.value, topCategory = document.querySelector('input[name=topCategory]:checked')?.value || '상의 추천받기', accessory = document.querySelector('input[name=accessoryCategory]:checked')?.value || '없음'; return fetch('/.netlify/functions/recommend', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ feel, weather: { city, tempC: weatherTemp }, topCategory: topCategory + " (" + categoryPreferenceText("topCategory") + ")", bottomCategory: bottomCategory + " (" + categoryPreferenceText("category") + ")", accessory: accessory + " (" + categoryPreferenceText("accessoryCategory") + ")", place: getFieldValue('place'), occasion: getFieldValue('occasion'), time: getFieldValue('time'), gender: characterConfig.gender || 'female' }) }).then(async response => { let data = await response.json(); if (!response.ok) throw new Error(data.error || 'AI 추천 요청에 실패했어요'); return data.recommendations }) } function generateRecommendations(aiRecommendations) { let feel = document.querySelector('input[name=feel]:checked').value, category = document.querySelector('input[name=category]:checked').value + ' (' + categoryPreferenceText('category') + ')', topChoice = (document.querySelector('input[name=topCategory]:checked')?.value || '상의 추천받기') + ' (' + categoryPreferenceText('topCategory') + ')', accessoryRaw = document.querySelector('input[name=accessoryCategory]:checked')?.value || '없음', accessoryChoice = accessoryRaw === '없음' ? '' : accessoryRaw + ' (' + categoryPreferenceText('accessoryCategory') + ')', place = getFieldValue('place'), occasion = getFieldValue('occasion'), time = getFieldValue('time'); localStorage.setItem('feel-level', feel); let warmth = feel === '매우 추워요' || (weatherTemp !== null && weatherTemp < 8) ? '도톰한' : feel === '더워요' || (weatherTemp !== null && weatherTemp > 25) ? '가벼운' : '편안한', tops = [['니트', '🧶'], ['가디건', '🧥'], ['블라우스', '👚'], ['맨투맨', '👕']], isSkirt = category.includes('치마'), isShort = category.includes('짧은'), isDress = category.includes('원피스'), isCustom = !isSkirt && !isDress && !/바지|팬츠|쇼츠/.test(category), bottom = isSkirt ? [[!isShort ? '플로럴 롱 스커트' : '플리츠 미니스커트', '👗'], [!isShort ? '데님 롱 스커트' : '데님 미니스커트', '👗'], [!isShort ? '차분한 롱 스커트' : '체크 미니스커트', '👗'], [!isShort ? '니트 롱 스커트' : '산뜻한 짧은 스커트', '👗']] : [[isShort ? '데님 쇼츠' : '와이드 팬츠', '👖'], [isShort ? '코튼 쇼츠' : '데님 팬츠', '👖'], [isShort ? '린넨 쇼츠' : '슬랙스', '👖'], [isShort ? '캐주얼 쇼츠' : '코튼 팬츠', '👖']], shoes = [['운동화', '👟'], ['로퍼', '👞'], ['메리제인 슈즈', '👞'], ['앵클 부츠', '👢']]; if (topChoice !== '상의 추천받기') { let icons = { '반팔': '👕', '긴팔': '👕', '민소매': '👚', '니트': '🧶', '가디건': '🧥', '블라우스': '👚', '맨투맨': '👕', '셔츠': '👔', '티셔츠': '👕' }; tops = Array.from({ length: 4 }, () => [topChoice, icons[topChoice] || '👚']) } if (isCustom) bottom = Array.from({ length: 4 }, (_, i) => [warmth + ' ' + category + ' ' + ['스타일', '코디', '룩', '착장'][i], '👗']); looks = Array.from({ length: 4 }, (_, i) => isDress ? { onepiece: [warmth + ' 니트 원피스', '👗'], bottom: ['원피스', ''], shoes: shoes[i], accessory: accessoryChoice === '없음' ? '' : accessoryChoice } : { onepiece: null, top: [warmth + ' ' + tops[i][0], tops[i][1]], bottom: bottom[i], shoes: shoes[i], accessory: accessoryChoice === '없음' ? '' : accessoryChoice }); if (Array.isArray(aiRecommendations) && aiRecommendations.length === 4) { let topIcons = { '반팔': '👕', '긴팔': '👕', '민소매': '👚', '니트': '🧶', '가디건': '🧥', '블라우스': '👚', '맨투맨': '👕', '셔츠': '👔', '티셔츠': '👕', '후드티': '🧥' }, bottomIcons = { '치마': '👗', '스커트': '👗', '원피스': '👗', '바지': '👖', '팬츠': '👖', '쇼츠': '👖' }, shoeIcons = { '부츠': '👢', '로퍼': '👞', '구두': '👞', '메리제인': '👞', '운동화': '👟', '스니커즈': '👟', '샌들': '🩴' }; looks = aiRecommendations.map((item, i) => { let top = String(item.top || '상의'), bottomName = String(item.bottom || '하의'), shoeName = String(item.shoes || '운동화'), dress = /원피스/.test(bottomName), topIcon = Object.keys(topIcons).find(k => top.includes(k)), bottomIcon = Object.keys(bottomIcons).find(k => bottomName.includes(k)), shoeIcon = Object.keys(shoeIcons).find(k => shoeName.includes(k)); return { onepiece: dress ? [bottomName, '👗'] : null, top: dress ? null : [top, topIcons[topIcon] || '👚'], bottom: [bottomName, dress ? '' : bottomIcons[bottomIcon] || '👖'], shoes: [shoeName, shoeIcons[shoeIcon] || '👟'], accessory: String(item.accessory || ''), aiTitle: String(item.title || ['포근한 데일리', '산뜻한 외출', '약속 코디', '포인트 룩'][i]), reason: String(item.reason || '') } }) } selected = 0; $('suggestCopy').textContent = weatherTemp === null ? 'AI가 체감온도와 선택한 옷, 약속에 맞춰 코디했어요. ' + time + ' · ' + place + ' · ' + occasion : city + ' ' + weatherTemp + '°C와 ' + feel + ' 느낌을 반영했어요. ' + time + ' · ' + place + ' · ' + occasion; $('outfits').innerHTML = looks.map((x, i) => '<article class="look ' + (i === 0 ? 'selected' : '') + '"><div class="look-title">' + escapeCalendarText(x.aiTitle || ['포근한 데일리', '산뜻한 외출', '약속 코디', '포인트 룩'][i]) + '</div><div class="stage" style="--bg:' + ['#fff0f2', '#f3efff', '#eaf7f0', '#fff4df'][i] + '"><div class="look-avatar gender-' + (characterConfig.gender || "female") + '">' + avatarClothesMarkup(x, i) + '</div></div><div class="look-items">' + (x.onepiece ? '<strong>' + escapeCalendarText(x.onepiece[0]) + '</strong>' : '상의 <strong>' + escapeCalendarText(x.top[0]) + '</strong><br>하의 <strong>' + escapeCalendarText(x.bottom[0]) + '</strong>') + (x.accessory ? '<br>액세서리 <strong>' + escapeCalendarText(x.accessory) + '</strong>' : '') + '<br>신발 <strong>' + escapeCalendarText(x.shoes[0]) + '</strong>' + (x.reason ? '<br>' + escapeCalendarText(x.reason) : '') + '</div><button class="pick" onclick="selectLook(' + i + ')">' + (i === 0 ? '💗 선택한 코디' : '이 코디 고르기') + '</button></article>').join(''); $('suggest').classList.add('show'); $('eventName').value = place + ' · ' + occasion; toast(aiRecommendations ? 'AI 코디 네 가지를 준비했어요!' : '기본 코디 네 가지를 준비했어요!') } function closeResults() { let panel = document.getElementById('suggest'); panel.classList.add('closing'); setTimeout(() => { panel.classList.remove('show', 'closing') }, 240) }
+        function recommend() { let modal = document.getElementById('thinking'); if (modal.classList.contains('visible')) return; let selectedFeel = document.querySelector('input[name=feel]:checked'), selectedCategory = document.querySelector('input[name=category]:checked'), selectedTop = document.querySelector('input[name=topCategory]:checked'); if (!selectedFeel || !selectedCategory || !selectedTop) { renderCategoryChoices(); updateFeelFromSlider(); selectedFeel = document.querySelector('input[name=feel]:checked'); selectedCategory = document.querySelector('input[name=category]:checked'); selectedTop = document.querySelector('input[name=topCategory]:checked') } if (!selectedFeel || !selectedCategory || !selectedTop) { toast('체감온도와 상의·하의를 선택해 주세요'); return } let missing = ['time', 'place', 'occasion'].find(id => $(id).value === 'custom' && !$(id + 'Custom').value.trim()); if (missing) { $(missing + 'Custom').hidden = false; $(missing + 'Custom').focus(); toast('직접 입력한 내용을 적어 주세요'); return } let poses = Array.from(document.querySelectorAll('.thinking-pose')), index = 0; poses.forEach((pose, i) => pose.classList.toggle('active', i === 0)); modal.classList.add('visible'); let cycle = setInterval(() => { poses[index].classList.remove('active'); index = (index + 1) % poses.length; poses[index].classList.add('active') }, 850); let start = Date.now(); (async () => { let aiRecommendations = null; try { aiRecommendations = await fetchAiRecommendations() } catch (error) { console.error(error); toast('AI 연결에 실패해 기본 코디로 추천할게요') } finally { clearInterval(cycle); let poseDelay = Math.max(0, 900 - (Date.now() - start)); setTimeout(() => { try { generateRecommendations(aiRecommendations) } catch (error) { console.error(error); toast('코디를 준비하지 못했어요. 다시 시도해 주세요') } finally { modal.classList.remove('visible'); document.getElementById('suggest').scrollIntoView({ behavior: 'smooth', block: 'center' }) } }, poseDelay) } })() } function selectLook(i) { selected = i; document.querySelectorAll('.look').forEach((x, n) => { x.classList.toggle('selected', i === n); x.querySelector('.pick').textContent = i === n ? '💗 선택한 코디' : '이 코디 고르기' }); toast('이 코디로 선택했어요') }
+        let feedbackTarget = null; function openOutfitFeedback(date, index) { feedbackTarget = { date, index }; let modal = document.getElementById('outfitFeedback'); modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden' } function closeOutfitFeedback() { let modal = document.getElementById('outfitFeedback'); modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; feedbackTarget = null } function rateOutfit(rating) { if (!feedbackTarget) return; let saved = events[feedbackTarget.date], list = Array.isArray(saved) ? saved : [saved]; if (list[feedbackTarget.index]) { list[feedbackTarget.index].rating = rating; events[feedbackTarget.date] = list; localStorage.setItem('ootd-events', JSON.stringify(events)) } closeOutfitFeedback(); toast('평가 고마워요! 다음 코디에 참고할게요 💗') } function saveLook() { if (!looks.length) return; let date = $('eventDate').value; if (!date) { toast('저장할 날짜를 골라주세요'); return } let x = looks[selected], entry = { name: $('eventName').value || '오늘의 코디', time: $('eventTime').value || '', outfit: (x.onepiece ? x.onepiece[0] : x.top[0] + ' · ' + x.bottom[0]) + (x.accessory ? ' · 액세서리 ' + x.accessory : '') + ' · ' + x.shoes[0], look: JSON.parse(JSON.stringify(x)), character: characterConfig.gender || 'female' }; if (!Array.isArray(events[date])) events[date] = events[date] ? [events[date]] : []; events[date].push(entry); localStorage.setItem('ootd-events', JSON.stringify(events)); let entryIndex = events[date].length - 1; toast('선택한 코디를 캘린더에 저장했어요 📅'); document.getElementById('suggest').classList.remove('show'); showCalendar(); setTimeout(() => openOutfitFeedback(date, entryIndex), 240) } function shiftMonth(n) { view.setMonth(view.getMonth() + n); renderCalendar() }
+        function escapeCalendarText(value) { return String(value || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])) }
+        function outfitFromSaved(item) { if (item.look) return item.look; let parts = String(item.outfit || '').split(' · ').filter(Boolean), shoeName = parts.length > 1 ? parts[parts.length - 1] : '운동화', shoeIcon = /부츠/.test(shoeName) ? '👢' : /로퍼|메리제인/.test(shoeName) ? '👞' : '👟'; if (parts.some(p => p.includes('원피스'))) { let dress = parts.find(p => p.includes('원피스')) || parts[0]; return { onepiece: [dress, '👗'], bottom: ['원피스', ''], shoes: [shoeName, shoeIcon] } } let top = parts[0] || '상의', bottom = parts[1] || '하의', topIcon = /니트/.test(top) ? '🧶' : /가디건/.test(top) ? '🧥' : /블라우스/.test(top) ? '👚' : /맨투맨/.test(top) ? '👕' : '👚', bottomIcon = /치마|스커트/.test(bottom) ? '👗' : '👖'; return { top: [top, topIcon], bottom: [bottom, bottomIcon], shoes: [shoeName, shoeIcon] } }
+        function savedOutfitMarkup(item) { let x = outfitFromSaved(item), body = x.onepiece ? x.onepiece[1] : x.top[1], name = x.onepiece ? x.onepiece[0] : x.top[0] + ' · ' + x.bottom[0], bottom = x.onepiece ? '' : x.bottom[1]; return '<div class="saved-outfit"><div class="saved-stage"><div class="look-avatar gender-' + (item.character || characterConfig.gender || "female") + '">' + avatarClothesMarkup(x, 0) + '</div></div><div class="saved-outfit-names">' + escapeCalendarText(name) + '<br>' + escapeCalendarText(x.shoes[0]) + (x.accessory ? '<br>액세서리 ' + escapeCalendarText(x.accessory) : '') + '</div></div>' }
+        function openCalendarDay(key) { let date = new Date(key + 'T12:00:00'); $('detailDate').textContent = date.getFullYear() + '년 ' + (date.getMonth() + 1) + '월 ' + date.getDate() + '일'; let saved = events[key] || [], list = Array.isArray(saved) ? saved : [saved], box = $('detailEvents'); box.innerHTML = list.length ? list.map(item => '<article class="detail-event"><h3>' + escapeCalendarText(item.name || '오늘의 코디') + '</h3>' + (item.time ? '<span class="detail-time">' + escapeCalendarText(item.time) + '</span>' : '') + savedOutfitMarkup(item) + '</article>').join('') : '<div class="detail-empty">이 날짜에는 저장된 코디가 없어요.<br>코디 추천에서 마음에 드는 옷을 캘린더에 담아보세요.</div>'; let modal = $('dayDetail'); modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; $('dayDetail').querySelector('.day-detail-close').focus() } function closeCalendarDay() { let modal = $('dayDetail'); modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); document.body.style.overflow = '' }
+        function renderCalendar() { let y = view.getFullYear(), m = view.getMonth(), first = new Date(y, m, 1).getDay(), count = new Date(y, m + 1, 0).getDate(), now = new Date(); $('monthTitle').textContent = y + '년 ' + (m + 1) + '월'; let html = ['일', '월', '화', '수', '목', '금', '토'].map(x => '<div class="dow">' + x + '</div>').join(''); for (let i = 0; i < first; i++)html += '<div class="day empty"></div>'; for (let d = 1; d <= count; d++) { let k = localDate(new Date(y, m, d)), saved = events[k] || [], arr = Array.isArray(saved) ? saved : [saved]; html += '<button type="button" class="day ' + (now.getFullYear() === y && now.getMonth() === m && now.getDate() === d ? 'today' : '') + '" data-date="' + k + '">' + d + (arr.length ? '<span class="event" title="' + escapeCalendarText(arr[0].name) + '"><strong>' + (arr[0].time ? escapeCalendarText(arr[0].time) + ' ' : '') + escapeCalendarText(arr[0].name) + '</strong>' + (arr[0].outfit ? '<small class="event-outfit">' + escapeCalendarText(arr[0].outfit) + '</small>' : '') + '</span>' : '') + (arr.length > 1 ? '<span class="event-more" title="날짜를 눌러 나머지 일정을 확인하세요">+' + (arr.length - 1) + ' 더 보기</span>' : '') + '</button>' } $('calendarGrid').innerHTML = html; document.querySelectorAll('.day[data-date]').forEach(button => button.addEventListener('click', () => openCalendarDay(button.dataset.date))) } let now = new Date(); $('today').textContent = now.getFullYear() + '년 ' + (now.getMonth() + 1) + '월 ' + now.getDate() + '일'; $('eventDate').value = localDate(now); $('eventTime').value = String(now.getHours()).padStart(2, '0') + ':00'; let savedFeel = localStorage.getItem('feel-level'); if (savedFeel) document.querySelectorAll('input[name=feel]').forEach(x => x.checked = x.value === savedFeel); let feelIndex = ['매우 추워요', '쌀쌀해요', '괜찮아요', '따뜻해요', '더워요'].indexOf(savedFeel); $('feelSlider').value = feelIndex < 0 ? 1 : feelIndex; updateFeelFromSlider(); renderCategoryChoices(); locate(); renderCalendar(); initSupabaseAuth();
+    </script>
+    <script>
+        function transitionPage(change, direction) { const app = $('app'); app.classList.remove('slide-in-left', 'slide-in-right', 'slide-out-left', 'slide-out-right'); app.classList.add('slide-out-' + direction); setTimeout(() => { change(); app.classList.remove('slide-out-' + direction); app.classList.add('slide-in-' + (direction === 'left' ? 'right' : 'left')); setTimeout(() => app.classList.remove('slide-in-left', 'slide-in-right'), 360) }, 180) }
+        showHome = function () { transitionPage(() => { $('calendarCard').classList.remove('visible'); $('recommendCard').style.display = 'block'; document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active')); $('navHome').classList.add('active') }, 'right') };
+        showCalendar = function () { transitionPage(() => { $('recommendCard').style.display = 'none'; $('calendarCard').classList.add('visible'); document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active')); document.getElementById('navCalendar').classList.add('active'); renderCalendar() }, 'left') };
+        const originalGetWeather = getWeather; getWeather = async function (which, key) { await originalGetWeather(which, key); const title = $('skyTitle').textContent; let kind = title.includes('눈') ? 'snowy' : title.includes('비') ? 'rainy' : title.includes('구름') ? 'cloudy' : title.includes('흐림') ? 'overcast' : 'sunny'; $('sky').dataset.weather = kind };
+        let characterConfig = JSON.parse(localStorage.getItem('codini-character') || 'null') || { hair: 'open', skin: 'default', eyes: 'default' }; let characterInitialized = false; function renderCharacter() { let hair = document.getElementById('charHair'), skin = document.getElementById('charSkin'), eyes = document.getElementById('charEyes'); if (!characterInitialized) { if (hair) hair.value = characterConfig.hair || 'open'; if (skin) skin.value = characterConfig.skin || 'default'; if (eyes) eyes.value = characterConfig.eyes || 'default' } characterConfig.hair = hair ? hair.value : 'open'; characterConfig.skin = skin ? skin.value : 'default'; let base = document.querySelector('.character-base'), skinAssets = { default: '기본스탠딩.png', toneA: '밝은피부.png', toneB: '어두운피부.png' }; if (base) base.src = skinAssets[characterConfig.skin] || skinAssets.default; characterConfig.eyes = eyes ? eyes.value : 'default'; characterInitialized = true; let img = document.querySelector('.character-hair'); if (img) { let hairAssets = { open: ['덮은머리.png?v=2', '덮은머리'], openLong: ['덮은긴머리.png', '덮은긴머리'], tied: ['깐머리.png', '깐머리'], tiedLong: ['깐긴머리.png', '깐긴머리'], openBob: ['덮은단발머리.png', '덮은단발머리'], tiedBob: ['깐 단발머리.png', '깐단발머리'] }, selectedHair = hairAssets[characterConfig.hair] || hairAssets.open; img.src = selectedHair[0]; img.alt = selectedHair[1] } } let onboardingIndex = 0; function startApp() { let welcome = document.getElementById('welcome'); welcome.classList.add('leaving'); setTimeout(() => { welcome.style.display = 'none'; welcome.classList.remove('leaving'); let page = document.getElementById('onboarding'); page.classList.add('visible'); page.setAttribute('aria-hidden', 'false'); onboardingIndex = 0; renderOnboarding() }, 260) } function renderOnboarding() { document.getElementById('onboarding').dataset.step = String(onboardingIndex); let slides = [...document.querySelectorAll('.onboarding-slide')], dots = [...document.querySelectorAll('.onboarding-dots button')]; slides.forEach((slide, i) => { slide.classList.toggle('active', i === onboardingIndex); slide.setAttribute('aria-hidden', String(i !== onboardingIndex)) }); dots.forEach((dot, i) => { dot.classList.toggle('active', i === onboardingIndex); dot.setAttribute('aria-current', String(i === onboardingIndex)) }); document.getElementById('onboardingStep').textContent = '0' + (onboardingIndex + 1) + ' / 03'; document.getElementById('onboardingBack').hidden = onboardingIndex === 0; document.getElementById('onboardingNext').textContent = onboardingIndex === slides.length - 1 ? '캐릭터 만들기' : '다음' } function goOnboarding(index) { onboardingIndex = Math.max(0, Math.min(2, index)); renderOnboarding() } function nextOnboarding() { if (onboardingIndex < 2) { onboardingIndex++; renderOnboarding() } else openAccountChoice() } function previousOnboarding() { if (onboardingIndex > 0) { onboardingIndex--; renderOnboarding() } } function skipOnboarding() { openAccountChoice() } function openAccountChoice() { let page = document.getElementById('onboarding'); page.classList.remove('visible'); page.setAttribute('aria-hidden', 'true'); let flow = document.getElementById('accountFlow'); flow.classList.add('visible'); flow.setAttribute('aria-hidden', 'false'); showAccountView('accountChoice') } function showAccountView(id) { document.querySelectorAll('.account-view').forEach(view => view.classList.toggle('active', view.id === id)) } function continueWithoutAccount() { let flow = document.getElementById('accountFlow'); flow.classList.remove('visible'); flow.setAttribute('aria-hidden', 'true'); openCharacterSetup() } function authComingSoon() { toast('로그인과 회원가입 기능은 준비 중이에요.') } function openCharacterSetup() { let page = document.getElementById('onboarding'); page.classList.remove('visible'); page.setAttribute('aria-hidden', 'true'); let flow = document.getElementById('accountFlow'); flow.classList.remove('visible'); flow.setAttribute('aria-hidden', 'true'); let setup = document.getElementById('characterSetup'); setup.style.display = 'grid'; setup.classList.add('visible'); setup.setAttribute('aria-hidden', 'false'); renderCharacter() }
+        function completeCharacterSetup() { renderCharacter(); localStorage.setItem('codini-character', JSON.stringify(characterConfig)); let setup = document.getElementById('characterSetup'); setup.classList.add('leaving'); setTimeout(() => { setup.classList.remove('visible', 'leaving'); setup.style.display = 'none'; setup.setAttribute('aria-hidden', 'true'); let app = document.getElementById('app'); app.style.display = 'block'; app.classList.add('slide-in-right'); autoDate(); setTimeout(() => app.classList.remove('slide-in-right'), 360) }, 240) }
+// Fade between the account screens and the adjoining setup screens.
+let screenFadeBusy = false;
+async function fadeScreenChange(outgoing, change, incoming) {
+    if (screenFadeBusy) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !outgoing || !outgoing.getClientRects().length) { change(); return; }
+    screenFadeBusy = true;
+    let leaving, entering;
+    try {
+        leaving = outgoing.animate([{opacity:1},{opacity:0}], {duration:180,easing:'ease-in',fill:'forwards'});
+        await leaving.finished;
+        change();
+        const target = incoming();
+        if (target) {
+            entering = target.animate([{opacity:0},{opacity:1}], {duration:320,easing:'ease-out',fill:'both'});
+            await entering.finished;
+        }
+    } finally {
+        if (leaving) leaving.cancel();
+        if (entering) entering.cancel();
+        screenFadeBusy = false;
+    }
+}
+const originalAccountChoice = openAccountChoice;
+openAccountChoice = function() {
+    return fadeScreenChange(document.getElementById('onboarding'), () => originalAccountChoice(), () => document.getElementById('accountFlow'));
+};
+const originalAccountView = showAccountView;
+showAccountView = function(id) {
+    const current = document.querySelector('.account-view.active');
+    if (screenFadeBusy || !current || current.id === id) { originalAccountView(id); return; }
+    return fadeScreenChange(current, () => originalAccountView(id), () => document.getElementById(id));
+};
+const originalContinueWithoutAccount = continueWithoutAccount;
+continueWithoutAccount = function() {
+    return fadeScreenChange(document.getElementById('accountFlow'), () => originalContinueWithoutAccount(), () => document.getElementById('characterSetup'));
+};
+</script>
+</body>
+
+</html>
