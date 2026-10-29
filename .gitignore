@@ -1,0 +1,5 @@
+.tools/
+.backups/
+publish-ready/
+website-publish-ready.zip
+__pycache__/

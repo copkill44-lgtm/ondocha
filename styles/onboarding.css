@@ -1,0 +1,1024 @@
+.onboarding {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 25;
+            place-items: center;
+            padding: 20px;
+            background: linear-gradient(155deg, #f5f8fd, #eaf2fc);
+            font-family: "Noto Sans KR", sans-serif
+        }
+
+        .onboarding.visible {
+            display: grid
+        }
+
+        .onboarding-card {
+            width: min(430px, 100%);
+            min-height: min(720px, calc(100dvh - 40px));
+            display: flex;
+            flex-direction: column;
+            padding: 24px 26px 22px;
+            border: 1px solid #e7edf6;
+            border-radius: 28px;
+            background: #fff;
+            box-shadow: 0 18px 55px #536b8a18
+        }
+
+        .onboarding-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #9ba8ba;
+            font-size: 12px;
+            font-weight: 800
+        }
+
+        .onboarding-top button {
+            border: 0;
+            background: transparent;
+            color: #9ba8ba;
+            font-size: 12px
+        }
+
+        .onboarding-slides {
+            flex: 1;
+            display: grid;
+            place-items: center
+        }
+
+        .onboarding-slide {
+            display: none;
+            width: 100%;
+            text-align: center;
+            animation: onboardIn .28s ease-out
+        }
+
+        .onboarding-slide.active {
+            display: block
+        }
+
+        .onboarding-art {
+            position: relative;
+            width: min(270px, 74vw);
+            height: 280px;
+            margin: 0 auto 20px;
+            display: grid;
+            place-items: center
+        }
+
+        .onboarding-art img {
+            width: 145px;
+            max-height: 180px;
+            object-fit: contain;
+            filter: drop-shadow(0 9px 12px #61799c20)
+        }
+
+        .onboarding-art>span {
+            position: absolute;
+            display: grid;
+            place-items: center;
+            width: 58px;
+            height: 58px;
+            border-radius: 20px;
+            background: #eef5ff;
+            font-size: 31px;
+            box-shadow: 0 6px 16px #63799b14
+        }
+
+        .onboarding-art>span:nth-of-type(1) {
+            left: 4px;
+            top: 42px
+        }
+
+        .onboarding-art>span:nth-of-type(2) {
+            right: 6px;
+            top: 68px
+        }
+
+        .onboarding-art>span:nth-of-type(3) {
+            left: 22px;
+            bottom: 34px
+        }
+
+        .temp-art>span:nth-of-type(3) {
+            right: 20px;
+            left: auto;
+            bottom: 26px
+        }
+
+        .outfit-art>span:nth-of-type(1) {
+            left: 2px;
+            top: 32px
+        }
+
+        .outfit-art>span:nth-of-type(2) {
+            right: 2px;
+            top: 28px
+        }
+
+        .outfit-art>span:nth-of-type(3) {
+            left: 2px;
+            bottom: 24px
+        }
+
+        .outfit-art>span:nth-of-type(4) {
+            right: 2px;
+            bottom: 24px
+        }
+
+        .occasion-art>span {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            font-size: 25px;
+            background: #eef5ff
+        }
+
+        .occasion-art>span small {
+            font-size: 10px;
+            color: #6d7d91
+        }
+
+        .onboarding-slide h2 {
+            margin: 0 0 10px;
+            color: #303542;
+            font-size: 23px;
+            font-weight: 900;
+            letter-spacing: -.5px
+        }
+
+        .onboarding-slide p {
+            margin: 0;
+            color: #858fa0;
+            font-size: 13px;
+            line-height: 1.9
+        }
+
+        .onboarding-dots {
+            display: flex;
+            justify-content: center;
+            gap: 7px;
+            margin: 14px 0 20px
+        }
+
+        .onboarding-dots i {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #d7deea
+        }
+
+        .onboarding-dots i.active {
+            width: 18px;
+            border-radius: 8px;
+            background: #7699ca
+        }
+
+        .onboarding-actions {
+            display: flex;
+            gap: 10px
+        }
+
+        .onboarding-actions button {
+            min-height: 48px;
+            border-radius: 13px
+        }
+
+        .onboarding-actions #onboardingBack {
+            width: 92px;
+            border: 1px solid #e5eaf1;
+            background: #fff;
+            color: #738096;
+            font-weight: 800
+        }
+
+        .onboarding-actions #onboardingBack[hidden] {
+            display: none
+        }
+
+        .onboarding-actions #onboardingNext {
+            flex: 1
+        }
+
+        @keyframes onboardIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        @media(max-width:520px) {
+            .onboarding {
+                padding: 12px
+            }
+
+            .onboarding-card {
+                min-height: calc(100dvh - 24px);
+                padding: 20px 20px 18px;
+                border-radius: 23px
+            }
+
+            .onboarding-art {
+                height: 260px
+            }
+
+            .onboarding-slide h2 {
+                font-size: 21px
+            }
+        }
+
+        .account-flow {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 27;
+            place-items: center;
+            padding: 20px;
+            background: linear-gradient(155deg, #f5f8fd, #eaf2fc);
+            font-family: "Noto Sans KR", sans-serif
+        }
+
+        .account-flow.visible {
+            display: grid
+        }
+
+        .account-card {
+            width: min(430px, 100%);
+            min-height: min(720px, calc(100dvh - 40px));
+            padding: 24px 28px;
+            background: #fff;
+            border: 1px solid #e7edf6;
+            border-radius: 28px;
+            box-shadow: 0 18px 55px #536b8a18
+        }
+
+        .account-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #5983bd;
+            font: 24px Jua
+        }
+
+        .account-brand img {
+            width: 37px;
+            height: 37px;
+            object-fit: contain
+        }
+
+        .account-view {
+            display: none;
+            min-height: 590px;
+            flex-direction: column;
+            justify-content: center
+        }
+
+        .account-view.active {
+            display: flex
+        }
+
+        .account-hero {
+            text-align: center;
+            margin: auto 0 30px
+        }
+
+        .account-cloud {
+            font-size: 64px
+        }
+
+        .account-hero h2 {
+            margin: 12px 0 8px;
+            font-size: 24px;
+            color: #373344
+        }
+
+        .account-hero p,
+        .account-caption {
+            color: #8b94a4;
+            font-size: 13px;
+            line-height: 1.8
+        }
+
+        .account-main-button,
+        .account-secondary {
+            width: 100%;
+            min-height: 48px;
+            margin: 5px 0
+        }
+
+        .account-secondary {
+            border: 1px solid #e4e9f0;
+            border-radius: 13px;
+            background: #fff;
+            color: #526174;
+            font-weight: 800
+        }
+
+        .account-later {
+            margin-top: 13px;
+            border: 0;
+            background: none;
+            color: #929baa;
+            font-size: 12px
+        }
+
+        .account-back {
+            align-self: flex-start;
+            margin: 2px 0 20px;
+            border: 0;
+            background: none;
+            color: #7e8ba0;
+            font-weight: 800
+        }
+
+        .account-view h2 {
+            margin: 0;
+            color: #303744;
+            font-size: 25px;
+            line-height: 1.45
+        }
+
+        .account-caption {
+            margin: 6px 0 22px
+        }
+
+        .account-view label {
+            display: grid;
+            gap: 7px;
+            margin: 0 0 14px;
+            color: #596578;
+            font-size: 12px;
+            font-weight: 800
+        }
+
+        .account-view input {
+            width: 100%;
+            height: 46px;
+            padding: 0 13px;
+            border: 1px solid #e1e7ef;
+            border-radius: 11px;
+            outline: none;
+            font-size: 13px
+        }
+
+        .account-view input:focus {
+            border-color: #88a9d3;
+            box-shadow: 0 0 0 3px #88a9d322
+        }
+
+        .account-view .account-main-button {
+            margin-top: 9px
+        }
+
+        .account-switch {
+            text-align: center;
+            color: #8c95a2;
+            font-size: 12px
+        }
+
+        .account-switch button {
+            border: 0;
+            background: none;
+            color: #6488ba;
+            font-weight: 900
+        }
+
+        .account-view#signupView {
+            justify-content: flex-start;
+            padding-top: 14px
+        }
+
+        .account-view#signupView h2 {
+            font-size: 23px
+        }
+
+        .account-view#signupView .account-back {
+            margin-bottom: 12px
+        }
+
+        .account-view#signupView .account-caption {
+            margin-bottom: 16px
+        }
+
+        .account-view#signupView label {
+            margin-bottom: 10px
+        }
+
+        .account-view#signupView input {
+            height: 43px
+        }
+
+        @media(max-width:520px) {
+            .account-flow {
+                padding: 12px
+            }
+
+            .account-card {
+                min-height: calc(100dvh - 24px);
+                padding: 20px;
+                border-radius: 23px
+            }
+
+            .account-view {
+                min-height: calc(100dvh - 130px)
+            }
+        }
+
+        #accountFlow {
+            padding: 0;
+            background: #fff
+        }
+
+        #accountFlow .account-card {
+            width: 100%;
+            height: 100dvh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            padding: 24px max(24px, calc((100vw - 430px)/2));
+            border: 0;
+            border-radius: 0;
+            box-shadow: none
+        }
+
+        #accountFlow .account-view {
+            width: min(430px, 100%);
+            margin: auto
+        }
+
+        /* Keep clothing settings in one bounded dialog with one scrolling editor. */
+        #categoryModal .category-modal-card {
+            display: flex;
+            flex-direction: column;
+            height: min(80vh, 650px);
+            height: min(80dvh, 650px);
+            max-height: 100%;
+            min-height: 0;
+            overflow: hidden
+        }
+
+        #categoryModalTitle {
+            flex: none
+        }
+
+        #categoryModal .category-modal-layout {
+            flex: 1;
+            min-height: 0;
+            overflow: hidden
+        }
+
+        #categoryModal .category-preview {
+            min-height: 0;
+            min-width: 0
+        }
+
+        #categoryModal .category-editor {
+            min-height: 0;
+            min-width: 0;
+            max-height: none;
+            overflow-x: hidden;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            scrollbar-gutter: stable
+        }
+
+        #categoryModal .category-done {
+            flex: none;
+            align-self: flex-end
+        }
+
+        @media(max-width:640px) {
+            #categoryModal .category-modal-card {
+                height: min(88vh, 720px);
+                height: min(88dvh, 720px);
+                padding: 21px 16px
+            }
+
+            #categoryModal .category-modal-layout {
+                grid-template-rows: auto minmax(0, 1fr)
+            }
+
+            #categoryModal .category-preview {
+                gap: 4px 12px;
+                padding: 6px 10px;
+                grid-template-columns: 60px 1fr
+            }
+
+            #categoryModal .category-preview .preview-icon {
+                max-height: 70px
+            }
+
+            #categoryModal .category-done {
+                margin-top: 12px
+            }
+        }
+
+        /* Align the real start button with the title and mascot in the supplied artwork. */
+        #welcome {
+            min-height: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #d8eaff url("../assets/images/screens/welcome.png") center center/cover no-repeat
+        }
+
+        #welcome .welcome-box {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: max(100vw, 211.717vh);
+            height: max(100vh, 47.233vw);
+            width: max(100vw, 211.717dvh);
+            height: max(100dvh, 47.233vw)
+        }
+
+        #welcome .welcome-accessible {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip-path: inset(50%);
+            white-space: nowrap
+        }
+
+        #welcome .start-button {
+            position: absolute;
+            left: 50%;
+            top: 55.5%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            width: clamp(180px, 11%, 240px);
+            min-height: 52px;
+            padding: 13px 23px;
+            border: 1px solid #ffffff38;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #5a9ee7, #4c91dd);
+            color: #fff;
+            font: 700 clamp(17px, 1.2vw, 22px)/1.35 'Noto Sans KR', sans-serif;
+            white-space: nowrap;
+            box-shadow: 0 8px 20px #4688ca26;
+            transition: background .2s, box-shadow .2s
+        }
+
+        #welcome .start-button span {
+            font-size: 1.4em;
+            line-height: 1
+        }
+
+        #welcome .start-button:hover {
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #478cdb, #367dcc);
+            box-shadow: 0 10px 25px #397abe40
+        }
+
+        #welcome .start-button:focus-visible {
+            outline: 3px solid #fff;
+            outline-offset: 5px
+        }
+
+        #welcome .start-button:active {
+            transform: translate(-50%, -50%) scale(.97)
+        }
+
+        /* Artwork onboarding and the following welcome screen. */
+        #onboarding {
+            padding: 0;
+            overflow: auto;
+            background: linear-gradient(135deg, #bfdcff, #edf6ff);
+            color: #468bd9
+        }
+
+        #onboarding .onboarding-card {
+            position: relative;
+            width: 100%;
+            height: 100dvh;
+            min-height: 520px;
+            overflow: hidden;
+            padding: 0;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            box-shadow: none
+        }
+
+        #onboarding .onboarding-top {
+            position: absolute;
+            inset: 24px 4% auto;
+            z-index: 3;
+            font-size: clamp(16px, 2vw, 29px);
+            color: #4486cc
+        }
+
+        #onboarding .onboarding-top button {
+            min-height: 44px;
+            padding: 8px 14px;
+            border-radius: 30px;
+            background: #e4f1ffe8;
+            color: #4486cc;
+            font-size: clamp(14px, 1.6vw, 24px);
+            font-weight: 800
+        }
+
+        #onboarding .onboarding-slides {
+            position: absolute;
+            inset: 0;
+            display: block
+        }
+
+        #onboarding .onboarding-slide {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            animation: artReveal .4s ease-out both
+        }
+
+        .onboard-full-art {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center
+        }
+
+        #onboarding .onboarding-dots {
+            position: absolute;
+            bottom: 26px;
+            left: 50%;
+            transform: translateX(-50%);
+            margin: 0;
+            z-index: 4;
+            gap: 12px
+        }
+
+        #onboarding .onboarding-dots button {
+            width: 12px;
+            height: 12px;
+            padding: 0;
+            border: 0;
+            border-radius: 50%;
+            background: #afcdef;
+            transition: transform .3s, background .3s
+        }
+
+        #onboarding .onboarding-dots button.active {
+            background: #4289df;
+            transform: scale(1.25)
+        }
+
+        #onboarding .onboarding-actions {
+            position: absolute;
+            bottom: 18px;
+            right: 4%;
+            left: 4%;
+            justify-content: space-between;
+            pointer-events: none;
+            z-index: 3
+        }
+
+        #onboarding .onboarding-actions button {
+            pointer-events: auto;
+            flex: none;
+            width: auto;
+            min-width: 100px;
+            padding: 10px 24px;
+            border-radius: 99px;
+            box-shadow: 0 8px 25px #4385ca25
+        }
+
+        #onboarding #onboardingNext {
+            margin-left: auto;
+            background: #4c91dd;
+            color: white
+        }
+
+        #onboarding #onboardingBack {
+            background: #f1f8ff;
+            color: #5487bd
+        }
+
+        .scene-three {
+            height: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            padding: 90px 5% 100px;
+            background: radial-gradient(ellipse at 70% 35%, #eef7ff99, transparent 65%), linear-gradient(125deg, #bbd9ff, #e3f1ff)
+        }
+
+        .scene-three:before,
+        .scene-three:after {
+            content: '';
+            position: absolute;
+            width: 30vw;
+            height: 15vw;
+            bottom: -7vw;
+            left: -6vw;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 8vw -4vw 30px #fff, 16vw 2vw 25px #fff;
+            filter: blur(5px);
+            opacity: .85;
+            pointer-events: none
+        }
+
+        .scene-three:after {
+            left: auto;
+            right: 0;
+            bottom: auto;
+            top: 14%;
+            width: 11vw;
+            height: 7vw;
+            box-shadow: 4vw 1vw 20px #fff;
+            animation: cloudDrift 8s ease-in-out infinite alternate
+        }
+
+        .scene-mascot {
+            position: relative;
+            max-width: 620px;
+            width: 100%;
+            aspect-ratio: 1;
+            display: grid;
+            place-items: center
+        }
+
+        .scene-mascot img {
+            width: 78%;
+            mix-blend-mode: multiply;
+            animation: happyFloat 3s ease-in-out infinite;
+            filter: drop-shadow(0 18px 15px #699bd32a)
+        }
+
+        .scene-icon {
+            position: absolute;
+            display: grid;
+            place-items: center;
+            width: 21%;
+            aspect-ratio: 1;
+            border: 3px solid #ffffff99;
+            border-radius: 25%;
+            background: linear-gradient(135deg, #f6f8ff, #dfeaff);
+            font-size: clamp(25px, 4vw, 62px);
+            box-shadow: 0 14px 20px #739dcc25;
+            animation: iconFloat 4s ease-in-out infinite
+        }
+
+        .scene-icon:nth-of-type(1) {
+            top: 0;
+            left: 5%;
+            rotate: -20deg
+        }
+
+        .scene-icon:nth-of-type(2) {
+            top: 0;
+            right: 2%;
+            rotate: 20deg;
+            animation-delay: -1s
+        }
+
+        .scene-icon:nth-of-type(3) {
+            bottom: 3%;
+            left: 3%;
+            rotate: -20deg;
+            animation-delay: -2s
+        }
+
+        .scene-icon:nth-of-type(4) {
+            bottom: 2%;
+            right: 0;
+            rotate: 20deg;
+            animation-delay: -3s
+        }
+
+        #onboarding .scene-copy {
+            position: relative;
+            z-index: 1;
+            text-align: center
+        }
+
+        #onboarding .scene-copy h2 {
+            font-family: Jua, sans-serif;
+            font-size: clamp(28px, 4.4vw, 72px);
+            color: #4388d8;
+            line-height: 1.3;
+            margin-bottom: 24px
+        }
+
+        #onboarding .scene-copy p {
+            font-size: clamp(16px, 2vw, 31px);
+            line-height: 1.8;
+            color: #4c90db
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #onboarding button:focus-visible,
+
+
+        @keyframes artReveal {
+            from {
+                opacity: 0
+            }
+
+            to {
+                opacity: 1
+            }
+        }
+
+        @keyframes happyFloat {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(-2deg)
+            }
+
+            50% {
+                transform: translateY(-12px) rotate(2deg)
+            }
+        }
+
+        @keyframes iconFloat {
+            50% {
+                transform: translateY(-10px)
+            }
+        }
+
+        @keyframes cloudDrift {
+            to {
+                transform: translateX(-25px)
+            }
+        }
+
+        @media(max-width:650px) {
+            #onboarding .onboarding-card {
+                min-height: 600px
+            }
+
+            #onboarding .onboarding-top {
+                top: 14px
+            }
+
+            #onboarding .onboarding-slide .onboard-full-art {
+                object-fit: cover;
+                object-position: 22% center;
+                opacity: .24
+            }
+
+            #onboarding .mobile-copy {
+                position: absolute;
+                inset: 100px 24px 100px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center
+            }
+
+            #onboarding .mobile-copy img {
+                width: min(65vw, 270px);
+                height: 260px;
+                object-fit: contain;
+                mix-blend-mode: multiply;
+                animation: happyFloat 4s infinite
+            }
+
+            #onboarding .mobile-copy h2 {
+                font: 29px Jua;
+                color: #4286ce
+            }
+
+            #onboarding .mobile-copy p {
+                font-size: 15px;
+                color: #5489bf
+            }
+
+            .scene-three {
+                grid-template-columns: 1fr;
+                padding: 85px 24px 100px;
+                align-content: center;
+                gap: 20px
+            }
+
+            .scene-mascot {
+                width: min(70vw, 300px);
+                margin: auto
+            }
+
+            .scene-three:after {
+                display: none
+            }
+
+            #onboarding .scene-copy h2 {
+                font-size: 29px;
+                margin-bottom: 14px
+            }
+
+            #onboarding .scene-copy p {
+                font-size: 15px
+            }
+
+            #onboarding .onboarding-actions button {
+                min-width: 80px;
+                padding: 10px 18px
+            }
+
+
+
+
+
+
+
+
+        }
+
+        @media(min-width:651px) {
+            .mobile-copy {
+                display: none
+            }
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+
+            #onboarding *,
+
+        }
+
+        /* Hide progress labels, including labels printed in the supplied artwork. */
+        #onboardingStep {
+            display: none
+        }
+
+        #onboarding .onboarding-top {
+            justify-content: flex-end
+        }
+
+        #onboarding .onboard-full-art {
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 11%, #000 17%, #000 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, transparent 11%, #000 17%, #000 100%)
+        }
+
+/* Keep both slide layers mounted so the outgoing artwork can fade out. */
+#onboarding .onboarding-slide{display:block;opacity:0;visibility:hidden;pointer-events:none;animation:none;transition:opacity .5s ease,visibility 0s linear .5s;z-index:0}
+#onboarding .onboarding-slide.active{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .5s ease,visibility 0s;z-index:1}
+@media(prefers-reduced-motion:reduce){#onboarding .onboarding-slide{transition:none}}
+
+/* Match clickable controls to the supplied login artwork at every screen size. */
+#accountFlow:has(#accountChoice.active) .account-brand{visibility:hidden}
+#accountFlow #accountChoice{position:absolute;inset:0;width:100%;height:100dvh;min-height:0;margin:0;padding:0;overflow:hidden;background:#d3e7ff}
+#accountFlow #accountChoice.active{display:block}
+.login-artboard{position:absolute;left:50%;top:50%;width:max(100vw,177.6833dvh);height:max(100dvh,56.2799vw);transform:translate(-50%,-50%)}
+.login-choice-art{display:block;width:100%;height:100%;object-fit:fill}
+.login-art-hit{position:absolute;left:36.1%;width:27.8%;height:6.7%;padding:0;border:0;border-radius:999px;background:transparent;cursor:pointer;transition:background .2s,box-shadow .2s}
+.login-hit{top:61.7%}.signup-hit{top:70.2%}
+.login-art-hit:hover{background:#ffffff20;box-shadow:0 6px 20px #508bd32b}
+.login-art-hit:focus-visible{outline:3px solid #245fae;outline-offset:4px}
+.login-art-hit:active{background:#376db522}
+.login-guest{position:absolute;bottom:7%;left:50%;transform:translateX(-50%);padding:12px 20px;white-space:nowrap;border:0;border-radius:99px;background:#ffffffb8;color:#547eae;font:500 13px 'Noto Sans KR',sans-serif}
+.login-guest:focus-visible{outline:3px solid #245fae;outline-offset:4px}
+
+/* Visible controls below the logo in the revised artwork. */
+.login-art-hit{left:50%;transform:translateX(-50%);width:28%;min-width:230px;max-width:460px;height:6.8%;min-height:46px;font:800 clamp(16px,2.1dvh,23px)/1.3 'Noto Sans KR',sans-serif;box-shadow:0 8px 22px #4b80bd22}
+.login-hit{top:55%;background:linear-gradient(135deg,#75a8ed,#548fda);color:#fff;border:1px solid #ffffff30}
+.signup-hit{top:64%;background:#ffffffdb;color:#477fc3;border:1px solid #ffffffbf}
+.login-hit:hover{background:#548cda;box-shadow:0 10px 25px #4b80bd40}
+.signup-hit:hover{background:#fff;box-shadow:0 10px 25px #4b80bd30}
+.login-guest{top:73%;bottom:auto;background:transparent;color:#507eb5;font-size:clamp(12px,1.6dvh,16px)}
+.login-guest:hover{background:#ffffff60}

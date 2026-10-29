@@ -1,0 +1,24 @@
+#suggest .outfit-carousel { max-width:540px; margin:24px auto 0; position:relative; padding:0 54px; }
+        #suggest .outfits { display:block; width:100%; }
+        #suggest .look { border-radius:26px; padding:22px; box-shadow:0 12px 34px #6384b116; }
+        #suggest .look[hidden] { display:none !important; }
+        #suggest .look-title { font-size:22px; }
+        #suggest .stage { height:240px; margin:14px 0; }
+        #suggest .look-items { font-size:13px; line-height:1.8; }
+        #suggest .pick { margin-top:12px; padding:12px; font-size:13px; }
+        .outfit-arrow { position:absolute; top:45%; width:42px; height:42px; border:1px solid #dce7f5; border-radius:50%; background:white; color:#6384b1; font-size:28px; box-shadow:0 5px 16px #6384b11a; transition:transform .2s; }
+        .outfit-arrow:hover { transform:scale(1.08); }
+        .outfit-arrow:disabled { opacity:.3; cursor:default; transform:none; }
+        .outfit-arrow.prev { left:0; }
+        .outfit-arrow.next { right:0; }
+        .outfit-pagination { display:flex; justify-content:center; align-items:center; gap:10px; margin-top:18px; }
+        .outfit-dot { width:9px; height:9px; border:0; border-radius:99px; padding:0; background:#d5e0ef; transition:width .3s,background .3s; }
+        .outfit-dot[aria-current="true"] { width:25px; background:#7599c9; }
+        .outfit-count { text-align:center; margin:10px 0 0; color:#8795a9; font-size:12px; }
+        #suggest > .date-row { justify-content:center; flex-wrap:wrap; }
+        @media(max-width:480px) {
+            #suggest .outfit-carousel { padding:0 34px; }
+            #suggest .look { padding:16px 12px; }
+            .outfit-arrow { width:29px; height:36px; font-size:24px; }
+        }
+        @media(prefers-reduced-motion:reduce) { .outfit-arrow,.outfit-dot { transition:none; } }

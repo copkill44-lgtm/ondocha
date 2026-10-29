@@ -1,0 +1,70 @@
+.tour-shade { position:fixed; background:rgba(8,15,27,.76); pointer-events:auto; }
+        #featureTour { position:fixed; inset:0; z-index:100; pointer-events:none; }
+        #featureTour[hidden] { display:none; }
+        .tour-outline { position:fixed; border:2px solid #a8ceff; border-radius:14px; box-shadow:0 0 20px #9cc6ff66; pointer-events:none; }
+        .tour-card { position:fixed; width:min(340px,calc(100vw - 24px)); padding:20px; border-radius:20px; background:white; box-shadow:0 12px 40px #0003; pointer-events:auto; color:#4b5667; }
+        .tour-card small { color:#7599c9; font-weight:800; }
+        .tour-card h2 { margin:8px 0; font:24px Jua,sans-serif; color:#496a96; }
+        .tour-card p { font-size:13px; line-height:1.7; margin:0 0 16px; }
+        .tour-controls { display:flex; gap:8px; align-items:center; }
+        .tour-controls button { border:0; border-radius:10px; padding:9px 12px; background:#edf4ff; color:#496a96; font-weight:700; }
+        .tour-controls button:last-child { margin-left:auto; background:#7599c9; color:white; }
+        .tour-replay { border:1px solid #dce7f7; border-radius:12px; padding:8px 12px; background:white; color:#6384b1; font-size:12px; }
+
+        /* A soft moving spotlight and a little companion for the guided tour. */
+        .tour-shade {
+            background: rgba(13, 23, 43, .69);
+            transition: left .48s cubic-bezier(.22,1,.36,1), top .48s cubic-bezier(.22,1,.36,1), width .48s cubic-bezier(.22,1,.36,1), height .48s cubic-bezier(.22,1,.36,1);
+        }
+        .tour-outline {
+            border: 2px solid #c5e0ff;
+            border-radius: 18px;
+            transition: left .48s cubic-bezier(.22,1,.36,1), top .48s cubic-bezier(.22,1,.36,1), width .48s cubic-bezier(.22,1,.36,1), height .48s cubic-bezier(.22,1,.36,1);
+            animation: tourGlow 2.6s ease-in-out infinite;
+        }
+        .tour-card {
+            padding: 20px;
+            border: 1px solid #dceafb;
+            border-radius: 24px;
+            background: linear-gradient(145deg, #fff 45%, #edf5ff);
+            box-shadow: 0 16px 48px #101c3b33, inset 0 1px 0 #fff;
+            transition: left .48s cubic-bezier(.22,1,.36,1), top .48s cubic-bezier(.22,1,.36,1);
+        }
+        .tour-companion { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+        .tour-companion img { width:66px; height:66px; object-fit:contain; animation:tourFloat 3s ease-in-out infinite; }
+        .tour-companion span { display:block; font:17px Jua,sans-serif; color:#6384b1; margin-bottom:5px; }
+        .tour-card small { font-size:11px; }
+        .tour-meter { height:4px; border-radius:9px; background:#e1ebf8; overflow:hidden; margin-bottom:15px; }
+        .tour-meter i { display:block; height:100%; width:10%; background:linear-gradient(90deg,#9fc8f5,#819ed4); border-radius:inherit; transition:width .5s ease; }
+        .tour-card h2 { font-size:25px; }
+        .tour-card p { color:#77869b; min-height:66px; }
+        .tour-controls button { transition:transform .18s ease,background .18s ease; }
+        .tour-controls button:hover { transform:translateY(-2px); background:#dfebfc; }
+        .tour-controls button:last-child { box-shadow:0 4px 12px #7599c933; }
+        .tour-controls button:last-child:hover { background:#638bc1; }
+        .tour-controls button:active { transform:scale(.96); }
+        @keyframes tourFloat { 0%,100% { transform:translateY(2px) rotate(-3deg); } 50% { transform:translateY(-4px) rotate(3deg); } }
+        @keyframes tourGlow { 0%,100% { box-shadow:0 0 0 3px #a7cfff18,0 0 20px #9cc6ff44; } 50% { box-shadow:0 0 0 6px #a7cfff30,0 0 28px #9cc6ff77; } }
+        @media(prefers-reduced-motion:reduce) {
+            .tour-shade,.tour-outline,.tour-card,.tour-meter i,.tour-controls button { transition:none; }
+            .tour-outline,.tour-companion img { animation:none; }
+        }
+
+        /* The rounded frame casts the dimming layer, leaving a rounded opening. */
+        #featureTour .tour-shade { background: transparent; }
+        #featureTour .tour-outline {
+            border-radius: 26px;
+            box-shadow: 0 0 0 200vmax rgba(13, 23, 43, .69);
+            animation: none;
+        }
+        #featureTour .tour-outline::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: inherit;
+            pointer-events: none;
+            animation: tourGlow 2.6s ease-in-out infinite;
+        }
+        @media(prefers-reduced-motion:reduce) {
+            #featureTour .tour-outline::after { animation: none; }
+        }

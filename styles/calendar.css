@@ -1,0 +1,19 @@
+.saved-feedback {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            flex-wrap:wrap;
+            gap:8px;
+            margin-top:14px;
+            padding:12px 14px;
+            border-radius:14px;
+            background:#eef4fd;
+            color:#7185a3;
+            font-size:12px;
+        }
+        .saved-feedback strong { font-size:13px; color:#5978a4; }
+        .saved-feedback.happy { background:#fff0f5; }
+        .saved-feedback.happy strong { color:#c86f94; }
+        .saved-feedback.sad { background:#fff4e8; }
+        .saved-feedback.sad strong { color:#b68a56; }
+        .saved-feedback.empty { background:#f1f4f8; color:#939eaf; }
