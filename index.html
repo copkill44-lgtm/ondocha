@@ -2,7 +2,6 @@
 <html lang="ko">
 
 <head>
-    <base href="./website-deploy/">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>오늘의 코디 온도차</title>
@@ -3645,6 +3644,257 @@
 .signup-hit:hover{background:#fff;box-shadow:0 10px 25px #4b80bd30}
 .login-guest{top:73%;bottom:auto;background:transparent;color:#507eb5;font-size:clamp(12px,1.6dvh,16px)}
 .login-guest:hover{background:#ffffff60}
+
+        /* Keep character setup within the viewport at the browser's normal zoom. */
+        .character-setup {
+            padding: 24px;
+        }
+        .character-wizard {
+            width: min(810px, 100%);
+            height: min(820px, calc(100dvh - 48px));
+            max-height: none;
+            margin: 0;
+            padding: 30px 27px 26px;
+            display: grid;
+            grid-template-rows: auto minmax(0, 1fr) auto;
+            gap: 18px;
+            overflow: visible;
+            border-radius: 26px;
+        }
+        .wizard-head { margin: 0; }
+        .wizard-head h1 { font-size: 30px; }
+        .wizard-grid {
+            min-height: 0;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 22px;
+            align-items: center;
+        }
+        .character-preview-card {
+            min-height: 0;
+            height: 100%;
+            padding: 0;
+        }
+        .character-preview {
+            flex: 0 1 auto;
+            width: auto;
+            max-width: 100%;
+            height: min(580px, calc(100dvh - 240px));
+            min-height: 0;
+            aspect-ratio: 1 / 2;
+            border-radius: 0;
+        }
+        .character-preview-card p {
+            flex: 0 0 auto;
+            margin-top: 10px;
+            font-size: 11px;
+        }
+        .character-options { min-width: 0; }
+        .character-customization { gap: 12px; }
+        .character-customization label { gap: 5px; }
+        .character-customization select { padding: 10px 12px; }
+        .underwear-note { margin-top: 16px; padding: 6px 10px; }
+        .underwear-copy { font-size: 11px; }
+        .wizard-actions { margin: 0; gap: 12px; }
+        @media (max-width: 640px) {
+            .character-setup { padding: 12px; }
+            .character-wizard {
+                width: min(480px, 100%);
+                height: calc(100dvh - 24px);
+                padding: 18px 16px;
+                gap: 12px;
+            }
+            .wizard-head h1 { font-size: 26px; margin: 4px 0; }
+            .wizard-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: minmax(0, 1fr) auto;
+                gap: 12px;
+                height: 100%;
+            }
+            .character-preview { height: 100%; max-height: 330px; }
+            .character-preview-card p { font-size: 10px; margin-top: 4px; }
+            .character-customization { gap: 7px; }
+            .character-customization label { font-size: 12px; gap: 3px; }
+            .character-customization select { padding: 7px 10px; }
+            .underwear-note { margin-top: 8px; font-size: 11px; padding: 4px 8px; }
+            .underwear-copy { margin: 5px 0 0; font-size: 10px; }
+            .wizard-actions .primary { font-size: 13px; }
+        }
+        @media (max-height: 540px) and (min-width: 641px) {
+            .character-wizard { padding: 14px 22px; gap: 8px; }
+            .wizard-head h1 { font-size: 24px; margin: 3px 0; }
+            .character-preview { height: calc(100dvh - 170px); }
+            .character-customization { gap: 6px; }
+            .character-customization select { padding: 6px 10px; }
+            .underwear-note { margin-top: 8px; }
+        }
+
+        .character-praise {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 31;
+            padding: 24px;
+            place-items: center;
+            overflow: auto;
+            background: radial-gradient(ellipse at 50% 20%, #fff, #eff5fd 75%);
+        }
+        .character-praise.visible { display: grid; }
+        .praise-card {
+            width: min(810px, 100%);
+            min-height: min(720px, calc(100dvh - 48px));
+            padding: clamp(20px, 4vh, 40px) 24px;
+            border: 1px solid #e7edf6;
+            border-radius: 26px;
+            background: #ffffffed;
+            box-shadow: 0 18px 60px #687e9b1a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 20px;
+            animation: praiseAppear .4s ease-out both;
+        }
+        .praise-card img {
+            display: block;
+            width: min(320px, 65vw, 42dvh);
+            height: auto;
+        }
+        .praise-card .wizard-step {
+            font: clamp(26px, 4vw, 36px)/1.4 Jua, sans-serif;
+            color: #496a96;
+            letter-spacing: 0;
+        }
+        .praise-card h1 {
+            margin: 0;
+            font: clamp(24px, 4vw, 34px)/1.4 Jua, sans-serif;
+            color: #496a96;
+        }
+        .praise-card p { margin: 0; color: #8795a9; font-size: 14px; }
+        .praise-card .primary { margin-top: 8px; padding: 13px 26px; }
+        @keyframes praiseAppear {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .praise-card { animation: none; }
+        }
+
+        .tour-shade { position:fixed; background:rgba(8,15,27,.76); pointer-events:auto; }
+        #featureTour { position:fixed; inset:0; z-index:100; pointer-events:none; }
+        #featureTour[hidden] { display:none; }
+        .tour-outline { position:fixed; border:2px solid #a8ceff; border-radius:14px; box-shadow:0 0 20px #9cc6ff66; pointer-events:none; }
+        .tour-card { position:fixed; width:min(340px,calc(100vw - 24px)); padding:20px; border-radius:20px; background:white; box-shadow:0 12px 40px #0003; pointer-events:auto; color:#4b5667; }
+        .tour-card small { color:#7599c9; font-weight:800; }
+        .tour-card h2 { margin:8px 0; font:24px Jua,sans-serif; color:#496a96; }
+        .tour-card p { font-size:13px; line-height:1.7; margin:0 0 16px; }
+        .tour-controls { display:flex; gap:8px; align-items:center; }
+        .tour-controls button { border:0; border-radius:10px; padding:9px 12px; background:#edf4ff; color:#496a96; font-weight:700; }
+        .tour-controls button:last-child { margin-left:auto; background:#7599c9; color:white; }
+        .tour-replay { border:1px solid #dce7f7; border-radius:12px; padding:8px 12px; background:white; color:#6384b1; font-size:12px; }
+
+        /* A soft moving spotlight and a little companion for the guided tour. */
+        .tour-shade {
+            background: rgba(13, 23, 43, .69);
+            transition: left .48s cubic-bezier(.22,1,.36,1), top .48s cubic-bezier(.22,1,.36,1), width .48s cubic-bezier(.22,1,.36,1), height .48s cubic-bezier(.22,1,.36,1);
+        }
+        .tour-outline {
+            border: 2px solid #c5e0ff;
+            border-radius: 18px;
+            transition: left .48s cubic-bezier(.22,1,.36,1), top .48s cubic-bezier(.22,1,.36,1), width .48s cubic-bezier(.22,1,.36,1), height .48s cubic-bezier(.22,1,.36,1);
+            animation: tourGlow 2.6s ease-in-out infinite;
+        }
+        .tour-card {
+            padding: 20px;
+            border: 1px solid #dceafb;
+            border-radius: 24px;
+            background: linear-gradient(145deg, #fff 45%, #edf5ff);
+            box-shadow: 0 16px 48px #101c3b33, inset 0 1px 0 #fff;
+            transition: left .48s cubic-bezier(.22,1,.36,1), top .48s cubic-bezier(.22,1,.36,1);
+        }
+        .tour-companion { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+        .tour-companion img { width:66px; height:66px; object-fit:contain; animation:tourFloat 3s ease-in-out infinite; }
+        .tour-companion span { display:block; font:17px Jua,sans-serif; color:#6384b1; margin-bottom:5px; }
+        .tour-card small { font-size:11px; }
+        .tour-meter { height:4px; border-radius:9px; background:#e1ebf8; overflow:hidden; margin-bottom:15px; }
+        .tour-meter i { display:block; height:100%; width:10%; background:linear-gradient(90deg,#9fc8f5,#819ed4); border-radius:inherit; transition:width .5s ease; }
+        .tour-card h2 { font-size:25px; }
+        .tour-card p { color:#77869b; min-height:66px; }
+        .tour-controls button { transition:transform .18s ease,background .18s ease; }
+        .tour-controls button:hover { transform:translateY(-2px); background:#dfebfc; }
+        .tour-controls button:last-child { box-shadow:0 4px 12px #7599c933; }
+        .tour-controls button:last-child:hover { background:#638bc1; }
+        .tour-controls button:active { transform:scale(.96); }
+        @keyframes tourFloat { 0%,100% { transform:translateY(2px) rotate(-3deg); } 50% { transform:translateY(-4px) rotate(3deg); } }
+        @keyframes tourGlow { 0%,100% { box-shadow:0 0 0 3px #a7cfff18,0 0 20px #9cc6ff44; } 50% { box-shadow:0 0 0 6px #a7cfff30,0 0 28px #9cc6ff77; } }
+        @media(prefers-reduced-motion:reduce) {
+            .tour-shade,.tour-outline,.tour-card,.tour-meter i,.tour-controls button { transition:none; }
+            .tour-outline,.tour-companion img { animation:none; }
+        }
+
+        /* The rounded frame casts the dimming layer, leaving a rounded opening. */
+        #featureTour .tour-shade { background: transparent; }
+        #featureTour .tour-outline {
+            border-radius: 26px;
+            box-shadow: 0 0 0 200vmax rgba(13, 23, 43, .69);
+            animation: none;
+        }
+        #featureTour .tour-outline::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: inherit;
+            pointer-events: none;
+            animation: tourGlow 2.6s ease-in-out infinite;
+        }
+        @media(prefers-reduced-motion:reduce) {
+            #featureTour .tour-outline::after { animation: none; }
+        }
+
+        #suggest .outfit-carousel { max-width:540px; margin:24px auto 0; position:relative; padding:0 54px; }
+        #suggest .outfits { display:block; width:100%; }
+        #suggest .look { border-radius:26px; padding:22px; box-shadow:0 12px 34px #6384b116; }
+        #suggest .look[hidden] { display:none !important; }
+        #suggest .look-title { font-size:22px; }
+        #suggest .stage { height:240px; margin:14px 0; }
+        #suggest .look-items { font-size:13px; line-height:1.8; }
+        #suggest .pick { margin-top:12px; padding:12px; font-size:13px; }
+        .outfit-arrow { position:absolute; top:45%; width:42px; height:42px; border:1px solid #dce7f5; border-radius:50%; background:white; color:#6384b1; font-size:28px; box-shadow:0 5px 16px #6384b11a; transition:transform .2s; }
+        .outfit-arrow:hover { transform:scale(1.08); }
+        .outfit-arrow:disabled { opacity:.3; cursor:default; transform:none; }
+        .outfit-arrow.prev { left:0; }
+        .outfit-arrow.next { right:0; }
+        .outfit-pagination { display:flex; justify-content:center; align-items:center; gap:10px; margin-top:18px; }
+        .outfit-dot { width:9px; height:9px; border:0; border-radius:99px; padding:0; background:#d5e0ef; transition:width .3s,background .3s; }
+        .outfit-dot[aria-current="true"] { width:25px; background:#7599c9; }
+        .outfit-count { text-align:center; margin:10px 0 0; color:#8795a9; font-size:12px; }
+        #suggest > .date-row { justify-content:center; flex-wrap:wrap; }
+        @media(max-width:480px) {
+            #suggest .outfit-carousel { padding:0 34px; }
+            #suggest .look { padding:16px 12px; }
+            .outfit-arrow { width:29px; height:36px; font-size:24px; }
+        }
+        @media(prefers-reduced-motion:reduce) { .outfit-arrow,.outfit-dot { transition:none; } }
+
+        .saved-feedback {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            flex-wrap:wrap;
+            gap:8px;
+            margin-top:14px;
+            padding:12px 14px;
+            border-radius:14px;
+            background:#eef4fd;
+            color:#7185a3;
+            font-size:12px;
+        }
+        .saved-feedback strong { font-size:13px; color:#5978a4; }
+        .saved-feedback.happy { background:#fff0f5; }
+        .saved-feedback.happy strong { color:#c86f94; }
+        .saved-feedback.sad { background:#fff4e8; }
+        .saved-feedback.sad strong { color:#b68a56; }
+        .saved-feedback.empty { background:#f1f4f8; color:#939eaf; }
 </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -3807,10 +4057,19 @@
                     onclick="completeCharacterSetup()">이 캐릭터로 시작하기</button></footer>
         </div>
     </section>
+    <section class="character-praise" id="characterPraise" aria-hidden="true" aria-labelledby="praiseTitle">
+        <div class="praise-card">
+            <span class="wizard-step">나만의 캐릭터 완성 !</span>
+            <img src="온보딩/신남_마스코트.png" alt="두 팔을 들고 기뻐하는 마스코트">
+            <h1 id="praiseTitle" tabindex="-1">정말 멋진 캐릭터예요 !</h1>
+            <p>이제 나에게 어울리는 코디를 만나볼까요?</p>
+            <button type="button" class="primary" onclick="startAfterCharacterPraise()">코디 추천 시작하기</button>
+        </div>
+    </section>
     <main class="shell" id="app" style="display:none">
         <header class="top">
             <div class="brand">☁ 오늘의 코디 온도차</div>
-            <nav class="nav"><button class="active" id="navHome" onclick="showHome()">코디 추천</button><button
+            <button type="button" class="tour-replay" onclick="startFeatureTour()">사용법 안내</button><nav class="nav"><button class="active" id="navHome" onclick="showHome()">코디 추천</button><button
                     id="navCalendar" onclick="showCalendar()">코디 캘린더</button></nav>
             <div class="account-area"><span id="accountLabel" hidden></span><button type="button" class="account-button"
                     id="accountButton" onclick="handleAccountButton()">Google 로그인</button></div><span class="today"
@@ -3894,7 +4153,13 @@
                         돌아가기</button><span>코디니의 추천</span></div>
                 <h2>마음에 드는 코디를 골라봐요</h2>
                 <p id="suggestCopy">작은 아바타에게 코디를 입혀봤어요.</p>
-                <div class="outfits" id="outfits"></div>
+                <div class="outfit-carousel" id="outfitCarousel" role="region" aria-roledescription="캐러셀" aria-label="추천 코디 카드" tabindex="0">
+                    <button type="button" class="outfit-arrow prev" id="outfitPrevious" onclick="moveOutfitCard(-1)" aria-label="이전 코디">‹</button>
+                    <div class="outfits" id="outfits"></div>
+                    <button type="button" class="outfit-arrow next" id="outfitNext" onclick="moveOutfitCard(1)" aria-label="다음 코디">›</button>
+                    <div class="outfit-pagination" id="outfitPagination"></div>
+                    <div class="outfit-count" id="outfitCount" aria-live="polite"></div>
+                </div>
                 <div class="date-row"><label>일정 이름 <input id="eventName" type="text"
                             placeholder="예: 친구와 저녁 약속"></label><button class="primary" onclick="saveLook()">선택한 코디를 캘린더에
                         저장</button></div>
@@ -4000,7 +4265,7 @@
         let city = '서울', weatherTemp = null, looks = [], selected = 0, events = JSON.parse(localStorage.getItem('ootd-events') || '{}'), view = new Date();
         const $ = id => document.getElementById(id);
         const baseCategories = ['긴치마', '짧은치마', '짧은바지', '긴바지', '원피스']; let customCategories = JSON.parse(localStorage.getItem('custom-clothing-types') || '[]'); let customTopCategories = JSON.parse(localStorage.getItem('custom-top-types') || '[]'), customAccessoryCategories = JSON.parse(localStorage.getItem('custom-accessory-types') || '[]'); let categoryOptions = [...baseCategories, ...customCategories];
-        function updateFeelFromSlider() { let values = ['매우 추워요', '쌀쌀해요', '괜찮아요', '따뜻해요', '더워요'], tones = ['#6fa5ed', '#9ec9e9', '#b7c9af', '#f3b679', '#f18b8f'], slider = $('feelSlider'), position = Math.max(0, Math.min(4, Number(slider.value))), index = Math.round(position), value = values[index]; document.querySelectorAll('input[name="feel"]').forEach(input => input.checked = input.value === value); let label = $('feelLabel'); label.textContent = String(index + 1); let tone = tones[index]; slider.style.setProperty('--feel-tone', tone); label.style.setProperty('--feel-tone', tone); slider.parentElement.querySelectorAll('.feel-ticks span').forEach((tick, i) => tick.classList.toggle('active', i === index)); } function renderCategoryChoices(selectValue, selectedGroup) { let keep = selectedGroup === 'category' && selectValue ? selectValue : document.querySelector('input[name="category"]:checked')?.value || '긴치마', topKeep = selectedGroup === 'topCategory' && selectValue ? selectValue : document.querySelector('input[name="topCategory"]:checked')?.value || '상의 추천받기', accessoryKeep = selectedGroup === 'accessoryCategory' && selectValue ? selectValue : document.querySelector('input[name="accessoryCategory"]:checked')?.value || '없음', bottomBox = document.getElementById('categoryList'), topBox = document.getElementById('topCategoryList'), accessoryBox = document.getElementById('accessoryCategoryList'); function makeChoice(name, group, checked) { let item = document.createElement('span'); item.className = 'category-item'; let label = document.createElement('label'); label.className = 'choice'; let radio = document.createElement('input'); radio.type = 'radio'; radio.name = group; radio.value = name; radio.checked = name === checked; let icon = document.createElement('span'); icon.className = 'choice-icon'; icon.innerHTML = clothingIconMarkup(name); let text = document.createElement('span'); text.textContent = name; label.append(radio, icon, text); item.appendChild(label); let customList = group === 'topCategory' ? customTopCategories : group === 'accessoryCategory' ? customAccessoryCategories : customCategories; if (customList.includes(name)) { let remove = document.createElement('button'); remove.type = 'button'; remove.className = 'delete-category'; remove.textContent = '×'; remove.title = name + ' 삭제'; remove.setAttribute('aria-label', name + ' 삭제'); remove.onclick = function (e) { e.preventDefault(); e.stopPropagation(); removeCategory(name, group) }; item.appendChild(remove) } return item } function makeGroup(title, names, group, checked) { let section = document.createElement('div'); section.className = 'category-subgroup'; let heading = document.createElement('strong'); heading.className = 'category-subgroup-title'; heading.textContent = title; section.appendChild(heading); names.forEach(name => section.appendChild(makeChoice(name, group, checked))); return section } let customShort = customTopCategories.filter(x => x.startsWith('반팔 · ')), customLong = customTopCategories.filter(x => x.startsWith('긴팔 · ')), customOuter = customTopCategories.filter(x => x.startsWith('겉옷 · ')); topBox.replaceChildren(makeChoice('상의 추천받기', 'topCategory', topKeep), makeGroup('반팔', ['반팔', '티셔츠', '블라우스', ...customShort], 'topCategory', topKeep), makeGroup('긴팔', ['긴팔', '니트', '맨투맨', '셔츠', ...customLong], 'topCategory', topKeep), makeGroup('겉옷', ['가디건', '민소매', ...customOuter], 'topCategory', topKeep)); let shorts = categoryOptions.filter(name => /짧은바지|반바지|쇼츠/.test(name)), longPants = categoryOptions.filter(name => /긴바지|긴 팬츠|바지/.test(name) && !shorts.includes(name)), skirts = categoryOptions.filter(name => /치마|스커트/.test(name)), dresses = categoryOptions.filter(name => /원피스/.test(name)), custom = categoryOptions.filter(name => !shorts.includes(name) && !longPants.includes(name) && !skirts.includes(name) && !dresses.includes(name)); bottomBox.replaceChildren(...[makeGroup('반바지', shorts, 'category', keep), makeGroup('긴바지', longPants, 'category', keep), makeGroup('치마', skirts, 'category', keep), makeGroup('원피스', dresses, 'category', keep), ...(custom.length ? [makeGroup('기타', custom, 'category', keep)] : [])].filter(group => group.querySelectorAll('.category-item').length)); let accessories = ['없음', '가방', '모자', '스카프', '목걸이', '귀걸이', '시계', ...customAccessoryCategories]; accessoryBox.replaceChildren(...accessories.map(name => makeChoice(name, 'accessoryCategory', accessoryKeep))) } function removeCategory(name, group = 'category') { if (group === 'topCategory') { customTopCategories = customTopCategories.filter(item => item !== name); localStorage.setItem('custom-top-types', JSON.stringify(customTopCategories)) } else if (group === 'accessoryCategory') { customAccessoryCategories = customAccessoryCategories.filter(item => item !== name); localStorage.setItem('custom-accessory-types', JSON.stringify(customAccessoryCategories)) } else { customCategories = customCategories.filter(item => item !== name); categoryOptions = categoryOptions.filter(item => item !== name); localStorage.setItem('custom-clothing-types', JSON.stringify(customCategories)) } let fallback = group === 'topCategory' ? '상의 추천받기' : group === 'accessoryCategory' ? '없음' : '긴치마'; renderCategoryChoices(document.querySelector('input[name="' + group + '"]:checked')?.value === name ? fallback : undefined, group) } function updateCustomClothingSubtypes() { let group = document.getElementById('customClothingGroup').value, options = { topCategory: ['반팔', '긴팔', '겉옷'], category: ['반바지', '긴바지', '치마', '원피스'], accessoryCategory: ['가방', '모자', '스카프', '목걸이', '귀걸이', '시계'] }, select = document.getElementById('customClothingSubtype'); select.replaceChildren(...options[group].map(name => { let option = document.createElement('option'); option.value = name; option.textContent = name; return option })) } function openCustomClothingModal() { let modal = document.getElementById('customClothingModal'); document.getElementById('customClothingGroup').value = 'topCategory'; document.getElementById('customClothingName').value = ''; updateCustomClothingSubtypes(); modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; document.getElementById('customClothingName').focus() } function closeCustomClothingModal() { let modal = document.getElementById('customClothingModal'); modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); document.body.style.overflow = '' } function addCustomClothing() { let group = document.getElementById('customClothingGroup').value, subtype = document.getElementById('customClothingSubtype').value, name = document.getElementById('customClothingName').value.trim(); if (!name) { document.getElementById('customClothingName').focus(); toast('추가할 옷 이름을 적어 주세요'); return } let value = subtype + ' · ' + name, list = group === 'topCategory' ? customTopCategories : group === 'accessoryCategory' ? customAccessoryCategories : customCategories; if (list.includes(value)) { toast('이미 추가된 종류예요'); return } list.push(value); if (group === 'topCategory') localStorage.setItem('custom-top-types', JSON.stringify(customTopCategories)); else if (group === 'accessoryCategory') localStorage.setItem('custom-accessory-types', JSON.stringify(customAccessoryCategories)); else { categoryOptions.push(value); localStorage.setItem('custom-clothing-types', JSON.stringify(customCategories)) } renderCategoryChoices(value, group); closeCustomClothingModal(); toast('옷 종류를 선택 목록에 추가했어요') } function addCategory() { openCustomClothingModal() } function localDate(d) { return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-') }
+        function updateFeelFromSlider() { let values = ['매우 추워요', '쌀쌀해요', '괜찮아요', '따뜻해요', '더워요'], tones = ['#6fa5ed', '#9ec9e9', '#b7c9af', '#f3b679', '#f18b8f'], slider = $('feelSlider'), position = Math.max(0, Math.min(4, Number(slider.value))), index = Math.round(position), value = values[index]; document.querySelectorAll('input[name="feel"]').forEach(input => input.checked = input.value === value); let label = $('feelLabel'); label.textContent = String(index + 1); let tone = tones[index]; slider.style.setProperty('--feel-tone', tone); label.style.setProperty('--feel-tone', tone); slider.parentElement.querySelectorAll('.feel-ticks span').forEach((tick, i) => tick.classList.toggle('active', i === index)); } function renderCategoryChoices(selectValue, selectedGroup) { let keep = selectedGroup === 'category' && selectValue ? selectValue : document.querySelector('input[name="category"]:checked')?.value || '긴치마', topKeep = selectedGroup === 'topCategory' && selectValue ? selectValue : document.querySelector('input[name="topCategory"]:checked')?.value || '상의 추천받기', accessoryKeep = selectedGroup === 'accessoryCategory' && selectValue ? selectValue : document.querySelector('input[name="accessoryCategory"]:checked')?.value || '없음', bottomBox = document.getElementById('categoryList'), topBox = document.getElementById('topCategoryList'), accessoryBox = document.getElementById('accessoryCategoryList'); function makeChoice(name, group, checked) { let item = document.createElement('span'); item.className = 'category-item'; let label = document.createElement('label'); label.className = 'choice'; let radio = document.createElement('input'); radio.type = 'radio'; radio.name = group; radio.value = name; radio.checked = name === checked; let icon = document.createElement('span'); icon.className = 'choice-icon'; icon.innerHTML = clothingIconMarkup(name); let text = document.createElement('span'); text.textContent = name; label.append(radio, icon, text); item.appendChild(label); let customList = group === 'topCategory' ? customTopCategories : group === 'accessoryCategory' ? customAccessoryCategories : customCategories; if (customList.includes(name)) { let remove = document.createElement('button'); remove.type = 'button'; remove.className = 'delete-category'; remove.textContent = '×'; remove.title = name + ' 삭제'; remove.setAttribute('aria-label', name + ' 삭제'); remove.onclick = function (e) { e.preventDefault(); e.stopPropagation(); removeCategory(name, group) }; item.appendChild(remove) } return item } function makeGroup(title, names, group, checked) { let section = document.createElement('div'); section.className = 'category-subgroup'; let heading = document.createElement('strong'); heading.className = 'category-subgroup-title'; heading.textContent = title; section.appendChild(heading); names.forEach(name => section.appendChild(makeChoice(name, group, checked))); return section } let customShort = customTopCategories.filter(x => x.startsWith('반팔 · ')), customLong = customTopCategories.filter(x => x.startsWith('긴팔 · ')), customOuter = customTopCategories.filter(x => x.startsWith('겉옷 · ')); topBox.replaceChildren(makeChoice('상의 추천받기', 'topCategory', topKeep), makeGroup('반팔', ['반팔', '티셔츠', '블라우스', ...customShort], 'topCategory', topKeep), makeGroup('긴팔', ['긴팔', '니트', '맨투맨', '셔츠', ...customLong], 'topCategory', topKeep), makeGroup('겉옷', ['가디건', '민소매', ...customOuter], 'topCategory', topKeep)); let shorts = categoryOptions.filter(name => /짧은바지|반바지|쇼츠/.test(name)), longPants = categoryOptions.filter(name => /긴바지|긴 팬츠|바지/.test(name) && !shorts.includes(name)), skirts = categoryOptions.filter(name => /치마|스커트/.test(name)), dresses = categoryOptions.filter(name => /원피스/.test(name)), custom = categoryOptions.filter(name => !shorts.includes(name) && !longPants.includes(name) && !skirts.includes(name) && !dresses.includes(name)); bottomBox.replaceChildren(makeChoice('하의 추천받기', 'category', keep), ...[makeGroup('반바지', shorts, 'category', keep), makeGroup('긴바지', longPants, 'category', keep), makeGroup('치마', skirts, 'category', keep), makeGroup('원피스', dresses, 'category', keep), ...(custom.length ? [makeGroup('기타', custom, 'category', keep)] : [])].filter(group => group.querySelectorAll('.category-item').length)); let accessories = ['액세서리 추천받기', '없음', '가방', '모자', '스카프', '목걸이', '귀걸이', '시계', ...customAccessoryCategories]; accessoryBox.replaceChildren(...accessories.map(name => makeChoice(name, 'accessoryCategory', accessoryKeep))) } function removeCategory(name, group = 'category') { if (group === 'topCategory') { customTopCategories = customTopCategories.filter(item => item !== name); localStorage.setItem('custom-top-types', JSON.stringify(customTopCategories)) } else if (group === 'accessoryCategory') { customAccessoryCategories = customAccessoryCategories.filter(item => item !== name); localStorage.setItem('custom-accessory-types', JSON.stringify(customAccessoryCategories)) } else { customCategories = customCategories.filter(item => item !== name); categoryOptions = categoryOptions.filter(item => item !== name); localStorage.setItem('custom-clothing-types', JSON.stringify(customCategories)) } let fallback = group === 'topCategory' ? '상의 추천받기' : group === 'accessoryCategory' ? '없음' : '긴치마'; renderCategoryChoices(document.querySelector('input[name="' + group + '"]:checked')?.value === name ? fallback : undefined, group) } function updateCustomClothingSubtypes() { let group = document.getElementById('customClothingGroup').value, options = { topCategory: ['반팔', '긴팔', '겉옷'], category: ['반바지', '긴바지', '치마', '원피스'], accessoryCategory: ['가방', '모자', '스카프', '목걸이', '귀걸이', '시계'] }, select = document.getElementById('customClothingSubtype'); select.replaceChildren(...options[group].map(name => { let option = document.createElement('option'); option.value = name; option.textContent = name; return option })) } function openCustomClothingModal() { let modal = document.getElementById('customClothingModal'); document.getElementById('customClothingGroup').value = 'topCategory'; document.getElementById('customClothingName').value = ''; updateCustomClothingSubtypes(); modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; document.getElementById('customClothingName').focus() } function closeCustomClothingModal() { let modal = document.getElementById('customClothingModal'); modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); document.body.style.overflow = '' } function addCustomClothing() { let group = document.getElementById('customClothingGroup').value, subtype = document.getElementById('customClothingSubtype').value, name = document.getElementById('customClothingName').value.trim(); if (!name) { document.getElementById('customClothingName').focus(); toast('추가할 옷 이름을 적어 주세요'); return } let value = subtype + ' · ' + name, list = group === 'topCategory' ? customTopCategories : group === 'accessoryCategory' ? customAccessoryCategories : customCategories; if (list.includes(value)) { toast('이미 추가된 종류예요'); return } list.push(value); if (group === 'topCategory') localStorage.setItem('custom-top-types', JSON.stringify(customTopCategories)); else if (group === 'accessoryCategory') localStorage.setItem('custom-accessory-types', JSON.stringify(customAccessoryCategories)); else { categoryOptions.push(value); localStorage.setItem('custom-clothing-types', JSON.stringify(customCategories)) } renderCategoryChoices(value, group); closeCustomClothingModal(); toast('옷 종류를 선택 목록에 추가했어요') } function addCategory() { openCustomClothingModal() } function localDate(d) { return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-') }
         let clothingPreferences = JSON.parse(localStorage.getItem("clothing-preferences") || "{}"); function categoryPreferenceText(group) { let pref = clothingPreferences[group] || {}; return "무늬 " + (pref.pattern || "없음") + ", 색상 " + (pref.color || "상관없음") } function clothingIconMarkup(name, color = "#f7f5ef") {
             let ink = "#343448", fill = color, detail = "#c8bfd9", shape; if (/상의 추천받기|반팔|티셔츠|블라우스/.test(name)) shape = '<path d="M36 31L48 25Q60 33 72 25L84 31L101 53L88 63L80 55V91Q60 97 40 91V55L32 63L19 53Z" fill="' + fill + '" stroke="' + ink + '" stroke-width="3.2" stroke-linejoin="round"/><path d="M49 27Q60 43 71 27" fill="none" stroke="' + detail + '" stroke-width="3" stroke-linecap="round"/>';
             else if (/민소매/.test(name)) shape = '<path d="M44 25Q60 35 76 25L82 43L91 50L87 92Q60 98 33 92L29 50L38 43Z" fill="' + fill + '" stroke="' + ink + '" stroke-width="3.2" stroke-linejoin="round"/><path d="M44 27Q45 44 60 46Q75 44 76 27" fill="none" stroke="' + detail + '" stroke-width="3.4"/>';
@@ -4030,13 +4295,23 @@
         function baseTime() { let d = new Date(Date.now() - 20 * 60000), h = d.getHours(), slots = [2, 5, 8, 11, 14, 17, 20, 23], slot = slots.filter(x => x <= h).pop(); if (slot === undefined) { d.setDate(d.getDate() - 1); slot = 23 } return { date: localDate(d).replaceAll('-', ''), time: String(slot).padStart(2, '0') + '00' } }
         async function getWeather(which, key) { city = which; let g = grids[city] || grids.서울, b = baseTime(), q = new URLSearchParams({ pageNo: '1', numOfRows: '1000', dataType: 'JSON', base_date: b.date, base_time: b.time, nx: g[0], ny: g[1], authKey: key }); try { let r = await fetch('https://apihub.kma.go.kr/api/typ02/openApi/VilageFcstInfoService_2.0/getVilageFcst?' + q), j = await r.json(), root = j.response || j, items = root.body.items.item, now = new Date(), stamp = localDate(now).replaceAll('-', '') + String(now.getHours()).padStart(2, '0'), times = [...new Set(items.map(x => x.fcstDate + x.fcstTime))].filter(x => x >= stamp).sort(), t = times[0] || items[0].fcstDate + items[0].fcstTime, hour = items.filter(x => x.fcstDate + x.fcstTime === t), get = c => hour.find(x => x.category === c)?.fcstValue; weatherTemp = Number(get('TMP')); let sky = Number(get('SKY')), pty = Number(get('PTY')), state = pty ? '비/눈 예보' : sky === 1 ? '맑음' : sky === 3 ? '구름 많음' : '흐림'; $('skyTitle').textContent = city + ' ' + state; $('skyDetail').textContent = '기상청 예보 기온 ' + weatherTemp + '°C · ' + t.slice(8, 10) + '시 예보'; $('weatherBadge').textContent = '기상청 · ' + city + ' ' + weatherTemp + '°C' } catch (e) { weatherStatus(city + ' · 기상청 연결 실패, 인증키를 확인해 주세요') } }
         function avatarClothesMarkup(x, i) { let colors = ['#e8a9b2', '#9cb7de', '#93c4a5', '#d4a46d'], color = colors[i % colors.length], bottomColor = ['#7388ac', '#8e789e', '#799984', '#a77f63'][i % 4], lower = (x.bottom?.[0] || '').toLowerCase(), isDress = !!x.onepiece, isSkirt = /치마|스커트/.test(lower), isShort = /짧은|쇼츠|반바지/.test(lower), top = isDress ? '<path d="M51 69Q65 62 79 69L83 104Q65 112 47 104Z" fill="' + color + '" stroke="#fff" stroke-opacity=".65" stroke-width="1.5"/><path d="M51 101L79 101Q85 126 94 151Q65 158 36 151Z" fill="' + color + '" stroke="#fff" stroke-opacity=".65" stroke-width="1.5"/>' : '<path d="M50 70L56 66H74L80 70L84 105Q65 111 46 105Z" fill="' + color + '" stroke="#fff" stroke-opacity=".65" stroke-width="1.5"/><path d="M50 72L44 75L38 94L44 97L51 84M80 72L86 75L92 94L86 97L79 84Z" fill="' + color + '" stroke="#fff" stroke-opacity=".65" stroke-width="1.5"/>', bottom = isDress ? '' : isSkirt ? '<path d="M47 104L83 104L91 148Q65 155 39 148Z" fill="' + bottomColor + '" stroke="#fff" stroke-opacity=".7" stroke-width="1.5"/>' : isShort ? '<path d="M47 104L83 104L82 127L67 126L65 120L62 126L48 127Z" fill="' + bottomColor + '" stroke="#fff" stroke-opacity=".7" stroke-width="1.5"/>' : '<path d="M47 104L83 104L80 151L66 151L65 121L62 151L48 151Z" fill="' + bottomColor + '" stroke="#fff" stroke-opacity=".7" stroke-width="1.5"/>'; return '<svg viewBox="0 0 130 215" aria-label="추천 코디를 입은 캐릭터">' + top + bottom + '</svg>' } function toggleCustomField(id) { let input = $(id + 'Custom'), select = $(id), show = select.value === 'custom'; input.hidden = !show; if (show) input.focus() }
-        function getFieldValue(id) { let select = $(id); return select.value === 'custom' ? $(id + 'Custom').value.trim() : select.value } function fetchAiRecommendations() { let feel = document.querySelector('input[name=feel]:checked')?.value, bottomCategory = document.querySelector('input[name=category]:checked')?.value, topCategory = document.querySelector('input[name=topCategory]:checked')?.value || '상의 추천받기', accessory = document.querySelector('input[name=accessoryCategory]:checked')?.value || '없음'; return fetch('/.netlify/functions/recommend', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ feel, weather: { city, tempC: weatherTemp }, topCategory: topCategory + " (" + categoryPreferenceText("topCategory") + ")", bottomCategory: bottomCategory + " (" + categoryPreferenceText("category") + ")", accessory: accessory + " (" + categoryPreferenceText("accessoryCategory") + ")", place: getFieldValue('place'), occasion: getFieldValue('occasion'), time: getFieldValue('time'), gender: characterConfig.gender || 'female' }) }).then(async response => { let data = await response.json(); if (!response.ok) throw new Error(data.error || 'AI 추천 요청에 실패했어요'); return data.recommendations }) } function generateRecommendations(aiRecommendations) { let feel = document.querySelector('input[name=feel]:checked').value, category = document.querySelector('input[name=category]:checked').value + ' (' + categoryPreferenceText('category') + ')', topChoice = (document.querySelector('input[name=topCategory]:checked')?.value || '상의 추천받기') + ' (' + categoryPreferenceText('topCategory') + ')', accessoryRaw = document.querySelector('input[name=accessoryCategory]:checked')?.value || '없음', accessoryChoice = accessoryRaw === '없음' ? '' : accessoryRaw + ' (' + categoryPreferenceText('accessoryCategory') + ')', place = getFieldValue('place'), occasion = getFieldValue('occasion'), time = getFieldValue('time'); localStorage.setItem('feel-level', feel); let warmth = feel === '매우 추워요' || (weatherTemp !== null && weatherTemp < 8) ? '도톰한' : feel === '더워요' || (weatherTemp !== null && weatherTemp > 25) ? '가벼운' : '편안한', tops = [['니트', '🧶'], ['가디건', '🧥'], ['블라우스', '👚'], ['맨투맨', '👕']], isSkirt = category.includes('치마'), isShort = category.includes('짧은'), isDress = category.includes('원피스'), isCustom = !isSkirt && !isDress && !/바지|팬츠|쇼츠/.test(category), bottom = isSkirt ? [[!isShort ? '플로럴 롱 스커트' : '플리츠 미니스커트', '👗'], [!isShort ? '데님 롱 스커트' : '데님 미니스커트', '👗'], [!isShort ? '차분한 롱 스커트' : '체크 미니스커트', '👗'], [!isShort ? '니트 롱 스커트' : '산뜻한 짧은 스커트', '👗']] : [[isShort ? '데님 쇼츠' : '와이드 팬츠', '👖'], [isShort ? '코튼 쇼츠' : '데님 팬츠', '👖'], [isShort ? '린넨 쇼츠' : '슬랙스', '👖'], [isShort ? '캐주얼 쇼츠' : '코튼 팬츠', '👖']], shoes = [['운동화', '👟'], ['로퍼', '👞'], ['메리제인 슈즈', '👞'], ['앵클 부츠', '👢']]; if (topChoice !== '상의 추천받기') { let icons = { '반팔': '👕', '긴팔': '👕', '민소매': '👚', '니트': '🧶', '가디건': '🧥', '블라우스': '👚', '맨투맨': '👕', '셔츠': '👔', '티셔츠': '👕' }; tops = Array.from({ length: 4 }, () => [topChoice, icons[topChoice] || '👚']) } if (isCustom) bottom = Array.from({ length: 4 }, (_, i) => [warmth + ' ' + category + ' ' + ['스타일', '코디', '룩', '착장'][i], '👗']); looks = Array.from({ length: 4 }, (_, i) => isDress ? { onepiece: [warmth + ' 니트 원피스', '👗'], bottom: ['원피스', ''], shoes: shoes[i], accessory: accessoryChoice === '없음' ? '' : accessoryChoice } : { onepiece: null, top: [warmth + ' ' + tops[i][0], tops[i][1]], bottom: bottom[i], shoes: shoes[i], accessory: accessoryChoice === '없음' ? '' : accessoryChoice }); if (Array.isArray(aiRecommendations) && aiRecommendations.length === 4) { let topIcons = { '반팔': '👕', '긴팔': '👕', '민소매': '👚', '니트': '🧶', '가디건': '🧥', '블라우스': '👚', '맨투맨': '👕', '셔츠': '👔', '티셔츠': '👕', '후드티': '🧥' }, bottomIcons = { '치마': '👗', '스커트': '👗', '원피스': '👗', '바지': '👖', '팬츠': '👖', '쇼츠': '👖' }, shoeIcons = { '부츠': '👢', '로퍼': '👞', '구두': '👞', '메리제인': '👞', '운동화': '👟', '스니커즈': '👟', '샌들': '🩴' }; looks = aiRecommendations.map((item, i) => { let top = String(item.top || '상의'), bottomName = String(item.bottom || '하의'), shoeName = String(item.shoes || '운동화'), dress = /원피스/.test(bottomName), topIcon = Object.keys(topIcons).find(k => top.includes(k)), bottomIcon = Object.keys(bottomIcons).find(k => bottomName.includes(k)), shoeIcon = Object.keys(shoeIcons).find(k => shoeName.includes(k)); return { onepiece: dress ? [bottomName, '👗'] : null, top: dress ? null : [top, topIcons[topIcon] || '👚'], bottom: [bottomName, dress ? '' : bottomIcons[bottomIcon] || '👖'], shoes: [shoeName, shoeIcons[shoeIcon] || '👟'], accessory: String(item.accessory || ''), aiTitle: String(item.title || ['포근한 데일리', '산뜻한 외출', '약속 코디', '포인트 룩'][i]), reason: String(item.reason || '') } }) } selected = 0; $('suggestCopy').textContent = weatherTemp === null ? 'AI가 체감온도와 선택한 옷, 약속에 맞춰 코디했어요. ' + time + ' · ' + place + ' · ' + occasion : city + ' ' + weatherTemp + '°C와 ' + feel + ' 느낌을 반영했어요. ' + time + ' · ' + place + ' · ' + occasion; $('outfits').innerHTML = looks.map((x, i) => '<article class="look ' + (i === 0 ? 'selected' : '') + '"><div class="look-title">' + escapeCalendarText(x.aiTitle || ['포근한 데일리', '산뜻한 외출', '약속 코디', '포인트 룩'][i]) + '</div><div class="stage" style="--bg:' + ['#fff0f2', '#f3efff', '#eaf7f0', '#fff4df'][i] + '"><div class="look-avatar gender-' + (characterConfig.gender || "female") + '">' + avatarClothesMarkup(x, i) + '</div></div><div class="look-items">' + (x.onepiece ? '<strong>' + escapeCalendarText(x.onepiece[0]) + '</strong>' : '상의 <strong>' + escapeCalendarText(x.top[0]) + '</strong><br>하의 <strong>' + escapeCalendarText(x.bottom[0]) + '</strong>') + (x.accessory ? '<br>액세서리 <strong>' + escapeCalendarText(x.accessory) + '</strong>' : '') + '<br>신발 <strong>' + escapeCalendarText(x.shoes[0]) + '</strong>' + (x.reason ? '<br>' + escapeCalendarText(x.reason) : '') + '</div><button class="pick" onclick="selectLook(' + i + ')">' + (i === 0 ? '💗 선택한 코디' : '이 코디 고르기') + '</button></article>').join(''); $('suggest').classList.add('show'); $('eventName').value = place + ' · ' + occasion; toast(aiRecommendations ? 'AI 코디 네 가지를 준비했어요!' : '기본 코디 네 가지를 준비했어요!') } function closeResults() { let panel = document.getElementById('suggest'); panel.classList.add('closing'); setTimeout(() => { panel.classList.remove('show', 'closing') }, 240) }
+        function getFieldValue(id) { let select = $(id); return select.value === 'custom' ? $(id + 'Custom').value.trim() : select.value } function fetchAiRecommendations() { let feel = document.querySelector('input[name=feel]:checked')?.value, bottomCategory = document.querySelector('input[name=category]:checked')?.value, topCategory = document.querySelector('input[name=topCategory]:checked')?.value || '상의 추천받기', accessory = document.querySelector('input[name=accessoryCategory]:checked')?.value || '없음'; return fetch('/.netlify/functions/recommend', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ feel, weather: { city, tempC: weatherTemp }, topCategory: topCategory + " (" + categoryPreferenceText("topCategory") + ")", bottomCategory: bottomCategory + " (" + categoryPreferenceText("category") + ")", accessory: accessory + " (" + categoryPreferenceText("accessoryCategory") + ")", place: getFieldValue('place'), occasion: getFieldValue('occasion'), time: getFieldValue('time'), gender: characterConfig.gender || 'female' }) }).then(async response => { let data = await response.json(); if (!response.ok) throw new Error(data.error || 'AI 추천 요청에 실패했어요'); return data.recommendations }) } function generateRecommendations(aiRecommendations) { let feel = document.querySelector('input[name=feel]:checked').value, category = document.querySelector('input[name=category]:checked').value + ' (' + categoryPreferenceText('category') + ')', topChoice = (document.querySelector('input[name=topCategory]:checked')?.value || '상의 추천받기') + ' (' + categoryPreferenceText('topCategory') + ')', accessoryRaw = document.querySelector('input[name=accessoryCategory]:checked')?.value || '없음', accessoryChoice = accessoryRaw === '없음' ? '' : accessoryRaw + ' (' + categoryPreferenceText('accessoryCategory') + ')', place = getFieldValue('place'), occasion = getFieldValue('occasion'), time = getFieldValue('time'); localStorage.setItem('feel-level', feel); let warmth = feel === '매우 추워요' || (weatherTemp !== null && weatherTemp < 8) ? '도톰한' : feel === '더워요' || (weatherTemp !== null && weatherTemp > 25) ? '가벼운' : '편안한', tops = [['니트', '🧶'], ['가디건', '🧥'], ['블라우스', '👚'], ['맨투맨', '👕']], isSkirt = category.includes('치마'), isShort = category.includes('짧은'), isDress = category.includes('원피스'), isCustom = !category.startsWith('하의 추천받기') && !isSkirt && !isDress && !/바지|팬츠|쇼츠/.test(category), bottom = isSkirt ? [[!isShort ? '플로럴 롱 스커트' : '플리츠 미니스커트', '👗'], [!isShort ? '데님 롱 스커트' : '데님 미니스커트', '👗'], [!isShort ? '차분한 롱 스커트' : '체크 미니스커트', '👗'], [!isShort ? '니트 롱 스커트' : '산뜻한 짧은 스커트', '👗']] : [[isShort ? '데님 쇼츠' : '와이드 팬츠', '👖'], [isShort ? '코튼 쇼츠' : '데님 팬츠', '👖'], [isShort ? '린넨 쇼츠' : '슬랙스', '👖'], [isShort ? '캐주얼 쇼츠' : '코튼 팬츠', '👖']], shoes = [['운동화', '👟'], ['로퍼', '👞'], ['메리제인 슈즈', '👞'], ['앵클 부츠', '👢']]; if (!topChoice.startsWith('상의 추천받기')) { let icons = { '반팔': '👕', '긴팔': '👕', '민소매': '👚', '니트': '🧶', '가디건': '🧥', '블라우스': '👚', '맨투맨': '👕', '셔츠': '👔', '티셔츠': '👕' }; tops = Array.from({ length: 4 }, () => [topChoice, icons[topChoice] || '👚']) } if (category.startsWith('하의 추천받기')) bottom = [['와이드 팬츠', '👖'], ['데님 팬츠', '👖'], ['플리츠 롱 스커트', '👗'], ['코튼 팬츠', '👖']]; if (isCustom) bottom = Array.from({ length: 4 }, (_, i) => [warmth + ' ' + category + ' ' + ['스타일', '코디', '룩', '착장'][i], '👗']); looks = Array.from({ length: 4 }, (_, i) => isDress ? { onepiece: [warmth + ' 니트 원피스', '👗'], bottom: ['원피스', ''], shoes: shoes[i], accessory: accessoryRaw === '액세서리 추천받기' ? ['가방', '모자', '목걸이', '시계'][i] : accessoryChoice } : { onepiece: null, top: [warmth + ' ' + tops[i][0], tops[i][1]], bottom: bottom[i], shoes: shoes[i], accessory: accessoryRaw === '액세서리 추천받기' ? ['가방', '모자', '목걸이', '시계'][i] : accessoryChoice }); if (Array.isArray(aiRecommendations) && aiRecommendations.length === 4) { let topIcons = { '반팔': '👕', '긴팔': '👕', '민소매': '👚', '니트': '🧶', '가디건': '🧥', '블라우스': '👚', '맨투맨': '👕', '셔츠': '👔', '티셔츠': '👕', '후드티': '🧥' }, bottomIcons = { '치마': '👗', '스커트': '👗', '원피스': '👗', '바지': '👖', '팬츠': '👖', '쇼츠': '👖' }, shoeIcons = { '부츠': '👢', '로퍼': '👞', '구두': '👞', '메리제인': '👞', '운동화': '👟', '스니커즈': '👟', '샌들': '🩴' }; looks = aiRecommendations.map((item, i) => { let top = String(item.top || '상의'), bottomName = String(item.bottom || '하의'), shoeName = String(item.shoes || '운동화'), dress = /원피스/.test(bottomName), topIcon = Object.keys(topIcons).find(k => top.includes(k)), bottomIcon = Object.keys(bottomIcons).find(k => bottomName.includes(k)), shoeIcon = Object.keys(shoeIcons).find(k => shoeName.includes(k)); return { onepiece: dress ? [bottomName, '👗'] : null, top: dress ? null : [top, topIcons[topIcon] || '👚'], bottom: [bottomName, dress ? '' : bottomIcons[bottomIcon] || '👖'], shoes: [shoeName, shoeIcons[shoeIcon] || '👟'], accessory: String(item.accessory || ''), aiTitle: String(item.title || ['포근한 데일리', '산뜻한 외출', '약속 코디', '포인트 룩'][i]), reason: String(item.reason || '') } }) } selected = 0; $('suggestCopy').textContent = weatherTemp === null ? 'AI가 체감온도와 선택한 옷, 약속에 맞춰 코디했어요. ' + time + ' · ' + place + ' · ' + occasion : city + ' ' + weatherTemp + '°C와 ' + feel + ' 느낌을 반영했어요. ' + time + ' · ' + place + ' · ' + occasion; $('outfits').innerHTML = looks.map((x, i) => '<article class="look ' + (i === 0 ? 'selected' : '') + '"><div class="look-title">' + escapeCalendarText(x.aiTitle || ['포근한 데일리', '산뜻한 외출', '약속 코디', '포인트 룩'][i]) + '</div><div class="stage" style="--bg:' + ['#fff0f2', '#f3efff', '#eaf7f0', '#fff4df'][i] + '"><div class="look-avatar gender-' + (characterConfig.gender || "female") + '">' + avatarClothesMarkup(x, i) + '</div></div><div class="look-items">' + (x.onepiece ? '<strong>' + escapeCalendarText(x.onepiece[0]) + '</strong>' : '상의 <strong>' + escapeCalendarText(x.top[0]) + '</strong><br>하의 <strong>' + escapeCalendarText(x.bottom[0]) + '</strong>') + (x.accessory ? '<br>액세서리 <strong>' + escapeCalendarText(x.accessory) + '</strong>' : '') + '<br>신발 <strong>' + escapeCalendarText(x.shoes[0]) + '</strong>' + (x.reason ? '<br>' + escapeCalendarText(x.reason) : '') + '</div><button class="pick" onclick="selectLook(' + i + ')">' + (i === 0 ? '💗 선택한 코디' : '이 코디 고르기') + '</button></article>').join(''); resetOutfitCards(); $('suggest').classList.add('show'); $('eventName').value = place + ' · ' + occasion; toast(aiRecommendations ? 'AI 코디 네 가지를 준비했어요!' : '기본 코디 네 가지를 준비했어요!') } function closeResults() { let panel = document.getElementById('suggest'); panel.classList.add('closing'); setTimeout(() => { panel.classList.remove('show', 'closing') }, 240) }
         function recommend() { let modal = document.getElementById('thinking'); if (modal.classList.contains('visible')) return; let selectedFeel = document.querySelector('input[name=feel]:checked'), selectedCategory = document.querySelector('input[name=category]:checked'), selectedTop = document.querySelector('input[name=topCategory]:checked'); if (!selectedFeel || !selectedCategory || !selectedTop) { renderCategoryChoices(); updateFeelFromSlider(); selectedFeel = document.querySelector('input[name=feel]:checked'); selectedCategory = document.querySelector('input[name=category]:checked'); selectedTop = document.querySelector('input[name=topCategory]:checked') } if (!selectedFeel || !selectedCategory || !selectedTop) { toast('체감온도와 상의·하의를 선택해 주세요'); return } let missing = ['time', 'place', 'occasion'].find(id => $(id).value === 'custom' && !$(id + 'Custom').value.trim()); if (missing) { $(missing + 'Custom').hidden = false; $(missing + 'Custom').focus(); toast('직접 입력한 내용을 적어 주세요'); return } let poses = Array.from(document.querySelectorAll('.thinking-pose')), index = 0; poses.forEach((pose, i) => pose.classList.toggle('active', i === 0)); modal.classList.add('visible'); let cycle = setInterval(() => { poses[index].classList.remove('active'); index = (index + 1) % poses.length; poses[index].classList.add('active') }, 850); let start = Date.now(); (async () => { let aiRecommendations = null; try { aiRecommendations = await fetchAiRecommendations() } catch (error) { console.error(error); toast('AI 연결에 실패해 기본 코디로 추천할게요') } finally { clearInterval(cycle); let poseDelay = Math.max(0, 900 - (Date.now() - start)); setTimeout(() => { try { generateRecommendations(aiRecommendations) } catch (error) { console.error(error); toast('코디를 준비하지 못했어요. 다시 시도해 주세요') } finally { modal.classList.remove('visible'); document.getElementById('suggest').scrollIntoView({ behavior: 'smooth', block: 'center' }) } }, poseDelay) } })() } function selectLook(i) { selected = i; document.querySelectorAll('.look').forEach((x, n) => { x.classList.toggle('selected', i === n); x.querySelector('.pick').textContent = i === n ? '💗 선택한 코디' : '이 코디 고르기' }); toast('이 코디로 선택했어요') }
         let feedbackTarget = null; function openOutfitFeedback(date, index) { feedbackTarget = { date, index }; let modal = document.getElementById('outfitFeedback'); modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden' } function closeOutfitFeedback() { let modal = document.getElementById('outfitFeedback'); modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; feedbackTarget = null } function rateOutfit(rating) { if (!feedbackTarget) return; let saved = events[feedbackTarget.date], list = Array.isArray(saved) ? saved : [saved]; if (list[feedbackTarget.index]) { list[feedbackTarget.index].rating = rating; events[feedbackTarget.date] = list; localStorage.setItem('ootd-events', JSON.stringify(events)) } closeOutfitFeedback(); toast('평가 고마워요! 다음 코디에 참고할게요 💗') } function saveLook() { if (!looks.length) return; let date = $('eventDate').value; if (!date) { toast('저장할 날짜를 골라주세요'); return } let x = looks[selected], entry = { name: $('eventName').value || '오늘의 코디', time: $('eventTime').value || '', outfit: (x.onepiece ? x.onepiece[0] : x.top[0] + ' · ' + x.bottom[0]) + (x.accessory ? ' · 액세서리 ' + x.accessory : '') + ' · ' + x.shoes[0], look: JSON.parse(JSON.stringify(x)), character: characterConfig.gender || 'female' }; if (!Array.isArray(events[date])) events[date] = events[date] ? [events[date]] : []; events[date].push(entry); localStorage.setItem('ootd-events', JSON.stringify(events)); let entryIndex = events[date].length - 1; toast('선택한 코디를 캘린더에 저장했어요 📅'); document.getElementById('suggest').classList.remove('show'); showCalendar(); setTimeout(() => openOutfitFeedback(date, entryIndex), 240) } function shiftMonth(n) { view.setMonth(view.getMonth() + n); renderCalendar() }
         function escapeCalendarText(value) { return String(value || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])) }
         function outfitFromSaved(item) { if (item.look) return item.look; let parts = String(item.outfit || '').split(' · ').filter(Boolean), shoeName = parts.length > 1 ? parts[parts.length - 1] : '운동화', shoeIcon = /부츠/.test(shoeName) ? '👢' : /로퍼|메리제인/.test(shoeName) ? '👞' : '👟'; if (parts.some(p => p.includes('원피스'))) { let dress = parts.find(p => p.includes('원피스')) || parts[0]; return { onepiece: [dress, '👗'], bottom: ['원피스', ''], shoes: [shoeName, shoeIcon] } } let top = parts[0] || '상의', bottom = parts[1] || '하의', topIcon = /니트/.test(top) ? '🧶' : /가디건/.test(top) ? '🧥' : /블라우스/.test(top) ? '👚' : /맨투맨/.test(top) ? '👕' : '👚', bottomIcon = /치마|스커트/.test(bottom) ? '👗' : '👖'; return { top: [top, topIcon], bottom: [bottom, bottomIcon], shoes: [shoeName, shoeIcon] } }
         function savedOutfitMarkup(item) { let x = outfitFromSaved(item), body = x.onepiece ? x.onepiece[1] : x.top[1], name = x.onepiece ? x.onepiece[0] : x.top[0] + ' · ' + x.bottom[0], bottom = x.onepiece ? '' : x.bottom[1]; return '<div class="saved-outfit"><div class="saved-stage"><div class="look-avatar gender-' + (item.character || characterConfig.gender || "female") + '">' + avatarClothesMarkup(x, 0) + '</div></div><div class="saved-outfit-names">' + escapeCalendarText(name) + '<br>' + escapeCalendarText(x.shoes[0]) + (x.accessory ? '<br>액세서리 ' + escapeCalendarText(x.accessory) : '') + '</div></div>' }
-        function openCalendarDay(key) { let date = new Date(key + 'T12:00:00'); $('detailDate').textContent = date.getFullYear() + '년 ' + (date.getMonth() + 1) + '월 ' + date.getDate() + '일'; let saved = events[key] || [], list = Array.isArray(saved) ? saved : [saved], box = $('detailEvents'); box.innerHTML = list.length ? list.map(item => '<article class="detail-event"><h3>' + escapeCalendarText(item.name || '오늘의 코디') + '</h3>' + (item.time ? '<span class="detail-time">' + escapeCalendarText(item.time) + '</span>' : '') + savedOutfitMarkup(item) + '</article>').join('') : '<div class="detail-empty">이 날짜에는 저장된 코디가 없어요.<br>코디 추천에서 마음에 드는 옷을 캘린더에 담아보세요.</div>'; let modal = $('dayDetail'); modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; $('dayDetail').querySelector('.day-detail-close').focus() } function closeCalendarDay() { let modal = $('dayDetail'); modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); document.body.style.overflow = '' }
+        function savedFeedbackMarkup(item) {
+            const ratings = {
+                '좋았어요': { icon: '💗', tone: 'happy' },
+                '보통이에요': { icon: '🙂', tone: 'neutral' },
+                '아쉬웠어요': { icon: '🛠️', tone: 'sad' }
+            };
+            const feedback = ratings[item.rating];
+            if (!feedback) return '<div class="saved-feedback empty"><span>내가 남긴 후기</span><span>아직 남긴 후기가 없어요</span></div>';
+            return '<div class="saved-feedback ' + feedback.tone + '"><span>내가 남긴 후기</span><strong>' + feedback.icon + ' ' + escapeCalendarText(item.rating) + '</strong></div>';
+        }
+        function openCalendarDay(key) { let date = new Date(key + 'T12:00:00'); $('detailDate').textContent = date.getFullYear() + '년 ' + (date.getMonth() + 1) + '월 ' + date.getDate() + '일'; let saved = events[key] || [], list = Array.isArray(saved) ? saved : [saved], box = $('detailEvents'); box.innerHTML = list.length ? list.map(item => '<article class="detail-event"><h3>' + escapeCalendarText(item.name || '오늘의 코디') + '</h3>' + (item.time ? '<span class="detail-time">' + escapeCalendarText(item.time) + '</span>' : '') + savedOutfitMarkup(item) + savedFeedbackMarkup(item) + '</article>').join('') : '<div class="detail-empty">이 날짜에는 저장된 코디가 없어요.<br>코디 추천에서 마음에 드는 옷을 캘린더에 담아보세요.</div>'; let modal = $('dayDetail'); modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; $('dayDetail').querySelector('.day-detail-close').focus() } function closeCalendarDay() { let modal = $('dayDetail'); modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); document.body.style.overflow = '' }
         function renderCalendar() { let y = view.getFullYear(), m = view.getMonth(), first = new Date(y, m, 1).getDay(), count = new Date(y, m + 1, 0).getDate(), now = new Date(); $('monthTitle').textContent = y + '년 ' + (m + 1) + '월'; let html = ['일', '월', '화', '수', '목', '금', '토'].map(x => '<div class="dow">' + x + '</div>').join(''); for (let i = 0; i < first; i++)html += '<div class="day empty"></div>'; for (let d = 1; d <= count; d++) { let k = localDate(new Date(y, m, d)), saved = events[k] || [], arr = Array.isArray(saved) ? saved : [saved]; html += '<button type="button" class="day ' + (now.getFullYear() === y && now.getMonth() === m && now.getDate() === d ? 'today' : '') + '" data-date="' + k + '">' + d + (arr.length ? '<span class="event" title="' + escapeCalendarText(arr[0].name) + '"><strong>' + (arr[0].time ? escapeCalendarText(arr[0].time) + ' ' : '') + escapeCalendarText(arr[0].name) + '</strong>' + (arr[0].outfit ? '<small class="event-outfit">' + escapeCalendarText(arr[0].outfit) + '</small>' : '') + '</span>' : '') + (arr.length > 1 ? '<span class="event-more" title="날짜를 눌러 나머지 일정을 확인하세요">+' + (arr.length - 1) + ' 더 보기</span>' : '') + '</button>' } $('calendarGrid').innerHTML = html; document.querySelectorAll('.day[data-date]').forEach(button => button.addEventListener('click', () => openCalendarDay(button.dataset.date))) } let now = new Date(); $('today').textContent = now.getFullYear() + '년 ' + (now.getMonth() + 1) + '월 ' + now.getDate() + '일'; $('eventDate').value = localDate(now); $('eventTime').value = String(now.getHours()).padStart(2, '0') + ':00'; let savedFeel = localStorage.getItem('feel-level'); if (savedFeel) document.querySelectorAll('input[name=feel]').forEach(x => x.checked = x.value === savedFeel); let feelIndex = ['매우 추워요', '쌀쌀해요', '괜찮아요', '따뜻해요', '더워요'].indexOf(savedFeel); $('feelSlider').value = feelIndex < 0 ? 1 : feelIndex; updateFeelFromSlider(); renderCategoryChoices(); locate(); renderCalendar(); initSupabaseAuth();
     </script>
     <script>
@@ -4045,7 +4320,33 @@
         showCalendar = function () { transitionPage(() => { $('recommendCard').style.display = 'none'; $('calendarCard').classList.add('visible'); document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active')); document.getElementById('navCalendar').classList.add('active'); renderCalendar() }, 'left') };
         const originalGetWeather = getWeather; getWeather = async function (which, key) { await originalGetWeather(which, key); const title = $('skyTitle').textContent; let kind = title.includes('눈') ? 'snowy' : title.includes('비') ? 'rainy' : title.includes('구름') ? 'cloudy' : title.includes('흐림') ? 'overcast' : 'sunny'; $('sky').dataset.weather = kind };
         let characterConfig = JSON.parse(localStorage.getItem('codini-character') || 'null') || { hair: 'open', skin: 'default', eyes: 'default' }; let characterInitialized = false; function renderCharacter() { let hair = document.getElementById('charHair'), skin = document.getElementById('charSkin'), eyes = document.getElementById('charEyes'); if (!characterInitialized) { if (hair) hair.value = characterConfig.hair || 'open'; if (skin) skin.value = characterConfig.skin || 'default'; if (eyes) eyes.value = characterConfig.eyes || 'default' } characterConfig.hair = hair ? hair.value : 'open'; characterConfig.skin = skin ? skin.value : 'default'; let base = document.querySelector('.character-base'), skinAssets = { default: '기본스탠딩.png', toneA: '밝은피부.png', toneB: '어두운피부.png' }; if (base) base.src = skinAssets[characterConfig.skin] || skinAssets.default; characterConfig.eyes = eyes ? eyes.value : 'default'; characterInitialized = true; let img = document.querySelector('.character-hair'); if (img) { let hairAssets = { open: ['덮은머리.png?v=2', '덮은머리'], openLong: ['덮은긴머리.png', '덮은긴머리'], tied: ['깐머리.png', '깐머리'], tiedLong: ['깐긴머리.png', '깐긴머리'], openBob: ['덮은단발머리.png', '덮은단발머리'], tiedBob: ['깐 단발머리.png', '깐단발머리'] }, selectedHair = hairAssets[characterConfig.hair] || hairAssets.open; img.src = selectedHair[0]; img.alt = selectedHair[1] } } let onboardingIndex = 0; function startApp() { let welcome = document.getElementById('welcome'); welcome.classList.add('leaving'); setTimeout(() => { welcome.style.display = 'none'; welcome.classList.remove('leaving'); let page = document.getElementById('onboarding'); page.classList.add('visible'); page.setAttribute('aria-hidden', 'false'); onboardingIndex = 0; renderOnboarding() }, 260) } function renderOnboarding() { document.getElementById('onboarding').dataset.step = String(onboardingIndex); let slides = [...document.querySelectorAll('.onboarding-slide')], dots = [...document.querySelectorAll('.onboarding-dots button')]; slides.forEach((slide, i) => { slide.classList.toggle('active', i === onboardingIndex); slide.setAttribute('aria-hidden', String(i !== onboardingIndex)) }); dots.forEach((dot, i) => { dot.classList.toggle('active', i === onboardingIndex); dot.setAttribute('aria-current', String(i === onboardingIndex)) }); document.getElementById('onboardingStep').textContent = '0' + (onboardingIndex + 1) + ' / 03'; document.getElementById('onboardingBack').hidden = onboardingIndex === 0; document.getElementById('onboardingNext').textContent = onboardingIndex === slides.length - 1 ? '캐릭터 만들기' : '다음' } function goOnboarding(index) { onboardingIndex = Math.max(0, Math.min(2, index)); renderOnboarding() } function nextOnboarding() { if (onboardingIndex < 2) { onboardingIndex++; renderOnboarding() } else openAccountChoice() } function previousOnboarding() { if (onboardingIndex > 0) { onboardingIndex--; renderOnboarding() } } function skipOnboarding() { openAccountChoice() } function openAccountChoice() { let page = document.getElementById('onboarding'); page.classList.remove('visible'); page.setAttribute('aria-hidden', 'true'); let flow = document.getElementById('accountFlow'); flow.classList.add('visible'); flow.setAttribute('aria-hidden', 'false'); showAccountView('accountChoice') } function showAccountView(id) { document.querySelectorAll('.account-view').forEach(view => view.classList.toggle('active', view.id === id)) } function continueWithoutAccount() { let flow = document.getElementById('accountFlow'); flow.classList.remove('visible'); flow.setAttribute('aria-hidden', 'true'); openCharacterSetup() } function authComingSoon() { toast('로그인과 회원가입 기능은 준비 중이에요.') } function openCharacterSetup() { let page = document.getElementById('onboarding'); page.classList.remove('visible'); page.setAttribute('aria-hidden', 'true'); let flow = document.getElementById('accountFlow'); flow.classList.remove('visible'); flow.setAttribute('aria-hidden', 'true'); let setup = document.getElementById('characterSetup'); setup.style.display = 'grid'; setup.classList.add('visible'); setup.setAttribute('aria-hidden', 'false'); renderCharacter() }
-        function completeCharacterSetup() { renderCharacter(); localStorage.setItem('codini-character', JSON.stringify(characterConfig)); let setup = document.getElementById('characterSetup'); setup.classList.add('leaving'); setTimeout(() => { setup.classList.remove('visible', 'leaving'); setup.style.display = 'none'; setup.setAttribute('aria-hidden', 'true'); let app = document.getElementById('app'); app.style.display = 'block'; app.classList.add('slide-in-right'); autoDate(); setTimeout(() => app.classList.remove('slide-in-right'), 360) }, 240) }
+        function completeCharacterSetup() {
+            const setup = document.getElementById('characterSetup');
+            if (setup.classList.contains('leaving')) return;
+            renderCharacter();
+            localStorage.setItem('codini-character', JSON.stringify(characterConfig));
+            setup.classList.add('leaving');
+            setTimeout(() => {
+                setup.classList.remove('visible', 'leaving');
+                setup.style.display = 'none';
+                setup.setAttribute('aria-hidden', 'true');
+                const praise = document.getElementById('characterPraise');
+                praise.classList.add('visible');
+                praise.setAttribute('aria-hidden', 'false');
+                document.getElementById('praiseTitle').focus({ preventScroll: true });
+            }, 240);
+        }
+        function startAfterCharacterPraise() {
+            const praise = document.getElementById('characterPraise');
+            praise.classList.remove('visible');
+            praise.setAttribute('aria-hidden', 'true');
+            const app = document.getElementById('app');
+            app.style.display = 'block';
+            app.classList.add('slide-in-right');
+            autoDate();
+            document.getElementById('navHome').focus({ preventScroll: true });
+            setTimeout(() => app.classList.remove('slide-in-right'), 360);
+        }
 // Fade between the account screens and the adjoining setup screens.
 let screenFadeBusy = false;
 async function fadeScreenChange(outgoing, change, incoming) {
@@ -4083,6 +4384,166 @@ continueWithoutAccount = function() {
     return fadeScreenChange(document.getElementById('accountFlow'), () => originalContinueWithoutAccount(), () => document.getElementById('characterSetup'));
 };
 </script>
+
+    <div id="featureTour" hidden>
+        <div class="tour-shade"></div><div class="tour-shade"></div><div class="tour-shade"></div><div class="tour-shade"></div>
+        <div class="tour-outline"></div>
+        <aside class="tour-card" aria-labelledby="tourTitle">
+            <div class="tour-companion"><img src="온보딩/신남_마스코트.png" alt="안내하는 코디니"><div><span>코디니랑 같이 해봐요</span><small id="tourProgress"></small></div></div>
+            <div class="tour-meter" aria-hidden="true"><i id="tourMeterFill"></i></div>
+            <h2 id="tourTitle" tabindex="-1"></h2><p id="tourCopy"></p>
+            <div class="tour-controls"><button type="button" onclick="finishFeatureTour()">건너뛰기</button><button id="tourPrevious" type="button" onclick="moveFeatureTour(-1)">이전</button><button id="tourNext" type="button" onclick="moveFeatureTour(1)">다음</button></div>
+        </aside>
+    </div>
+    <script>
+    const featureTourSteps = [
+        ['.sky','오늘 하늘은 어떨까요?','외출 전에 날씨부터 살짝 볼까요? 여기서 오늘 날씨를 확인해요. 예보를 연결하고 싶다면 ‘날씨 연결 설정’을 눌러봐요!'],
+        ['.feel-range','지금, 춥나요? 따뜻한가요?','동그란 손잡이를 쓱 움직여봐요. 내가 느끼는 온도를 알려주면 더 편안한 코디를 골라줄게요!'],
+        ['#recommendCard .fields','오늘 어디 가요?','친구랑 카페? 설레는 데이트? 언제 어디로 가는지 알려줘요. 목록에 없다면 직접 적어도 좋아요!'],
+        ['.category-groups > button:nth-child(1)','상의 고르기','여기를 톡 눌러 상의를 골라봐요. 색깔과 무늬도 정할 수 있어요! 다 고르고 창을 닫으면 여기서 기다릴게요.'],
+        ['.category-groups > button:nth-child(2)','하의 고르기','바지나 치마 등 원하는 하의를 골라 보세요. 코디니에게 추천을 맡길 수도 있어요.'],
+        ['.category-groups > button:nth-child(3)','액세서리 고르기','코디에 더하고 싶은 액세서리를 골라 보세요. 필요 없다면 선택하지 않아도 괜찮아요.'],
+        ['.custom-category-trigger','원하는 옷 직접 추가','목록에 없는 옷은 이름과 종류를 입력해 추가해 보세요.'],
+        ['#recommendCard > .date-row','날짜와 시간','옷을 입을 날짜와 시간을 설정해 보세요. 코디를 캘린더에 저장할 때 사용해요.'],
+        ['#recommendCard > .primary','코디 추천받기','설정을 마쳤다면 이 버튼으로 추천을 받아 보세요. 마음에 드는 코디를 고른 뒤 일정 이름을 적고 캘린더에 저장할 수 있어요. 추천을 누르면 안내를 마칠게요.'],
+        ['#navCalendar','코디 캘린더','여기를 누르면 저장한 코디를 날짜별로 확인할 수 있어요. 날짜를 눌러 자세히 볼 수 있어요. 이제 자유롭게 사용해 보세요!']
+    ];
+    let featureTourIndex = 0, featureTourActive = false, tourFrame = 0;
+    function startFeatureTour() {
+        featureTourIndex = 0;
+        featureTourActive = true;
+        showHome();
+        setTimeout(() => { if(featureTourActive) showFeatureTourStep(); }, 400);
+    }
+    function moveFeatureTour(delta) {
+        featureTourIndex += delta;
+        if (featureTourIndex >= featureTourSteps.length) { finishFeatureTour(); return; }
+        featureTourIndex = Math.max(0, featureTourIndex);
+        showFeatureTourStep();
+    }
+    function showFeatureTourStep() {
+        const step = featureTourSteps[featureTourIndex];
+        const target = document.querySelector(step[0]);
+        if (!target) { finishFeatureTour(); return; }
+        document.getElementById('featureTour').hidden = false;
+        document.getElementById('tourProgress').textContent = (featureTourIndex + 1) + ' / ' + featureTourSteps.length + ' · 천천히 따라와요';
+        document.getElementById('tourTitle').textContent = step[1];
+        document.getElementById('tourCopy').textContent = step[2];
+        document.getElementById('tourPrevious').hidden = featureTourIndex === 0;
+        document.getElementById('tourNext').textContent = featureTourIndex === featureTourSteps.length - 1 ? '시작' : '다음으로 →';
+        document.getElementById('tourMeterFill').style.width = ((featureTourIndex + 1) / featureTourSteps.length * 100) + '%';
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        target.scrollIntoView({ behavior: reduceMotion ? 'instant' : 'smooth', block:'center' });
+        if (!reduceMotion) {
+            const card = document.querySelector('.tour-card');
+            if (card.tourEntrance) card.tourEntrance.cancel();
+            card.tourEntrance = card.animate([
+                {opacity:.3, transform:'translateY(10px) scale(.97)'},
+                {opacity:1, transform:'translateY(0) scale(1)'}
+            ], {duration:420, easing:'cubic-bezier(.22,1,.36,1)'});
+        }
+        positionFeatureTour();
+        document.getElementById('tourTitle').focus({preventScroll:true});
+    }
+    function positionFeatureTour() {
+        if (!featureTourActive) return;
+        const root = document.getElementById('featureTour');
+        const popup = document.querySelector('.category-modal[aria-hidden="false"], .day-detail[aria-hidden="false"], .thinking.visible');
+        root.hidden = !!popup;
+        if (popup) return;
+        const target = document.querySelector(featureTourSteps[featureTourIndex][0]);
+        if (!target || !target.getClientRects().length) { finishFeatureTour(); return; }
+        const r=target.getBoundingClientRect(), w=innerWidth, h=innerHeight;
+        const l=Math.min(w,Math.max(0,r.left-7)), t=Math.min(h,Math.max(0,r.top-7)), right=Math.max(l,Math.min(w,r.right+7)), bottom=Math.max(t,Math.min(h,r.bottom+7));
+        const boxes=[[0,0,w,t],[0,t,l,bottom-t],[right,t,w-right,bottom-t],[0,bottom,w,h-bottom]];
+        root.querySelectorAll('.tour-shade').forEach((el,i)=>{const b=boxes[i];Object.assign(el.style,{left:b[0]+'px',top:b[1]+'px',width:Math.max(0,b[2])+'px',height:Math.max(0,b[3])+'px'});});
+        Object.assign(root.querySelector('.tour-outline').style,{left:l+'px',top:t+'px',width:(right-l)+'px',height:(bottom-t)+'px'});
+        const card=root.querySelector('.tour-card'), ch=card.offsetHeight, cw=card.offsetWidth;
+        let x=Math.max(12,Math.min(w-cw-12,l)), y=bottom+14;
+        if(y+ch>h-12) y=t-ch-14;
+        if(y<12) {
+            if(w-right>cw+24) { x=right+14; y=Math.max(12,(h-ch)/2); }
+            else if(l>cw+24) { x=l-cw-14; y=Math.max(12,(h-ch)/2); }
+            else y=Math.max(12,h-ch-12);
+        }
+        Object.assign(card.style,{left:x+'px',top:y+'px'});
+    }
+    function finishFeatureTour() {
+        featureTourActive=false;
+        document.getElementById('featureTour').hidden=true;
+        try { localStorage.setItem('codini-tour-seen','1'); } catch(e) {}
+        const button=document.querySelector('.tour-replay');
+        if(button) button.focus({preventScroll:true});
+    }
+    function scheduleTourPosition() {
+        cancelAnimationFrame(tourFrame);
+        tourFrame=requestAnimationFrame(positionFeatureTour);
+    }
+    window.addEventListener('resize',scheduleTourPosition);
+    window.addEventListener('scroll',scheduleTourPosition,true);
+    document.addEventListener('keydown',event=>{if(featureTourActive && event.key==='Escape' && !document.getElementById('featureTour').hidden) finishFeatureTour();});
+    new MutationObserver(scheduleTourPosition).observe(document.getElementById('app'),{subtree:true,attributes:true,attributeFilter:['class','style','hidden']});
+    ['categoryModal','customClothingModal','dayDetail','thinking'].forEach(id=>{
+        new MutationObserver(scheduleTourPosition).observe(document.getElementById(id),{attributes:true,attributeFilter:['class','aria-hidden']});
+    });
+    document.querySelector('#recommendCard > .primary').addEventListener('click',()=>{if(featureTourActive) finishFeatureTour();});
+    document.getElementById('navCalendar').addEventListener('click',()=>{if(featureTourActive) finishFeatureTour();});
+    const startAppWithPraise = startAfterCharacterPraise;
+    startAfterCharacterPraise = function() {
+        startAppWithPraise();
+        let seen=false;
+        try { seen=localStorage.getItem('codini-tour-seen')==='1'; } catch(e) {}
+        if(!seen) setTimeout(startFeatureTour,420);
+    };
+    </script>
+
+    <script>
+    let visibleOutfitCard = 0;
+    function resetOutfitCards() {
+        visibleOutfitCard = 0;
+        const cards = document.querySelectorAll('#outfits .look');
+        const dots = document.getElementById('outfitPagination');
+        dots.replaceChildren();
+        cards.forEach((card,index) => {
+            card.setAttribute('role','group');
+            card.setAttribute('aria-label',(index+1)+' / '+cards.length);
+            const dot=document.createElement('button');
+            dot.type='button'; dot.className='outfit-dot';
+            dot.setAttribute('aria-label',(index+1)+'번째 코디 보기');
+            dot.onclick=()=>showOutfitCard(index);
+            dots.appendChild(dot);
+        });
+        showOutfitCard(0,false);
+    }
+    function moveOutfitCard(delta) { showOutfitCard(visibleOutfitCard + delta); }
+    function showOutfitCard(index,animate=true) {
+        const cards=[...document.querySelectorAll('#outfits .look')];
+        if(index<0 || index>=cards.length) return;
+        const direction=index>=visibleOutfitCard?1:-1;
+        visibleOutfitCard=index;
+        cards.forEach((card,i)=>{card.hidden=i!==index;});
+        document.querySelectorAll('#outfitPagination button').forEach((dot,i)=>dot.setAttribute('aria-current',String(i===index)));
+        document.getElementById('outfitPrevious').disabled=index===0;
+        document.getElementById('outfitNext').disabled=index===cards.length-1;
+        document.getElementById('outfitCount').textContent=(index+1)+' / '+cards.length+' · 한 장씩 둘러보고 마음에 드는 코디를 골라요';
+        if(animate && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            cards[index].animate([{opacity:0,transform:'translateX('+direction*22+'px)'},{opacity:1,transform:'translateX(0)'}],{duration:300,easing:'ease-out'});
+        }
+    }
+    const outfitCarousel=document.getElementById('outfitCarousel');
+    outfitCarousel.addEventListener('keydown',event=>{
+        if(event.target!==outfitCarousel) return;
+        if(event.key==='ArrowLeft' || event.key==='ArrowRight') { event.preventDefault(); moveOutfitCard(event.key==='ArrowLeft'?-1:1); }
+    });
+    let outfitTouchStart=null;
+    outfitCarousel.addEventListener('touchstart',event=>{const t=event.touches[0];outfitTouchStart={x:t.clientX,y:t.clientY};},{passive:true});
+    outfitCarousel.addEventListener('touchend',event=>{
+        if(!outfitTouchStart) return;
+        const t=event.changedTouches[0],dx=t.clientX-outfitTouchStart.x,dy=t.clientY-outfitTouchStart.y;
+        if(Math.abs(dx)>55 && Math.abs(dx)>Math.abs(dy)*1.5) moveOutfitCard(dx<0?1:-1);
+        outfitTouchStart=null;
+    },{passive:true});
+    </script>
 </body>
 
 </html>
