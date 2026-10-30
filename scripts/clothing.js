@@ -44,7 +44,10 @@ function renderCategoryChoices(selectValue, selectedGroup) {
         icon.innerHTML = clothingIconMarkup(name);
         let text = document.createElement('span');
         text.textContent = name;
-        label.append(radio, icon, text);
+        if (name.endsWith('추천받기')) {
+            label.classList.add('recommendation-choice');
+            label.append(radio, text);
+        } else label.append(radio, icon, text);
         item.appendChild(label);
         let customList = group === 'topCategory' ? customTopCategories : group === 'accessoryCategory' ? customAccessoryCategories : customCategories;
         if (customList.includes(name)) {
@@ -180,6 +183,7 @@ function categoryPreferenceText(group) {
 }
 
 function clothingIconMarkup(name, color = "#f7f5ef") {
+    if (name.endsWith('추천받기')) return '';
     let ink = "#343448",
         fill = color,
         detail = "#c8bfd9",
@@ -242,6 +246,7 @@ function updateCategoryPreview() {
         검정: "#50536b",
         베이지: "#d4a46d"
     })[(clothingPreferences[group] || {}).color] || "#f7f5ef");
+    $("categoryPreviewIcon").hidden = name.endsWith('추천받기');
     $("categoryPreviewName").textContent = name;
     $("categoryPreviewStyle").textContent = categoryPreferenceText(group);
     $("categoryModalTitle").textContent = names[group][0] + " 설정"
@@ -261,12 +266,14 @@ function openCategoryModal(group) {
     document.querySelectorAll('input[name="clothingPattern"]').forEach(x => x.checked = x.value === (pref.pattern || "없음"));
     document.querySelectorAll('input[name="clothingColor"]').forEach(x => x.checked = x.value === (pref.color || "상관없음"));
     updateCategoryPreview();
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
     modal.scrollTop = 0;
     modal.querySelector(".category-modal-card").scrollTop = 0;
     modal.querySelector(".category-editor").scrollTop = 0;
-    modal.classList.add("open");
-    modal.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden"
+    modal.querySelector('.category-preview').scrollTop = 0;
+    document.body.style.overflow = "hidden";
+    modal.querySelector('.category-modal-close').focus({ preventScroll: true });
 }
 
 function closeCategoryModal() {

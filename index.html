@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="styles/calendar.css">
     <link rel="stylesheet" href="styles/auth.css">
     <link rel="stylesheet" href="styles/weather.css">
+    <link rel="stylesheet" href="styles/clothing.css">
     <script src="assets/vendor/supabase/supabase.js"></script>
 </head>
 
@@ -396,9 +397,8 @@
                                     value="초록"><i></i><span>초록</span></label><label style="--swatch:#373344"><input
                                     type="radio" name="clothingColor" value="검정"><i></i><span>검정</span></label><label
                                 style="--swatch:#d4a46d"><input type="radio" name="clothingColor"
-                                    value="베이지"><i></i><span>베이지</span></label><label><input type="radio"
-                                    name="clothingColor" value="상관없음" checked><i
-                                    class="any-color">✦</i><span>상관없음</span></label></div>
+                                    value="베이지"><i></i><span>베이지</span></label><label class="no-color"><input type="radio"
+                                    name="clothingColor" value="상관없음" checked><span>상관없음</span></label></div>
                     </fieldset>
                 </div>
             </div><button type="button" class="primary category-done" onclick="closeCategoryModal()">선택 완료</button>

@@ -1,0 +1,35 @@
+/* Keep the title/footer fixed and scroll only the clothing choices. */
+#categoryModal { overflow: hidden; }
+#categoryModal .category-modal-card {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    height: min(650px, calc(100dvh - 36px));
+    max-height: calc(100dvh - 36px);
+    overflow: hidden;
+    padding: 25px;
+}
+#categoryModalTitle { margin: 0 40px 18px 0; }
+#categoryModal .category-modal-layout {
+    display: grid;
+    grid-template-columns: minmax(150px, .75fr) minmax(0, 1.25fr);
+    grid-template-rows: minmax(0, 1fr);
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+    align-items: stretch;
+}
+#categoryModal .category-preview { align-self: start; min-height: 0; max-height: 100%; overflow-y: auto; padding: 16px 10px; }
+#categoryModal .category-editor { height: 100%; min-height: 0; max-height: 100%; overflow-y: auto; padding: 3px 8px 16px 3px; }
+#categoryModal .category-done { margin: 16px 0 0 auto; justify-self: end; }
+#categoryPreviewIcon[hidden] { display: none !important; }
+#categoryModal .category-list .recommendation-choice { min-height: 42px; flex-direction: row; align-items: center; gap: 8px; padding: 10px 12px; }
+#categoryModal .color-options .no-color { display: flex; flex-direction: row; align-items: center; align-self: center; gap: 7px; padding: 8px 10px; border: 1px solid #e4eaf2; border-radius: 10px; font-size: 12px; }
+#categoryModal .color-options .no-color input { position: static; opacity: 1; margin: 0; }
+@media(max-width:640px) {
+    #categoryModal .category-modal-card { padding: 20px 16px; height: min(720px, calc(100dvh - 24px)); max-height: calc(100dvh - 24px); }
+    #categoryModal .category-modal-layout { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); gap: 12px; }
+    #categoryModal .category-preview { display: flex; flex-direction: row; justify-content: flex-start; flex-wrap: wrap; padding: 6px; gap: 6px 12px; overflow: hidden; }
+    #categoryModal .category-preview .preview-caption { display: none; }
+    #categoryModal .category-preview .preview-icon { width: 60px; height: 60px; flex: 0 0 60px; }
+    #categoryModal .category-preview small { flex-basis: 100%; }
+}
