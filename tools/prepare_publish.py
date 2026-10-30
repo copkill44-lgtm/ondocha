@@ -11,7 +11,7 @@ ARCHIVE = ROOT / "website-publish-ready.zip"
 
 def prepare_publish():
     sources = [ROOT / "index.html"]
-    for folder in ("styles", "scripts", "assets/images"):
+    for folder in ("styles", "scripts", "assets/images", "assets/vendor"):
         sources.extend(path for path in (ROOT / folder).rglob("*") if path.is_file())
 
     expected = {path.relative_to(ROOT) for path in sources}

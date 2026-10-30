@@ -11,3 +11,4 @@
 *.png binary
 *.mdp binary
 *.zip binary
+assets/vendor/** -whitespace

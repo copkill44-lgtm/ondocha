@@ -1,0 +1,6 @@
+{
+    "license":  "MIT",
+    "source":  "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js",
+    "version":  "2.118.0",
+    "package":  "@supabase/supabase-js"
+}

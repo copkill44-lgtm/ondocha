@@ -92,7 +92,11 @@ async function runEmailAuth(event, messageId, operation) {
     try {
         await authInitialization;
         if (!supabaseClient) {
-            setAuthMessage(messageId, '이메일 로그인을 아직 준비 중이에요. 잠시 후 다시 이용해 주세요.');
+            authInitialization = initSupabaseAuth();
+            await authInitialization;
+        }
+        if (!supabaseClient) {
+            setAuthMessage(messageId, authInitializationError || '로그인 연결을 시작하지 못했어요. 사이트를 새로고침해 주세요.');
             return;
         }
         await operation();

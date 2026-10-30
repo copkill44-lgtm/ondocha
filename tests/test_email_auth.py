@@ -57,8 +57,14 @@ class EmailAuthTests(unittest.TestCase):
   self.assertIsNone(self.ctx.eval('failure'))
   return json.loads(self.ctx.eval('JSON.stringify(result)'))
  def test_unconfigured_login_is_not_success(self):
-  result=self.run_js("supabaseClient=null;await submitEmailLogin(submitEvent('loginForm'));return [calls.signIn,currentAuthUser,document.getElementById('loginMessage').textContent];")
-  self.assertEqual(result[:2],[0,None]);self.assertIn('준비 중',result[2])
+  result=self.run_js("supabaseClient=null;window.supabase=undefined;await submitEmailLogin(submitEvent('loginForm'));return [calls.signIn,currentAuthUser,document.getElementById('loginMessage').textContent];")
+  self.assertEqual(result[:2],[0,None]);self.assertIn('불러오지 못',result[2])
+ def test_failed_session_restore_keeps_signup_client(self):
+  result=self.run_js("client.auth.getSession=async()=>{throw new Error('refresh failed');};await initSupabaseAuth();return [supabaseClient===client,authInitializationError.length>0];")
+  self.assertEqual(result,[True,True])
+ def test_login_retries_initialization_if_it_was_skipped(self):
+  result=self.run_js("supabaseClient=null;await submitEmailLogin(submitEvent('loginForm'));return [calls.signIn,currentAuthUser.id];")
+  self.assertEqual(result,[1,'account-a'])
  def test_signup_password_mismatch_does_not_call_service(self):
   result=self.run_js("document.getElementById('signupPassword').value='password1';document.getElementById('signupPasswordConfirm').value='password2';await submitEmailSignup(submitEvent('signupForm'));return [calls.signUp,document.getElementById('signupMessage').textContent];")
   self.assertEqual(result[0],0);self.assertIn('같지',result[1])

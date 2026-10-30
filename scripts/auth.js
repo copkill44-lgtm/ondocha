@@ -9,6 +9,7 @@ let suspendCloudSync = false,
     authDataReady = false,
     processingAuthId = null,
     authSyncPromise = null;
+let authInitializationError = '';
 
 function setAccountUi(user) {
     const button = document.getElementById('accountButton');
@@ -150,7 +151,15 @@ async function synchronizeAuthUser(user) {
 
 async function initSupabaseAuth() {
     setAccountUi(null);
-    if (!window.supabase || !SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY || SUPABASE_URL.startsWith('YOUR_') || SUPABASE_PUBLISHABLE_KEY.startsWith('YOUR_')) return;
+    authInitializationError = '';
+    if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY || SUPABASE_URL.startsWith('YOUR_') || SUPABASE_PUBLISHABLE_KEY.startsWith('YOUR_')) {
+        authInitializationError = '로그인 연결 설정이 아직 적용되지 않았어요. 사이트를 새로고침해 주세요.';
+        return;
+    }
+    if (!window.supabase?.createClient) {
+        authInitializationError = '로그인 파일을 불러오지 못했어요. 인터넷 연결을 확인하고 새로고침해 주세요.';
+        return;
+    }
     try {
         supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
         supabaseClient.auth.onAuthStateChange((event, session) => {
@@ -185,7 +194,8 @@ async function initSupabaseAuth() {
             if (data.session) finishEmailAuth();
         }
     } catch {
-        supabaseClient = null;
+        // Keep a valid client: a session refresh failure must not disable signup.
+        authInitializationError = '로그인 서버에 연결하지 못했어요. 인터넷 연결을 확인하고 다시 시도해 주세요.';
         if (authRecoveryMode) {
             openEmailAuth('resetPasswordView');
             setAuthMessage('resetMessage', '재설정 링크를 확인할 수 없어요. 연결을 확인하고 새 메일을 받아 주세요.');
