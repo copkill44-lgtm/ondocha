@@ -1,4 +1,4 @@
-#sky { height: auto; min-height: 190px; padding-bottom: 48px; }
+#sky { height: auto; min-height: 190px; padding-bottom: 48px; scroll-margin-top: 12px; }
 .weather-actions { display: flex; flex-wrap: wrap; gap: 8px; position: relative; z-index: 1; margin-top: 8px; }
 #sky .weather-config { position: relative; z-index: 1; margin-top: 12px; max-width: 430px; }
 #sky .weather-config.open { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }

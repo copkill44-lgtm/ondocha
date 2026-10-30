@@ -203,6 +203,11 @@ function closeResults() {
 function recommend() {
     let modal = document.getElementById('thinking');
     if (modal.classList.contains('visible')) return;
+    if (typeof tourWeatherRequired === 'function' && tourWeatherRequired()) {
+        updateTourWeatherGate();
+        toast('먼저 날씨를 설정해 주세요.');
+        return;
+    }
     if (!canRequestRecommendation()) return;
     const isGuestRequest = !currentAuthUser;
     let selectedFeel = document.querySelector('input[name=feel]:checked'),

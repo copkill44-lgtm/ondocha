@@ -60,6 +60,15 @@ class WeatherTests(unittest.TestCase):
     def test_saved_manual_city_skips_location_prompt(self):
         value=self.run_js("localStorage.setItem('weather-mode','manual');localStorage.setItem('weather-city','Busan');await locate();return [weatherDestination.label,requests.length];")
         self.assertEqual(value,['Busan',1])
+    def test_denied_location_does_not_complete_tour_requirement(self):
+        value=self.run_js("navigator.geolocation={getCurrentPosition(ok,fail){fail({code:1})}};locate();await Promise.resolve();await Promise.resolve();return weatherSetupComplete;")
+        self.assertFalse(value)
+    def test_explicit_city_confirmation_completes_requirement(self):
+        value=self.run_js("await selectWeatherCity('Seoul');return weatherSetupComplete;")
+        self.assertTrue(value)
+    def test_failed_weather_does_not_complete_requirement(self):
+        value=self.run_js("fail=true;await selectWeatherCity('Seoul');return weatherSetupComplete;")
+        self.assertFalse(value)
     def test_weather_codes(self):
         value=self.run_js("return [weatherDescription(0).kind,weatherDescription(3).kind,weatherDescription(75).kind,weatherDescription(95).kind,weatherDescription(999).kind];")
         self.assertEqual(value,['sunny','overcast','snowy','stormy','unknown'])

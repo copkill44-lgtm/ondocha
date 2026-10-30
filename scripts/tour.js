@@ -14,10 +14,46 @@ const featureTourSteps = [
 let featureTourIndex = 0,
     featureTourActive = false,
     tourFrame = 0;
+let accountTourTimer = null;
+
+function maybeStartAccountTour() {
+    clearTimeout(accountTourTimer);
+    if (!currentAuthUser || !authDataReady || featureTourActive) return;
+    if (localStorage.getItem('codini-account-tour-seen') === '1') return;
+    const owner = currentAuthUser.id;
+    accountTourTimer = setTimeout(() => {
+        if (currentAuthUser?.id === owner && localStorage.getItem('codini-account-tour-seen') !== '1') startFeatureTour();
+    }, 500);
+}
+
+function tourWeatherRequired() {
+    return featureTourActive && featureTourIndex === 0 && !weatherSetupComplete;
+}
+
+function updateTourWeatherGate() {
+    const blocked = tourWeatherRequired();
+    document.getElementById('tourNext').disabled = blocked;
+    document.getElementById('tourSkip').disabled = blocked;
+    const hint = document.getElementById('tourWeatherHint');
+    hint.hidden = !featureTourActive || featureTourIndex !== 0;
+    hint.textContent = blocked
+        ? '내 위치를 허용하거나 도시를 선택하고 ‘이 도시로 설정’을 눌러주세요. 날씨를 불러오면 다음으로 갈 수 있어요.'
+        : '날씨 설정 완료! 다음 기능도 함께 둘러볼까요?';
+}
+
+document.addEventListener('ondocha-weather-change', () => {
+    if (!featureTourActive) return;
+    updateTourWeatherGate();
+    scheduleTourPosition();
+});
 
 function startFeatureTour() {
     featureTourIndex = 0;
     featureTourActive = true;
+    if (!weatherSetupComplete) {
+        document.getElementById('weatherConfig').classList.add('open');
+        document.getElementById('weatherSettingsToggle').setAttribute('aria-expanded', 'true');
+    }
     showHome();
     setTimeout(() => {
         if (featureTourActive) showFeatureTourStep();
@@ -25,6 +61,7 @@ function startFeatureTour() {
 }
 
 function moveFeatureTour(delta) {
+    if (delta > 0 && tourWeatherRequired()) { updateTourWeatherGate(); return; }
     featureTourIndex += delta;
     if (featureTourIndex >= featureTourSteps.length) {
         finishFeatureTour();
@@ -48,10 +85,11 @@ function showFeatureTourStep() {
     document.getElementById('tourPrevious').hidden = featureTourIndex === 0;
     document.getElementById('tourNext').textContent = featureTourIndex === featureTourSteps.length - 1 ? '시작' : '다음으로 →';
     document.getElementById('tourMeterFill').style.width = ((featureTourIndex + 1) / featureTourSteps.length * 100) + '%';
+    updateTourWeatherGate();
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     target.scrollIntoView({
         behavior: reduceMotion ? 'instant' : 'smooth',
-        block: 'center'
+        block: featureTourIndex === 0 ? 'start' : 'center'
     });
     if (!reduceMotion) {
         const card = document.querySelector('.tour-card');
@@ -134,10 +172,11 @@ function positionFeatureTour() {
 }
 
 function finishFeatureTour() {
+    if (tourWeatherRequired()) { updateTourWeatherGate(); return false; }
     featureTourActive = false;
     document.getElementById('featureTour').hidden = true;
     try {
-        localStorage.setItem('codini-tour-seen', '1');
+        localStorage.setItem(currentAuthUser ? 'codini-account-tour-seen' : 'codini-tour-seen', '1');
     } catch (e) {}
     const button = document.querySelector('.tour-replay');
     if (button) button.focus({

@@ -4,6 +4,11 @@ let weatherDestination = null;
 let weatherRequest = 0;
 let locationRequest = 0;
 let weatherController = null;
+let weatherSetupComplete = false;
+
+function notifyWeatherSetup() {
+    document.dispatchEvent?.(new Event('ondocha-weather-change'));
+}
 
 function weatherDescription(code) {
     if (code === 0 || code === 1) return { label: code === 0 ? '맑음' : '대체로 맑음', kind: 'sunny' };
@@ -29,7 +34,7 @@ function selectWeatherCity(name, notice = '') {
     city = entry[0];
     $('weatherCity').value = city;
     try { localStorage.setItem('weather-city', city); localStorage.setItem('weather-mode', 'manual'); } catch {}
-    return getWeather({ label: city, latitude: entry[1], longitude: entry[2], source: notice || '선택한 도시 기준' });
+    return getWeather({ label: city, latitude: entry[1], longitude: entry[2], source: notice || '선택한 도시 기준', confirmed: !notice });
 }
 
 function locate(force = false) {
@@ -41,6 +46,8 @@ function locate(force = false) {
     if (weatherController) weatherController.abort();
     weatherTemp = null;
     weatherApparentTemp = null;
+    weatherSetupComplete = false;
+    notifyWeatherSetup();
     $('skyTitle').textContent = '내 위치를 확인하고 있어요';
     $('skyDetail').textContent = '위치를 허용하면 지금 있는 곳의 날씨를 자동으로 알려드려요.';
     $('weatherBadge').textContent = '위치 확인 중';
@@ -57,7 +64,7 @@ function locate(force = false) {
         const { latitude, longitude } = position.coords;
         if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return fallback('위치 확인 불가');
         try { localStorage.setItem('weather-mode', 'auto'); } catch {}
-        getWeather({ label: '현재 위치', latitude, longitude, source: '내 위치 기준' });
+        getWeather({ label: '현재 위치', latitude, longitude, source: '내 위치 기준', confirmed: true });
     }, error => fallback(error.code === 1 ? '위치 권한 꺼짐' : '위치 확인 지연'), {
         timeout: 10000, maximumAge: 300000, enableHighAccuracy: false
     });
@@ -73,6 +80,8 @@ async function getWeather(destination) {
     city = destination.label;
     weatherTemp = null;
     weatherApparentTemp = null;
+    weatherSetupComplete = false;
+    notifyWeatherSetup();
     $('sky').setAttribute('aria-busy', 'true');
     $('sky').dataset.weather = 'unknown';
     $('skyTitle').textContent = city + ' 날씨를 불러오고 있어요';
@@ -91,6 +100,7 @@ async function getWeather(destination) {
         if (!current || typeof current.temperature_2m !== 'number' || !Number.isFinite(current.temperature_2m)) throw new Error('Missing temperature');
         if (request !== weatherRequest) return;
         weatherTemp = current.temperature_2m;
+        weatherSetupComplete = destination.confirmed === true;
         weatherApparentTemp = typeof current.apparent_temperature === 'number' && Number.isFinite(current.apparent_temperature) ? current.apparent_temperature : null;
         const state = weatherDescription(current.weather_code);
         $('sky').dataset.weather = state.kind;
@@ -114,6 +124,7 @@ async function getWeather(destination) {
     } finally {
         clearTimeout(timeout);
         if (request === weatherRequest) $('sky').setAttribute('aria-busy', 'false');
+        if (request === weatherRequest) notifyWeatherSetup();
     }
 }
 

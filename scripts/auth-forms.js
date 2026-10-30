@@ -65,6 +65,7 @@ function finishEmailAuth() {
         screen.setAttribute('aria-hidden', 'true');
     }
     showRecommendationHome();
+    if (typeof maybeStartAccountTour === 'function') maybeStartAccountTour();
 }
 
 function emailAuthRedirect(recovery = false) {

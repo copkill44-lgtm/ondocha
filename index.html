@@ -235,6 +235,7 @@
                 <select id="weatherCity" onchange="selectWeatherCity(this.value)">
                     <option>서울</option><option>인천</option><option>대전</option><option>대구</option><option>부산</option><option>광주</option><option>제주</option>
                 </select>
+                <button type="button" onclick="selectWeatherCity(document.getElementById('weatherCity').value)">이 도시로 설정</button>
                 <button type="button" onclick="locate(true)">내 위치로 찾기</button>
             </div>
             <a class="weather-attribution" href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">날씨 데이터: Open-Meteo</a>
@@ -427,7 +428,8 @@
             <div class="tour-companion"><img src="assets/images/mascots/onboarding-excited.png" alt="안내하는 코디니"><div><span>코디니랑 같이 해봐요</span><small id="tourProgress"></small></div></div>
             <div class="tour-meter" aria-hidden="true"><i id="tourMeterFill"></i></div>
             <h2 id="tourTitle" tabindex="-1"></h2><p id="tourCopy"></p>
-            <div class="tour-controls"><button type="button" onclick="finishFeatureTour()">건너뛰기</button><button id="tourPrevious" type="button" onclick="moveFeatureTour(-1)">이전</button><button id="tourNext" type="button" onclick="moveFeatureTour(1)">다음</button></div>
+            <p class="tour-weather-hint" id="tourWeatherHint" role="status" hidden></p>
+            <div class="tour-controls"><button id="tourSkip" type="button" onclick="finishFeatureTour()">건너뛰기</button><button id="tourPrevious" type="button" onclick="moveFeatureTour(-1)">이전</button><button id="tourNext" type="button" onclick="moveFeatureTour(1)">다음</button></div>
         </aside>
     </div>
 
