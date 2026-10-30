@@ -29,11 +29,12 @@ function toggleWeatherSettings() {
 }
 
 function selectWeatherCity(name, notice = '') {
+    if (typeof restoreWeatherRegion === 'function') return restoreWeatherRegion(name, notice);
     const entry = coords.find(item => item[0] === name) || coords[0];
     locationRequest++;
     city = entry[0];
     $('weatherCity').value = city;
-    try { localStorage.setItem('weather-city', city); localStorage.setItem('weather-mode', 'manual'); } catch {}
+    try { localStorage.setItem('weather-city', city); localStorage.setItem('weather-mode', notice ? 'fallback' : 'manual'); } catch {}
     return getWeather({ label: city, latitude: entry[1], longitude: entry[2], source: notice || '선택한 도시 기준', confirmed: !notice });
 }
 

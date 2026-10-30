@@ -1,7 +1,7 @@
 // Email/password authentication and per-user cloud synchronization.
 const SUPABASE_URL = ONDOCHA_CONFIG.supabaseUrl;
 const SUPABASE_PUBLISHABLE_KEY = ONDOCHA_CONFIG.supabasePublishableKey;
-const CLOUD_DATA_KEYS = ["ootd-events", "codini-character", "feel-level", "custom-clothing-types", "custom-top-types", "custom-accessory-types", "clothing-preferences", "weather-city", "codini-account-tour-seen"];
+const CLOUD_DATA_KEYS = ["ootd-events", "codini-character", "feel-level", "custom-clothing-types", "custom-top-types", "custom-accessory-types", "clothing-preferences", "weather-city", "weather-region", "codini-account-tour-seen"];
 let supabaseClient = null,
     currentAuthUser = null,
     cloudSaveTimer = null;

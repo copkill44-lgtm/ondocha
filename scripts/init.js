@@ -14,5 +14,6 @@ let feelIndex = ['매우 추워요', '쌀쌀해요', '괜찮아요', '따뜻해�
 $('feelSlider').value = feelIndex < 0 ? 1 : feelIndex;
 updateFeelFromSlider();
 renderCategoryChoices();
+initWeatherRegions();
 locate();
 renderCalendar();

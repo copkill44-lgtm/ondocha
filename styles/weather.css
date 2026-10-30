@@ -1,6 +1,6 @@
 #sky { height: auto; min-height: 190px; padding-bottom: 48px; scroll-margin-top: 12px; }
 .weather-actions { display: flex; flex-wrap: wrap; gap: 8px; position: relative; z-index: 1; margin-top: 8px; }
-#sky .weather-config { position: relative; z-index: 1; margin-top: 12px; max-width: 430px; }
+#sky .weather-config { position: relative; z-index: 1; margin-top: 12px; max-width: 620px; }
 #sky .weather-config.open { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 #sky .weather-config label { font-size: 12px; color: #5978a4; }
 #sky .weather-config select { max-width: 150px; border: 1px solid #dce7f5; border-radius: 9px; padding: 7px 10px; background: #fff; color: #496a96; }

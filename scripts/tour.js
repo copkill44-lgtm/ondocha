@@ -37,7 +37,7 @@ function updateTourWeatherGate() {
     const hint = document.getElementById('tourWeatherHint');
     hint.hidden = !featureTourActive || featureTourIndex !== 0;
     hint.textContent = blocked
-        ? '내 위치를 허용하거나 도시를 선택하고 ‘이 도시로 설정’을 눌러주세요. 날씨를 불러오면 다음으로 갈 수 있어요.'
+        ? '내 위치를 허용하거나 시/도와 시/군/구를 고르고 ‘이 지역으로 설정’을 눌러주세요. 날씨를 불러오면 다음으로 갈 수 있어요.'
         : '날씨 설정 완료! 다음 기능도 함께 둘러볼까요?';
 }
 
