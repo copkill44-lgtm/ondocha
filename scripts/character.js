@@ -118,10 +118,6 @@ function continueWithoutAccount() {
     openCharacterSetup()
 }
 
-function authComingSoon() {
-    toast('로그인과 회원가입 기능은 준비 중이에요.')
-}
-
 function openCharacterSetup() {
     let page = document.getElementById('onboarding');
     page.classList.remove('visible');

@@ -1,4 +1,5 @@
 .tools/
+.vscode/settings.json
 .backups/
 publish-ready/
 website-publish-ready.zip

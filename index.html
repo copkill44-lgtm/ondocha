@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="styles/tour.css">
     <link rel="stylesheet" href="styles/carousel.css">
     <link rel="stylesheet" href="styles/calendar.css">
+    <link rel="stylesheet" href="styles/auth.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
@@ -113,26 +114,52 @@
     <section class="account-flow" id="accountFlow" aria-hidden="true">
         <div class="account-card">
 
-            <section class="account-view active" id="accountChoice" aria-label="로그인 및 회원가입"><div class="login-artboard"><img class="login-choice-art" src="assets/images/screens/login.png" alt="온도차. 오늘의 체감온도. 내 취향에 맞는 코디를 저장하고 언제든 다시 확인해 보세요."><button type="button" class="login-art-hit login-hit" aria-label="로그인" onclick="showAccountView('loginView')">로그인</button><button type="button" class="login-art-hit signup-hit" aria-label="회원가입" onclick="showAccountView('signupView')">회원가입</button><button type="button" class="login-guest" onclick="continueWithoutAccount()">로그인 없이 둘러보기</button></div></section><section class="account-view" id="loginView"><button type="button" class="account-back"
-                    onclick="showAccountView('accountChoice')">‹ 이전</button>
-                <h2>로그인 정보를<br>입력하세요</h2>
-                <p class="account-caption">로그인 후 내 코디를 저장할 수 있어요.</p><label>이메일<input type="email" autocomplete="email"
-                        placeholder="이메일을 입력하세요"></label><label>비밀번호<input type="password"
-                        autocomplete="current-password" placeholder="비밀번호를 입력하세요"></label><button type="button"
-                    class="primary account-main-button" onclick="authComingSoon()">로그인</button>
-                <p class="account-switch">계정이 없으신가요? <button type="button"
-                        onclick="showAccountView('signupView')">회원가입</button></p>
+            <section class="account-view active" id="accountChoice" aria-label="로그인 및 회원가입"><div class="login-artboard"><img class="login-choice-art" src="assets/images/screens/login.png" alt="온도차. 오늘의 체감온도. 내 취향에 맞는 코디를 저장하고 언제든 다시 확인해 보세요."><button type="button" class="login-art-hit login-hit" aria-label="로그인" onclick="showAccountView('loginView')">로그인</button><button type="button" class="login-art-hit signup-hit" aria-label="회원가입" onclick="showAccountView('signupView')">회원가입</button><button type="button" class="login-guest" onclick="continueWithoutAccount()">로그인 없이 둘러보기</button></div></section><section class="account-view" id="loginView">
+                <button type="button" class="account-back" onclick="leaveEmailAuth()">‹ 이전</button>
+                <h2>다시 만나서 반가워요</h2>
+                <p class="account-caption">이메일과 비밀번호로 내 코디를 불러와요.</p>
+                <form class="auth-form" id="loginForm" onsubmit="submitEmailLogin(event)">
+                    <label>이메일<input id="loginEmail" type="email" autocomplete="email" maxlength="254" required placeholder="이메일을 입력하세요"></label>
+                    <label>비밀번호<input id="loginPassword" type="password" autocomplete="current-password" required placeholder="비밀번호를 입력하세요"></label>
+                    <p class="auth-message" id="loginMessage" role="status" aria-live="polite" hidden></p>
+                    <button type="submit" class="primary account-main-button">로그인</button>
+                </form>
+                <button type="button" class="auth-text-button" onclick="showAccountView('resetPasswordView')">비밀번호를 잊었나요?</button>
+                <p class="account-switch">처음 오셨나요? <button type="button" onclick="showAccountView('signupView')">회원가입</button></p>
             </section>
-            <section class="account-view" id="signupView"><button type="button" class="account-back"
-                    onclick="showAccountView('accountChoice')">‹ 이전</button>
-                <h2>새 계정 만들기</h2>
-                <p class="account-caption">가입해서 나만의 코디를 모아보세요.</p><label>이메일<input type="email" autocomplete="email"
-                        placeholder="이메일을 입력하세요"></label><label>비밀번호<input type="password" autocomplete="new-password"
-                        placeholder="비밀번호를 입력하세요"></label><label>비밀번호 확인<input type="password"
-                        autocomplete="new-password" placeholder="비밀번호를 다시 입력하세요"></label><button type="button"
-                    class="primary account-main-button" onclick="authComingSoon()">회원가입</button>
-                <p class="account-switch">이미 계정이 있으신가요? <button type="button"
-                        onclick="showAccountView('loginView')">로그인</button></p>
+            <section class="account-view" id="signupView">
+                <button type="button" class="account-back" onclick="leaveEmailAuth()">‹ 이전</button>
+                <h2>나만의 코디를 모아봐요</h2>
+                <p class="account-caption">이메일로 가입하고 확인 메일을 받아보세요.</p>
+                <form class="auth-form" id="signupForm" onsubmit="submitEmailSignup(event)">
+                    <label>이메일<input id="signupEmail" type="email" autocomplete="email" maxlength="254" required placeholder="이메일을 입력하세요"></label>
+                    <label>비밀번호<input id="signupPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="8자 이상 입력하세요"></label>
+                    <label>비밀번호 확인<input id="signupPasswordConfirm" type="password" autocomplete="new-password" minlength="8" required placeholder="비밀번호를 다시 입력하세요"></label>
+                    <p class="auth-message" id="signupMessage" role="status" aria-live="polite" hidden></p>
+                    <button type="submit" class="primary account-main-button">회원가입</button>
+                </form>
+                <p class="account-switch">이미 계정이 있나요? <button type="button" onclick="showAccountView('loginView')">로그인</button></p>
+            </section>
+            <section class="account-view" id="resetPasswordView">
+                <button type="button" class="account-back" onclick="showAccountView('loginView')">‹ 로그인으로</button>
+                <h2>비밀번호를 잊었나요?</h2>
+                <p class="account-caption">가입한 이메일로 비밀번호 재설정 링크를 보내드릴게요.</p>
+                <form class="auth-form" id="resetPasswordForm" onsubmit="submitPasswordReset(event)">
+                    <label>이메일<input id="resetEmail" type="email" autocomplete="email" maxlength="254" required placeholder="가입한 이메일을 입력하세요"></label>
+                    <p class="auth-message" id="resetMessage" role="status" aria-live="polite" hidden></p>
+                    <button type="submit" class="primary account-main-button">재설정 메일 받기</button>
+                </form>
+            </section>
+            <section class="account-view" id="updatePasswordView">
+                <h2>새 비밀번호를 정해요</h2>
+                <p class="account-caption">앞으로 사용할 비밀번호를 입력해 주세요.</p>
+                <form class="auth-form" id="updatePasswordForm" onsubmit="submitNewPassword(event)">
+                    <label>새 비밀번호<input id="newPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="8자 이상 입력하세요"></label>
+                    <label>비밀번호 확인<input id="newPasswordConfirm" type="password" autocomplete="new-password" minlength="8" required placeholder="비밀번호를 다시 입력하세요"></label>
+                    <p class="auth-message" id="updateMessage" role="status" aria-live="polite" hidden></p>
+                    <button type="submit" class="primary account-main-button">새 비밀번호 저장</button>
+                </form>
+                <button type="button" class="auth-text-button" onclick="cancelPasswordRecovery()">로그인 화면으로</button>
             </section>
         </div>
     </section>
@@ -188,7 +215,7 @@
             <button type="button" class="tour-replay" onclick="startFeatureTour()">사용법 안내</button><nav class="nav"><button class="active" id="navHome" onclick="showHome()">코디 추천</button><button
                     id="navCalendar" onclick="showCalendar()">코디 캘린더</button></nav>
             <div class="account-area"><span id="accountLabel" hidden></span><button type="button" class="account-button"
-                    id="accountButton" onclick="handleAccountButton()">Google 로그인</button></div><span class="today"
+                    id="accountButton" onclick="handleAccountButton()">이메일 로그인</button></div><span class="today"
                 id="today"></span>
         </header>
         <section class="sky">
@@ -389,7 +416,9 @@
 
     <script src="scripts/state.js"></script>
     <script src="scripts/clothing.js"></script>
+    <script src="scripts/config.js"></script>
     <script src="scripts/auth.js"></script>
+    <script src="scripts/auth-forms.js"></script>
     <script src="scripts/navigation.js"></script>
     <script src="scripts/weather.js"></script>
     <script src="scripts/recommendations.js"></script>

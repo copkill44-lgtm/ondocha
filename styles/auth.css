@@ -1,0 +1,9 @@
+#accountFlow .account-card { overflow-y: auto; }
+.auth-form { width: 100%; }
+.auth-message { margin: 12px 0; padding: 12px 14px; border-radius: 12px; background: #edf4ff; color: #53739e; font-size: 13px; line-height: 1.7; overflow-wrap: anywhere; }
+.auth-message[hidden] { display: none; }
+.auth-message[data-kind="error"] { background: #fff0f2; color: #b85d72; }
+.auth-message[data-kind="success"] { background: #edf8f2; color: #4f8769; }
+.auth-form button:disabled { opacity: .55; cursor: wait; }
+.auth-text-button { display: block; margin: 12px auto; border: 0; background: transparent; color: #7594bd; font-size: 12px; padding: 7px; }
+.auth-password-hint { margin: -6px 0 12px; color: #8996a7; font-size: 11px; }

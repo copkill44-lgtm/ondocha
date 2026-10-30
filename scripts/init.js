@@ -11,4 +11,4 @@ updateFeelFromSlider();
 renderCategoryChoices();
 locate();
 renderCalendar();
-initSupabaseAuth();
+authInitialization = initSupabaseAuth();
