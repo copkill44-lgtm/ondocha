@@ -238,15 +238,18 @@ function updateCategoryPreview() {
             "귀걸이": "💎",
             "시계": "⌚"
         };
-    $("categoryPreviewIcon").innerHTML = clothingIconMarkup(name, ({
+    const previewItem = name.endsWith('추천받기')
+        ? ({ topCategory: '티셔츠', category: '긴바지', accessoryCategory: '' })[group]
+        : name;
+    $("categoryPreviewIcon").innerHTML = previewItem ? clothingIconMarkup(previewItem, ({
         아이보리: "#f7f5ef",
         핑크: "#e8a9b2",
         하늘색: "#9cb7de",
         초록: "#93c4a5",
         검정: "#50536b",
         베이지: "#d4a46d"
-    })[(clothingPreferences[group] || {}).color] || "#f7f5ef");
-    $("categoryPreviewIcon").hidden = name.endsWith('추천받기');
+    })[(clothingPreferences[group] || {}).color] || "#f7f5ef") : '';
+    $("categoryPreviewIcon").hidden = !previewItem;
     $("categoryPreviewName").textContent = name;
     $("categoryPreviewStyle").textContent = categoryPreferenceText(group);
     $("categoryModalTitle").textContent = names[group][0] + " 설정"

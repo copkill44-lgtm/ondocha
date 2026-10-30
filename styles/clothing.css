@@ -22,9 +22,19 @@
 #categoryModal .category-editor { height: 100%; min-height: 0; max-height: 100%; overflow-y: auto; padding: 3px 8px 16px 3px; }
 #categoryModal .category-done { margin: 16px 0 0 auto; justify-self: end; }
 #categoryPreviewIcon[hidden] { display: none !important; }
+#categoryModal .color-options label { position: relative; }
+#categoryModal .color-options input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+}
 #categoryModal .category-list .recommendation-choice { min-height: 42px; flex-direction: row; align-items: center; gap: 8px; padding: 10px 12px; }
 #categoryModal .color-options .no-color { display: flex; flex-direction: row; align-items: center; align-self: center; gap: 7px; padding: 8px 10px; border: 1px solid #e4eaf2; border-radius: 10px; font-size: 12px; }
-#categoryModal .color-options .no-color input { position: static; opacity: 1; margin: 0; }
+#categoryModal .color-options .no-color input { position: static; width: auto; height: auto; opacity: 1; margin: 0; }
 @media(max-width:640px) {
     #categoryModal .category-modal-card { padding: 20px 16px; height: min(720px, calc(100dvh - 24px)); max-height: calc(100dvh - 24px); }
     #categoryModal .category-modal-layout { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); gap: 12px; }
