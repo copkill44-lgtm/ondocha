@@ -7,3 +7,6 @@
 .auth-form button:disabled { opacity: .55; cursor: wait; }
 .auth-text-button { display: block; margin: 12px auto; border: 0; background: transparent; color: #7594bd; font-size: 12px; padding: 7px; }
 .auth-password-hint { margin: -6px 0 12px; color: #8996a7; font-size: 11px; }
+.guest-usage-notice { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; padding: 12px 14px; margin: 14px 0; border-radius: 14px; background: #edf4ff; color: #6384b1; font-size: 12px; }
+.guest-usage-notice[hidden] { display: none; }
+.guest-usage-notice button { border: 0; border-radius: 9px; padding: 7px 10px; background: #fff; color: #496a96; font: inherit; font-weight: 700; }

@@ -64,13 +64,7 @@ function finishEmailAuth() {
         if (id === 'welcome') screen.style.display = 'none';
         screen.setAttribute('aria-hidden', 'true');
     }
-    if (localStorage.getItem('codini-character')) {
-        document.getElementById('app').style.display = 'block';
-        renderCalendar();
-        document.getElementById('accountButton').focus({
-            preventScroll: true
-        });
-    } else openCharacterSetup();
+    showRecommendationHome();
 }
 
 function emailAuthRedirect(recovery = false) {

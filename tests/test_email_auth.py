@@ -10,7 +10,7 @@ function element(id=''){return {id,value:'',textContent:'',hidden:false,dataset:
  classList:{add(){},remove(){},contains(){return false;}},setAttribute(){},focus(){},replaceChildren(){},
  reportValidity(){return true;},querySelectorAll(){return [];}};}
 const document={getElementById(id){return nodes[id]||(nodes[id]=element(id));}, querySelectorAll(){return [];}};
-const window=globalThis;
+const window=globalThis;window.addEventListener=()=>{};
 window.location={href:'https://copkill44-lgtm.github.io/ondocha/',origin:'https://copkill44-lgtm.github.io',pathname:'/ondocha/',protocol:'https:',hash:'',reload(){calls.reload++;}};
 window.history={replaceState(){}};
 class URLSearchParams {
@@ -22,11 +22,11 @@ class URL {
  constructor(s){const [base,hash='']=s.split('#'),[path,query='']=base.split('?'); const m=path.match(/^(https?:\/\/[^/]+)(.*)$/);this.origin=m?m[1]:'';this.pathname=m?m[2]:path;this.hash=hash?'#'+hash:'';this.searchParams=new URLSearchParams(query);}
  get href(){const q=this.searchParams.toString();return this.origin+this.pathname+(q?'?'+q:'')+this.hash;}
 }
-let calls={signUp:0,signIn:0,update:0,reset:0,save:0,reload:0,setup:0};
+let calls={signUp:0,signIn:0,update:0,reset:0,save:0,reload:0,setup:0,home:0};
 let messages=[],lastView='',remoteRow=null,cloudError=null;
 let events={},characterConfig={},characterInitialized=false,customCategories=[],customTopCategories=[],customAccessoryCategories=[],categoryOptions=[],baseCategories=[],clothingPreferences={},looks=[],selected=0;
 function renderCategoryChoices(){} function updateFeelFromSlider(){} function renderCalendar(){}
-function openCharacterSetup(){calls.setup++;} function showAccountView(id){lastView=id;}
+function showRecommendationHome(){calls.home++;updateGuestUsage();} function openCharacterSetup(){calls.setup++;} function showAccountView(id){lastView=id;}
 function toast(s){messages.push(s);} function setTimeout(){return 0;} function clearTimeout(){}
 const ONDOCHA_CONFIG={supabaseUrl:'https://example.supabase.co',supabasePublishableKey:'sb_publishable_test'};
 const user={id:'account-a',email:'person@example.com'};
@@ -46,7 +46,7 @@ function submitEvent(id){return {preventDefault(){},currentTarget:document.getEl
 class EmailAuthTests(unittest.TestCase):
  def setUp(self):
   self.ctx=quickjs.Context();self.ctx.eval(BOOT)
-  for name in ['auth.js','auth-forms.js']:self.ctx.eval(Path('scripts',name).read_text(encoding='utf-8'))
+  for name in ['auth.js','auth-forms.js','guest-usage.js']:self.ctx.eval(Path('scripts',name).read_text(encoding='utf-8'))
   self.ctx.eval('supabaseClient=client;authInitialization=Promise.resolve();')
  def run_js(self,body):
   self.ctx.eval('var result=null,done=false,failure=null;(async()=>{'+body+'})().then(value=>{result=value;done=true;},error=>{failure=String(error);done=true;});')
@@ -75,8 +75,26 @@ class EmailAuthTests(unittest.TestCase):
   result=self.run_js("authResponse={data:{session:null},error:{code:'invalid_credentials'}};await submitEmailLogin(submitEvent('loginForm'));return [currentAuthUser,document.getElementById('loginMessage').textContent,authActionBusy];")
   self.assertIsNone(result[0]);self.assertIn('비밀번호',result[1]);self.assertFalse(result[2])
  def test_success_preserves_password_whitespace_and_saves_no_password(self):
-  result=self.run_js("document.getElementById('loginEmail').value=' person@example.com ';document.getElementById('loginPassword').value=' password1 ';await submitEmailLogin(submitEvent('loginForm'));return [currentAuthUser.id,calls.loginPayload,JSON.stringify(calls.saved),calls.setup];")
+  result=self.run_js("document.getElementById('loginEmail').value=' person@example.com ';document.getElementById('loginPassword').value=' password1 ';await submitEmailLogin(submitEvent('loginForm'));return [currentAuthUser.id,calls.loginPayload,JSON.stringify(calls.saved),calls.home];")
   self.assertEqual(result[0],'account-a');self.assertEqual(result[1]['password'],' password1 ');self.assertEqual(result[1]['email'],'person@example.com');self.assertNotIn('password1',result[2]);self.assertEqual(result[3],1)
+ def test_login_without_character_goes_directly_home(self):
+  result=self.run_js("await submitEmailLogin(submitEvent('loginForm'));return [calls.home,calls.setup];")
+  self.assertEqual(result,[1,0])
+ def test_guest_has_five_uses_then_login_is_required(self):
+  result=self.run_js("for(let i=0;i<5;i++){if(!canRequestRecommendation())throw Error('too early');recordGuestRecommendation();}return [guestRecommendationsUsed(),canRequestRecommendation(),lastView];")
+  self.assertEqual(result,[5,False,'loginView'])
+ def test_guest_limit_survives_reload(self):
+  result=self.run_js("localStorage.setItem(GUEST_USAGE_KEY,'5');guestUsageMemory=0;return [guestRecommendationsUsed(),canRequestRecommendation()];")
+  self.assertEqual(result,[5,False])
+ def test_signed_in_user_can_continue_after_guest_limit(self):
+  result=self.run_js("localStorage.setItem(GUEST_USAGE_KEY,'5');currentAuthUser=user;return canRequestRecommendation();")
+  self.assertTrue(result)
+ def test_logout_does_not_reset_trial(self):
+  result=self.run_js("localStorage.setItem(GUEST_USAGE_KEY,'5');currentAuthUser=user;authActionBusy=true;await processAuthUser(null);return [guestRecommendationsUsed(),canRequestRecommendation()];")
+  self.assertEqual(result,[5,False])
+ def test_trial_key_not_in_cloud_data(self):
+  result=self.run_js("recordGuestRecommendation();return [CLOUD_DATA_KEYS.includes(GUEST_USAGE_KEY),Object.keys(localAppData()).includes(GUEST_USAGE_KEY)];")
+  self.assertEqual(result,[False,False])
  def test_reset_redirect_stays_under_pages_project(self):
   result=self.run_js("document.getElementById('resetEmail').value='person@example.com';await submitPasswordReset(submitEvent('resetPasswordForm'));return calls.resetOptions;")
   self.assertEqual(result['redirectTo'],'https://copkill44-lgtm.github.io/ondocha/?auth=recovery')

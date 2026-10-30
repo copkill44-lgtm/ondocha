@@ -290,6 +290,10 @@
             </fieldset>
             <div class="date-row"><label>날짜 <input id="eventDate" type="date"></label><label>시간 <input id="eventTime"
                         type="time"></label></div>
+            <div class="guest-usage-notice" id="guestUsageNotice" hidden>
+                <span id="guestUsageText"></span>
+                <button type="button" onclick="openEmailAuth('loginView')">로그인하고 계속하기</button>
+            </div>
             <button class="primary" onclick="recommend()">확인하고 코디 추천받기</button>
             <div class="suggest" id="suggest">
                 <div class="results-head"><button class="result-back" onclick="closeResults()">← 코디 입력으로
@@ -419,6 +423,7 @@
     <script src="scripts/config.js"></script>
     <script src="scripts/auth.js"></script>
     <script src="scripts/auth-forms.js"></script>
+    <script src="scripts/guest-usage.js"></script>
     <script src="scripts/navigation.js"></script>
     <script src="scripts/weather.js"></script>
     <script src="scripts/recommendations.js"></script>

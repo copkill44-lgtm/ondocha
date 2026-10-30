@@ -202,6 +202,8 @@ function closeResults() {
 function recommend() {
     let modal = document.getElementById('thinking');
     if (modal.classList.contains('visible')) return;
+    if (!canRequestRecommendation()) return;
+    const isGuestRequest = !currentAuthUser;
     let selectedFeel = document.querySelector('input[name=feel]:checked'),
         selectedCategory = document.querySelector('input[name=category]:checked'),
         selectedTop = document.querySelector('input[name=topCategory]:checked');
@@ -245,7 +247,8 @@ function recommend() {
             let poseDelay = Math.max(0, 900 - (Date.now() - start));
             setTimeout(() => {
                 try {
-                    generateRecommendations(aiRecommendations)
+                    generateRecommendations(aiRecommendations);
+                    if (isGuestRequest) recordGuestRecommendation();
                 } catch (error) {
                     console.error(error);
                     toast('코디를 준비하지 못했어요. 다시 시도해 주세요')

@@ -23,6 +23,25 @@ function autoDate() {
     $("eventTime").value = String(d.getHours()).padStart(2, "0") + ":00"
 }
 
+function showRecommendationHome() {
+    for (const id of ['welcome', 'onboarding', 'accountFlow', 'characterSetup', 'characterPraise']) {
+        const screen = document.getElementById(id);
+        screen.classList.remove('visible', 'leaving');
+        screen.setAttribute('aria-hidden', 'true');
+        if (id !== 'accountFlow') screen.style.display = 'none';
+    }
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('recommendCard').style.display = 'block';
+    document.getElementById('calendarCard').classList.remove('visible');
+    document.querySelectorAll('.nav button').forEach(button => button.classList.remove('active'));
+    document.getElementById('navHome').classList.add('active');
+    autoDate();
+    renderCalendar();
+    updateGuestUsage();
+    document.getElementById('accountButton').focus({ preventScroll: true });
+    window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
 function showHome() {
     $('calendarCard').classList.remove('visible');
     $('recommendCard').style.display = 'block';
