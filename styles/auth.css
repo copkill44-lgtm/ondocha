@@ -1,4 +1,8 @@
 #accountFlow .account-card { overflow-y: auto; }
+.session-loading { display: none; }
+.auth-checking body { overflow: hidden; }
+.auth-checking .session-loading { display: grid; place-items: center; position: fixed; inset: 0; z-index: 200; background: #f3f7fc; color: #7599c9; font: 20px Jua, sans-serif; }
+.auth-checking #welcome, .auth-checking #onboarding, .auth-checking #accountFlow, .auth-checking #characterSetup, .auth-checking #characterPraise, .auth-checking #app { visibility: hidden !important; pointer-events: none; }
 .auth-form { width: 100%; }
 .auth-message { margin: 12px 0; padding: 12px 14px; border-radius: 12px; background: #edf4ff; color: #53739e; font-size: 13px; line-height: 1.7; overflow-wrap: anywhere; }
 .auth-message[hidden] { display: none; }

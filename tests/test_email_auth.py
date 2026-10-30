@@ -77,6 +77,12 @@ class EmailAuthTests(unittest.TestCase):
  def test_success_preserves_password_whitespace_and_saves_no_password(self):
   result=self.run_js("document.getElementById('loginEmail').value=' person@example.com ';document.getElementById('loginPassword').value=' password1 ';await submitEmailLogin(submitEvent('loginForm'));return [currentAuthUser.id,calls.loginPayload,JSON.stringify(calls.saved),calls.home];")
   self.assertEqual(result[0],'account-a');self.assertEqual(result[1]['password'],' password1 ');self.assertEqual(result[1]['email'],'person@example.com');self.assertNotIn('password1',result[2]);self.assertEqual(result[3],1)
+ def test_restored_session_opens_home_without_setup(self):
+  result=self.run_js("await initSupabaseAuth();return [calls.home,calls.setup,currentAuthUser.id];")
+  self.assertEqual(result,[1,0,'account-a'])
+ def test_signed_out_visit_does_not_open_member_home(self):
+  result=self.run_js("authResponse={data:{session:null},error:null};await initSupabaseAuth();return [calls.home,calls.setup];")
+  self.assertEqual(result,[0,0])
  def test_login_without_character_goes_directly_home(self):
   result=self.run_js("await submitEmailLogin(submitEvent('loginForm'));return [calls.home,calls.setup];")
   self.assertEqual(result,[1,0])

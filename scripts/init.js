@@ -1,6 +1,8 @@
 // init.js — Initialize after all feature scripts are loaded
 // Authentication must start even if an unrelated form or weather widget fails.
-authInitialization = initSupabaseAuth();
+authInitialization = initSupabaseAuth().finally(() => {
+    document.documentElement.classList.remove('auth-checking');
+});
 updateGuestUsage();
 let now = new Date();
 $('today').textContent = now.getFullYear() + '년 ' + (now.getMonth() + 1) + '월 ' + now.getDate() + '일';

@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>오늘의 코디 온도차</title>
+    <script>document.documentElement.classList.add('auth-checking');</script>
     <link rel="stylesheet" href="styles/base.css">
     <link rel="stylesheet" href="styles/components.css">
     <link rel="stylesheet" href="styles/onboarding.css">
@@ -16,7 +17,9 @@
     <script src="assets/vendor/supabase/supabase.js"></script>
 </head>
 
-<body><svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden">
+<body>
+    <div class="session-loading" role="status" aria-live="polite">내 코디를 불러오고 있어요…</div>
+    <svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden">
         <defs>
             <linearGradient id="cloudFill" x1="0" y1="0" x2=".8" y2="1">
                 <stop stop-color="#fff" />
