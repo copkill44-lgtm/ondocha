@@ -27,10 +27,3 @@ showCalendar = function() {
         renderCalendar()
     }, 'left')
 };
-const originalGetWeather = getWeather;
-getWeather = async function(which, key) {
-    await originalGetWeather(which, key);
-    const title = $('skyTitle').textContent;
-    let kind = title.includes('눈') ? 'snowy' : title.includes('비') ? 'rainy' : title.includes('구름') ? 'cloudy' : title.includes('흐림') ? 'overcast' : 'sunny';
-    $('sky').dataset.weather = kind
-};

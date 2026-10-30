@@ -39,7 +39,8 @@ function fetchAiRecommendations() {
             feel,
             weather: {
                 city,
-                tempC: weatherTemp
+                tempC: weatherTemp,
+                apparentTempC: weatherApparentTemp
             },
             topCategory: topCategory + " (" + categoryPreferenceText("topCategory") + ")",
             bottomCategory: bottomCategory + " (" + categoryPreferenceText("category") + ")",

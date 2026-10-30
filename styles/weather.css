@@ -1,0 +1,15 @@
+#sky { height: auto; min-height: 190px; padding-bottom: 48px; }
+.weather-actions { display: flex; flex-wrap: wrap; gap: 8px; position: relative; z-index: 1; margin-top: 8px; }
+#sky .weather-config { position: relative; z-index: 1; margin-top: 12px; max-width: 430px; }
+#sky .weather-config.open { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+#sky .weather-config label { font-size: 12px; color: #5978a4; }
+#sky .weather-config select { max-width: 150px; border: 1px solid #dce7f5; border-radius: 9px; padding: 7px 10px; background: #fff; color: #496a96; }
+.weather-attribution { position: relative; z-index: 1; display: inline-block; margin-top: 10px; color: #6584ac; font-size: 10px; }
+#sky .weather-badge { max-width: calc(100% - 32px); white-space: normal; }
+#sky[data-weather="unknown"] { background: linear-gradient(120deg, #e9f0fa, #f7f9fc); }
+#sky[data-weather="unknown"] .sun { opacity: .25; }
+#sky[data-night="true"] .sun { background: #d7e5f6; box-shadow: 0 0 0 14px #d7e5f630; }
+@media(max-width:640px) {
+    #sky { padding-bottom: 50px; }
+    #sky .weather-badge { left: 16px; right: auto; bottom: 10px; }
+}
