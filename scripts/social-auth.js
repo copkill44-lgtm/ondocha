@@ -39,8 +39,8 @@ async function startSocialLogin(provider, messageId = 'loginMessage') {
             options: {
                 redirectTo,
                 skipBrowserRedirect: true,
-                // This Kakao app has no permission to request account_email.
-                ...(provider === 'kakao' ? { scopes: 'profile_nickname profile_image' } : {})
+                // scopes appends to Supabase defaults; singular scope overrides the provider request.
+                ...(provider === 'kakao' ? { queryParams: { scope: 'profile_nickname profile_image' } } : {})
             }
         });
         if (error) throw error;

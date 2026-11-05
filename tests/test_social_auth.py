@@ -40,8 +40,8 @@ class SocialAuthTests(unittest.TestCase):
         self.assertEqual(self.run_js("await startSocialLogin('evil');return oauthCalls.length;"),0)
 
     def test_kakao_does_not_request_email(self):
-        result=self.run_js("await startSocialLogin('kakao');return oauthCalls[0].options.scopes;")
-        self.assertEqual(result,'profile_nickname profile_image')
+        result=self.run_js("await startSocialLogin('kakao');return [oauthCalls[0].options.queryParams.scope, 'scopes' in oauthCalls[0].options];")
+        self.assertEqual(result,['profile_nickname profile_image',False])
 
     def test_google_keeps_default_scopes(self):
         result=self.run_js("await startSocialLogin('google');return 'scopes' in oauthCalls[0].options;")
