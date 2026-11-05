@@ -132,3 +132,54 @@
         @media (prefers-reduced-motion: reduce) {
             .praise-card { animation: none; }
         }
+.look-avatar.custom-look-avatar,
+.saved-stage .look-avatar.custom-look-avatar { width: 120px; height: 240px; background-image: none !important; overflow: visible; }
+.look-avatar.custom-look-avatar svg { display: block; width: 100%; height: 100%; }
+.top { flex-wrap: wrap; row-gap: 12px; }
+.nav { flex-wrap: nowrap; }
+.nav button { white-space: nowrap; }
+
+/* Character editor entrance and control feedback. */
+.character-setup.visible:not(.leaving) .character-wizard {
+    animation: characterWindowEnter 380ms cubic-bezier(.22,1,.36,1) both;
+}
+.character-setup.visible:not(.leaving) .wizard-head,
+.character-setup.visible:not(.leaving) .character-preview-card,
+.character-setup.visible:not(.leaving) .character-options,
+.character-setup.visible:not(.leaving) .wizard-actions {
+    animation: characterContentEnter 340ms ease-out both;
+}
+.character-setup.visible .wizard-head { animation-delay:40ms; }
+.character-setup.visible .character-preview-card { animation-delay:80ms; }
+.character-setup.visible .character-options { animation-delay:120ms; }
+.character-setup.visible .wizard-actions { animation-delay:160ms; }
+.character-customization select {
+    transition:border-color 180ms ease, box-shadow 180ms ease;
+}
+.character-customization select:focus-visible {
+    outline:2px solid #9bb8e0;
+    outline-offset:3px;
+    box-shadow:0 0 0 5px #a6c3e822;
+}
+.wizard-actions button {
+    transition:transform 160ms ease, box-shadow 160ms ease;
+}
+.wizard-actions button:hover { transform:translateY(-2px); }
+.wizard-actions button:active { transform:translateY(0) scale(.98); }
+@keyframes characterWindowEnter {
+    from { opacity:0; transform:translateY(18px) scale(.975); }
+    to { opacity:1; transform:translateY(0) scale(1); }
+}
+@keyframes characterContentEnter {
+    from { opacity:0; transform:translateY(8px); }
+    to { opacity:1; transform:translateY(0); }
+}
+@media(prefers-reduced-motion:reduce) {
+    .character-setup.visible:not(.leaving) .character-wizard,
+    .character-setup.visible:not(.leaving) .wizard-head,
+    .character-setup.visible:not(.leaving) .character-preview-card,
+    .character-setup.visible:not(.leaving) .character-options,
+    .character-setup.visible:not(.leaving) .wizard-actions { animation:none; }
+    .character-customization select,.wizard-actions button { transition:none; }
+    .wizard-actions button:hover,.wizard-actions button:active { transform:none; }
+}

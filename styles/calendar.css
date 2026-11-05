@@ -17,3 +17,20 @@
         .saved-feedback.sad { background:#fff4e8; }
         .saved-feedback.sad strong { color:#b68a56; }
         .saved-feedback.empty { background:#f1f4f8; color:#939eaf; }
+
+/* Calendar and the user's character share one responsive view. */
+.calendar-with-character { display:grid; grid-template-columns:minmax(0,1fr) 230px; gap:24px; align-items:start; }
+.calendar-main { min-width:0; }
+.calendar-character { padding:24px 18px; border:1px solid #e1e9f5; border-radius:24px; background:linear-gradient(160deg,#f3f7ff,#fff4f7); text-align:center; }
+.calendar-character-label { color:#889cbb; font-size:10px; letter-spacing:2px; font-weight:700; }
+.calendar-character h2 { margin:8px 0 16px; font-size:20px; color:#4c6284; }
+.calendar-character-preview { height:300px; position:relative; margin:0 auto; width:150px; }
+.calendar-character-preview > img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; }
+.calendar-character-preview > svg { display:block; width:100%; height:100%; }
+.calendar-character p { color:#7989a2; font-size:12px; line-height:1.7; margin:16px 0; }
+.calendar-character .primary { width:100%; }
+@media(max-width:800px) {
+    .calendar-with-character { grid-template-columns:minmax(0,1fr); gap:20px; }
+    .calendar-character-preview { height:240px; width:120px; }
+    .calendar-character { padding:20px; }
+}

@@ -45,7 +45,8 @@ function saveLook() {
             name: $('eventName').value || '오늘의 코디',
             time: $('eventTime').value || '',
             outfit: (x.onepiece ? x.onepiece[0] : x.top[0] + ' · ' + x.bottom[0]) + (x.accessory ? ' · 액세서리 ' + x.accessory : '') + ' · ' + x.shoes[0],
-            look: JSON.parse(JSON.stringify(x)),
+            look: { ...JSON.parse(JSON.stringify(x)), visualIndex: selected },
+            characterAppearance: { ...characterConfig },
             character: characterConfig.gender || 'female'
         };
     if (!Array.isArray(events[date])) events[date] = events[date] ? [events[date]] : [];
@@ -102,7 +103,7 @@ function savedOutfitMarkup(item) {
         body = x.onepiece ? x.onepiece[1] : x.top[1],
         name = x.onepiece ? x.onepiece[0] : x.top[0] + ' · ' + x.bottom[0],
         bottom = x.onepiece ? '' : x.bottom[1];
-    return '<div class="saved-outfit"><div class="saved-stage"><div class="look-avatar gender-' + (item.character || characterConfig.gender || "female") + '">' + avatarClothesMarkup(x, 0) + '</div></div><div class="saved-outfit-names">' + escapeCalendarText(name) + '<br>' + escapeCalendarText(x.shoes[0]) + (x.accessory ? '<br>액세서리 ' + escapeCalendarText(x.accessory) : '') + '</div></div>'
+    return '<div class="saved-outfit"><div class="saved-stage"><div class="look-avatar custom-look-avatar">' + avatarClothesMarkup(x, x.visualIndex || 0, item.characterAppearance || characterConfig) + '</div></div><div class="saved-outfit-names">' + escapeCalendarText(name) + '<br>' + escapeCalendarText(x.shoes[0]) + (x.accessory ? '<br>액세서리 ' + escapeCalendarText(x.accessory) : '') + '</div></div>'
 }
 
 function savedFeedbackMarkup(item) {
@@ -146,7 +147,28 @@ function closeCalendarDay() {
     document.body.style.overflow = ''
 }
 
+function renderCalendarCharacter() {
+    const preview = document.getElementById('calendarCharacterPreview');
+    if (!preview) return;
+    const outfit = looks[selected];
+    if (outfit) {
+        preview.innerHTML = avatarClothesMarkup(outfit, selected, characterConfig);
+        document.getElementById('calendarCharacterCopy').textContent = '지금 선택한 코디를 입은 내 캐릭터예요.';
+    } else {
+        const layers = characterImageLayers(characterConfig);
+        preview.replaceChildren();
+        [layers.body, layers.face, layers.hair].forEach((src, index) => {
+            const image = document.createElement('img');
+            image.src = src;
+            image.alt = index === 0 ? '내가 설정한 캐릭터' : '';
+            preview.appendChild(image);
+        });
+        document.getElementById('calendarCharacterCopy').textContent = '코디를 추천받으면 선택한 착장도 볼 수 있어요.';
+    }
+}
+
 function renderCalendar() {
+    renderCalendarCharacter();
     let y = view.getFullYear(),
         m = view.getMonth(),
         first = new Date(y, m, 1).getDay(),

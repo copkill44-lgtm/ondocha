@@ -1,15 +1,6 @@
 // recommendations.js — Outfit generation and selection
-function avatarClothesMarkup(x, i) {
-    let colors = ['#e8a9b2', '#9cb7de', '#93c4a5', '#d4a46d'],
-        color = colors[i % colors.length],
-        bottomColor = ['#7388ac', '#8e789e', '#799984', '#a77f63'][i % 4],
-        lower = (x.bottom?.[0] || '').toLowerCase(),
-        isDress = !!x.onepiece,
-        isSkirt = /치마|스커트/.test(lower),
-        isShort = /짧은|쇼츠|반바지/.test(lower),
-        top = isDress ? '<path d="M51 69Q65 62 79 69L83 104Q65 112 47 104Z" fill="' + color + '" stroke="#fff" stroke-opacity=".65" stroke-width="1.5"/><path d="M51 101L79 101Q85 126 94 151Q65 158 36 151Z" fill="' + color + '" stroke="#fff" stroke-opacity=".65" stroke-width="1.5"/>' : '<path d="M50 70L56 66H74L80 70L84 105Q65 111 46 105Z" fill="' + color + '" stroke="#fff" stroke-opacity=".65" stroke-width="1.5"/><path d="M50 72L44 75L38 94L44 97L51 84M80 72L86 75L92 94L86 97L79 84Z" fill="' + color + '" stroke="#fff" stroke-opacity=".65" stroke-width="1.5"/>',
-        bottom = isDress ? '' : isSkirt ? '<path d="M47 104L83 104L91 148Q65 155 39 148Z" fill="' + bottomColor + '" stroke="#fff" stroke-opacity=".7" stroke-width="1.5"/>' : isShort ? '<path d="M47 104L83 104L82 127L67 126L65 120L62 126L48 127Z" fill="' + bottomColor + '" stroke="#fff" stroke-opacity=".7" stroke-width="1.5"/>' : '<path d="M47 104L83 104L80 151L66 151L65 121L62 151L48 151Z" fill="' + bottomColor + '" stroke="#fff" stroke-opacity=".7" stroke-width="1.5"/>';
-    return '<svg viewBox="0 0 130 215" aria-label="추천 코디를 입은 캐릭터">' + top + bottom + '</svg>'
+function avatarClothesMarkup(outfit, index, config = characterConfig) {
+    return renderOutfitAvatar(outfit, index, config);
 }
 
 function toggleCustomField(id) {
@@ -185,7 +176,9 @@ function generateRecommendations(aiRecommendations) {
     }
     selected = 0;
     $('suggestCopy').textContent = weatherTemp === null ? 'AI가 체감온도와 선택한 옷, 약속에 맞춰 코디했어요. ' + time + ' · ' + place + ' · ' + occasion : city + ' ' + weatherTemp + '°C와 ' + feel + ' 느낌을 반영했어요. ' + time + ' · ' + place + ' · ' + occasion;
-    $('outfits').innerHTML = looks.map((x, i) => '<article class="look ' + (i === 0 ? 'selected' : '') + '"><div class="look-title">' + escapeCalendarText(x.aiTitle || ['포근한 데일리', '산뜻한 외출', '약속 코디', '포인트 룩'][i]) + '</div><div class="stage" style="--bg:' + ['#fff0f2', '#f3efff', '#eaf7f0', '#fff4df'][i] + '"><div class="look-avatar gender-' + (characterConfig.gender || "female") + '">' + avatarClothesMarkup(x, i) + '</div></div><div class="look-items">' + (x.onepiece ? '<strong>' + escapeCalendarText(x.onepiece[0]) + '</strong>' : '상의 <strong>' + escapeCalendarText(x.top[0]) + '</strong><br>하의 <strong>' + escapeCalendarText(x.bottom[0]) + '</strong>') + (x.accessory ? '<br>액세서리 <strong>' + escapeCalendarText(x.accessory) + '</strong>' : '') + '<br>신발 <strong>' + escapeCalendarText(x.shoes[0]) + '</strong>' + (x.reason ? '<br>' + escapeCalendarText(x.reason) : '') + '</div><button class="pick" onclick="selectLook(' + i + ')">' + (i === 0 ? '💗 선택한 코디' : '이 코디 고르기') + '</button></article>').join('');
+    $('outfits').innerHTML = looks.map((x, i) => '<article class="look ' + (i === 0 ? 'selected' : '') + '"><div class="look-title">' + escapeCalendarText(x.aiTitle || ['포근한 데일리', '산뜻한 외출', '약속 코디', '포인트 룩'][i]) + '</div><div class="stage" style="--bg:' + ['#fff0f2', '#f3efff', '#eaf7f0', '#fff4df'][i] + '"><div class="look-avatar custom-look-avatar">' + avatarClothesMarkup(x, i) + '</div></div><div class="look-items">' + (x.onepiece ? '<strong>' + escapeCalendarText(x.onepiece[0]) + '</strong>' : '상의 <strong>' + escapeCalendarText(x.top[0]) + '</strong><br>하의 <strong>' + escapeCalendarText(x.bottom[0]) + '</strong>') + (x.accessory ? '<br>액세서리 <strong>' + escapeCalendarText(x.accessory) + '</strong>' : '') + '<br>신발 <strong>' + escapeCalendarText(x.shoes[0]) + '</strong>' + (x.reason ? '<br>' + escapeCalendarText(x.reason) : '') + '</div><button class="pick" onclick="selectLook(' + i + ')">' + (i === 0 ? '💗 선택한 코디' : '이 코디 고르기') + '</button></article>').join('');
+    mountOutfitImageControls();
+
     resetOutfitCards();
     $('suggest').classList.add('show');
     $('eventName').value = place + ' · ' + occasion;

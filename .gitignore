@@ -4,3 +4,6 @@
 publish-ready/
 website-publish-ready.zip
 __pycache__/
+
+.qwen-venv/
+.qwen-cache/

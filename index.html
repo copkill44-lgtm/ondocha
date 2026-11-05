@@ -8,7 +8,7 @@
     <script>document.documentElement.classList.add('auth-checking');</script>
     <link rel="stylesheet" href="styles/base.css">
     <link rel="stylesheet" href="styles/components.css">
-    <link rel="stylesheet" href="styles/onboarding.css">
+    <link rel="stylesheet" href="styles/onboarding.css?v=20261103-8">
     <link rel="stylesheet" href="styles/character.css">
     <link rel="stylesheet" href="styles/tour.css">
     <link rel="stylesheet" href="styles/carousel.css">
@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="styles/auth.css">
     <link rel="stylesheet" href="styles/weather.css">
     <link rel="stylesheet" href="styles/clothing.css">
+    <link rel="stylesheet" href="styles/outfit-images.css">
     <script src="assets/vendor/supabase/supabase.js"></script>
 </head>
 
@@ -86,22 +87,28 @@
             <div class="onboarding-top"><span id="onboardingStep" aria-live="polite">01 / 03</span></div>
             <div class="onboarding-slides">
                 <article class="onboarding-slide active" aria-label="오늘의 체감온도"><img class="onboard-full-art"
-                        src="assets/images/onboarding/step-1.png" alt="오늘의 체감온도. 같은 날씨에도 사람마다 느끼는 온도는 달라요. 나에게 맞는 옷차림을 추천해 드려요.">
-                    <div class="mobile-copy" aria-hidden="true"><img src="assets/images/mascots/onboarding-thinking.png" alt="">
-                        <h2>오늘의 체감온도</h2>
-                        <p>같은 날씨에도 사람마다 느끼는 온도는 달라요.<br>나에게 맞는 옷차림을 추천해 드려요.</p>
+                        src="assets/images/onboarding/step-1-original.png?v=20261103-7"
+                        alt="오늘의 체감온도. 같은 날씨에도 사람마다 느끼는 온도는 달라요. 나에게 맞는 옷차림을 추천해 드려요.">
+                    <div class="mobile-copy" aria-hidden="true"><img src="assets/images/mascots/onboarding-thinking.png"
+                            alt="">
+                        <h2></h2>
+                        <p><br></p>
                     </div>
                 </article>
                 <article class="onboarding-slide" aria-label="내 취향에 맞는 옷차림"><img class="onboard-full-art"
-                        src="assets/images/onboarding/step-2.png" alt="내 취향에 맞는 옷차림. 원하는 스타일과 옷을 고르면 취향에 맞게 코디를 추천해 드려요.">
-                    <div class="mobile-copy" aria-hidden="true"><img src="assets/images/mascots/onboarding-curious.png" alt="">
+                        src="assets/images/onboarding/step-2-original.png?v=20261103-7"
+                        alt="내 취향에 맞는 옷차림. 원하는 스타일과 옷을 고르면 취향에 맞게 코디를 추천해 드려요.">
+                    <div class="mobile-copy" aria-hidden="true"><img src="assets/images/mascots/onboarding-curious.png"
+                            alt="">
                         <h2>내 취향에 맞는 옷차림</h2>
                         <p>원하는 스타일과 옷을 고르면<br>취향에 맞게 코디를 추천해 드려요.</p>
                     </div>
                 </article>
                 <article class="onboarding-slide" aria-label="오늘의 상황에 꼭 맞게"><img class="onboard-full-art"
-                        src="assets/images/onboarding/step-3.png" alt="오늘의 상황에 꼭 맞게. 날씨와 일정, 체감온도를 반영해 오늘 입기 좋은 옷을 골라드려요.">
-                    <div class="mobile-copy" aria-hidden="true"><img src="assets/images/mascots/onboarding-excited.png" alt="">
+                        src="assets/images/onboarding/step-3-original.png?v=20261103-7"
+                        alt="오늘의 상황에 꼭 맞게. 날씨와 일정, 체감온도를 반영해 오늘 입기 좋은 옷을 골라드려요.">
+                    <div class="mobile-copy" aria-hidden="true"><img src="assets/images/mascots/onboarding-excited.png"
+                            alt="">
                         <h2>오늘의 상황에 꼭 맞게</h2>
                         <p>날씨와 일정, 체감온도를 반영해<br>오늘 입기 좋은 옷을 골라드려요.</p>
                     </div>
@@ -119,38 +126,56 @@
     <section class="account-flow" id="accountFlow" aria-hidden="true">
         <div class="account-card">
 
-            <section class="account-view active" id="accountChoice" aria-label="로그인 및 회원가입"><div class="login-artboard"><img class="login-choice-art" src="assets/images/screens/login.png" alt="온도차. 오늘의 체감온도. 내 취향에 맞는 코디를 저장하고 언제든 다시 확인해 보세요."><button type="button" class="login-art-hit login-hit" aria-label="로그인" onclick="showAccountView('loginView')">로그인</button><button type="button" class="login-art-hit signup-hit" aria-label="회원가입" onclick="showAccountView('signupView')">회원가입</button><button type="button" class="login-guest" onclick="continueWithoutAccount()">로그인 없이 둘러보기</button></div></section><section class="account-view" id="loginView">
+            <section class="account-view active" id="accountChoice" aria-label="로그인 및 회원가입">
+                <div class="login-artboard"><img class="login-choice-art" src="assets/images/screens/login.png"
+                        alt="온도차. 오늘의 체감온도. 내 취향에 맞는 코디를 저장하고 언제든 다시 확인해 보세요."><button type="button"
+                        class="login-art-hit login-hit" aria-label="로그인"
+                        onclick="showAccountView('loginView')">로그인</button><button type="button"
+                        class="login-art-hit signup-hit" aria-label="회원가입"
+                        onclick="showAccountView('signupView')">회원가입</button><button type="button" class="login-guest"
+                        onclick="continueWithoutAccount()">로그인 없이 둘러보기</button></div>
+            </section>
+            <section class="account-view" id="loginView">
                 <button type="button" class="account-back" onclick="leaveEmailAuth()">‹ 이전</button>
                 <h2>다시 만나서 반가워요</h2>
                 <p class="account-caption">이메일과 비밀번호로 내 코디를 불러와요.</p>
                 <form class="auth-form" id="loginForm" onsubmit="submitEmailLogin(event)">
-                    <label>이메일<input id="loginEmail" type="email" autocomplete="email" maxlength="254" required placeholder="이메일을 입력하세요"></label>
-                    <label>비밀번호<input id="loginPassword" type="password" autocomplete="current-password" required placeholder="비밀번호를 입력하세요"></label>
+                    <label>이메일<input id="loginEmail" type="email" autocomplete="email" maxlength="254" required
+                            placeholder="이메일을 입력하세요"></label>
+                    <label>비밀번호<input id="loginPassword" type="password" autocomplete="current-password" required
+                            placeholder="비밀번호를 입력하세요"></label>
                     <p class="auth-message" id="loginMessage" role="status" aria-live="polite" hidden></p>
                     <button type="submit" class="primary account-main-button">로그인</button>
                 </form>
-                <button type="button" class="auth-text-button" onclick="showAccountView('resetPasswordView')">비밀번호를 잊었나요?</button>
-                <p class="account-switch">처음 오셨나요? <button type="button" onclick="showAccountView('signupView')">회원가입</button></p>
+                <button type="button" class="auth-text-button" onclick="showAccountView('resetPasswordView')">비밀번호를
+                    잊었나요?</button>
+                <p class="account-switch">처음 오셨나요? <button type="button"
+                        onclick="showAccountView('signupView')">회원가입</button></p>
             </section>
             <section class="account-view" id="signupView">
                 <button type="button" class="account-back" onclick="leaveEmailAuth()">‹ 이전</button>
                 <h2>나만의 코디를 모아봐요</h2>
                 <p class="account-caption">이메일로 가입하고 확인 메일을 받아보세요.</p>
                 <form class="auth-form" id="signupForm" onsubmit="submitEmailSignup(event)">
-                    <label>이메일<input id="signupEmail" type="email" autocomplete="email" maxlength="254" required placeholder="이메일을 입력하세요"></label>
-                    <label>비밀번호<input id="signupPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="8자 이상 입력하세요"></label>
-                    <label>비밀번호 확인<input id="signupPasswordConfirm" type="password" autocomplete="new-password" minlength="8" required placeholder="비밀번호를 다시 입력하세요"></label>
+                    <label>이메일<input id="signupEmail" type="email" autocomplete="email" maxlength="254" required
+                            placeholder="이메일을 입력하세요"></label>
+                    <label>비밀번호<input id="signupPassword" type="password" autocomplete="new-password" minlength="8"
+                            required placeholder="8자 이상 입력하세요"></label>
+                    <label>비밀번호 확인<input id="signupPasswordConfirm" type="password" autocomplete="new-password"
+                            minlength="8" required placeholder="비밀번호를 다시 입력하세요"></label>
                     <p class="auth-message" id="signupMessage" role="status" aria-live="polite" hidden></p>
                     <button type="submit" class="primary account-main-button">회원가입</button>
                 </form>
-                <p class="account-switch">이미 계정이 있나요? <button type="button" onclick="showAccountView('loginView')">로그인</button></p>
+                <p class="account-switch">이미 계정이 있나요? <button type="button"
+                        onclick="showAccountView('loginView')">로그인</button></p>
             </section>
             <section class="account-view" id="resetPasswordView">
                 <button type="button" class="account-back" onclick="showAccountView('loginView')">‹ 로그인으로</button>
                 <h2>비밀번호를 잊었나요?</h2>
                 <p class="account-caption">가입한 이메일로 비밀번호 재설정 링크를 보내드릴게요.</p>
                 <form class="auth-form" id="resetPasswordForm" onsubmit="submitPasswordReset(event)">
-                    <label>이메일<input id="resetEmail" type="email" autocomplete="email" maxlength="254" required placeholder="가입한 이메일을 입력하세요"></label>
+                    <label>이메일<input id="resetEmail" type="email" autocomplete="email" maxlength="254" required
+                            placeholder="가입한 이메일을 입력하세요"></label>
                     <p class="auth-message" id="resetMessage" role="status" aria-live="polite" hidden></p>
                     <button type="submit" class="primary account-main-button">재설정 메일 받기</button>
                 </form>
@@ -159,8 +184,10 @@
                 <h2>새 비밀번호를 정해요</h2>
                 <p class="account-caption">앞으로 사용할 비밀번호를 입력해 주세요.</p>
                 <form class="auth-form" id="updatePasswordForm" onsubmit="submitNewPassword(event)">
-                    <label>새 비밀번호<input id="newPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="8자 이상 입력하세요"></label>
-                    <label>비밀번호 확인<input id="newPasswordConfirm" type="password" autocomplete="new-password" minlength="8" required placeholder="비밀번호를 다시 입력하세요"></label>
+                    <label>새 비밀번호<input id="newPassword" type="password" autocomplete="new-password" minlength="8"
+                            required placeholder="8자 이상 입력하세요"></label>
+                    <label>비밀번호 확인<input id="newPasswordConfirm" type="password" autocomplete="new-password"
+                            minlength="8" required placeholder="비밀번호를 다시 입력하세요"></label>
                     <p class="auth-message" id="updateMessage" role="status" aria-live="polite" hidden></p>
                     <button type="submit" class="primary account-main-button">새 비밀번호 저장</button>
                 </form>
@@ -176,8 +203,9 @@
             <div class="wizard-grid">
                 <section class="character-preview-card">
                     <div id="characterPreview" class="character-preview" aria-label="기본 스탠딩 캐릭터 미리보기"><img
-                            class="character-base" src="assets/images/characters/body-default.png" alt="기본 스탠딩 캐릭터"><img class="character-hair"
-                            src="assets/images/characters/hair-covered.png?v=2" alt="덮은머리"></div>
+                            class="character-base" src="assets/images/characters/body-default.png" alt="기본 스탠딩 캐릭터"><img
+                            class="character-face" src="assets/images/characters/눈-일반.png" alt="캐릭터 얼굴"><img
+                            class="character-hair" src="assets/images/characters/hair-covered.png?v=2" alt="덮은머리"></div>
                     <p>원본 사진의 얼굴과 디자인은 바꾸지 않아요.</p>
                 </section>
                 <section class="character-options">
@@ -194,15 +222,18 @@
                                 <option value="toneA">밝은 피부톤</option>
                                 <option value="toneB">어두운 피부톤</option>
                             </select></label><label>눈<select id="charEyes" onchange="renderCharacter()">
-                                <option value="default">기본</option>
+                                <option value="default">일반</option>
+                                <option value="normal2">일반 2</option>
+                                <option value="sad">불쌍한 눈</option>
+                                <option value="sleepy">졸린 눈</option>
                             </select></label></div>
                     <div class="underwear-note">기본스탠딩 · 기본 모습</div>
                     <p class="underwear-copy">머리카락, 피부색, 눈 설정은 캐릭터 미리보기에 적용됩니다.</p>
                 </section>
             </div>
-            <footer class="wizard-actions"><button type="button" class="wizard-back"
-                    onclick="backToWelcome()">처음으로</button><button type="button" class="primary"
-                    onclick="completeCharacterSetup()">이 캐릭터로 시작하기</button></footer>
+            <footer class="wizard-actions"><button type="button" class="wizard-back" id="characterCancel"
+                    onclick="cancelCharacterSetup()">처음으로</button><button type="button" class="primary"
+                    id="characterSave" onclick="completeCharacterSetup()">이 캐릭터로 시작하기</button></footer>
         </div>
     </section>
     <section class="character-praise" id="characterPraise" aria-hidden="true" aria-labelledby="praiseTitle">
@@ -217,8 +248,10 @@
     <main class="shell" id="app" style="display:none">
         <header class="top">
             <div class="brand">☁ 오늘의 코디 온도차</div>
-            <button type="button" class="tour-replay" onclick="startFeatureTour()">사용법 안내</button><nav class="nav"><button class="active" id="navHome" onclick="showHome()">코디 추천</button><button
-                    id="navCalendar" onclick="showCalendar()">코디 캘린더</button></nav>
+            <button type="button" class="tour-replay" onclick="startFeatureTour()">사용법 안내</button>
+            <nav class="nav"><button class="active" id="navHome" onclick="showHome()">코디 추천</button><button
+                    id="navCalendar" onclick="showCalendar()">코디 캘린더</button><button type="button" id="navCharacter"
+                    onclick="openCharacterSetup(true)">캐릭터 설정</button></nav>
             <div class="account-area"><span id="accountLabel" hidden></span><button type="button" class="account-button"
                     id="accountButton" onclick="handleAccountButton()">이메일 로그인</button></div><span class="today"
                 id="today"></span>
@@ -228,7 +261,8 @@
             <h1 id="skyTitle">오늘 하늘을 살펴보고 있어요</h1>
             <p id="skyDetail">위치를 허용하면 내 주변 날씨를 자동으로 알려드려요.</p>
             <div class="weather-actions">
-                <button type="button" class="settings" id="weatherSettingsToggle" aria-controls="weatherConfig" aria-expanded="false" onclick="toggleWeatherSettings()">지역 바꾸기</button>
+                <button type="button" class="settings" id="weatherSettingsToggle" aria-controls="weatherConfig"
+                    aria-expanded="false" onclick="toggleWeatherSettings()">지역 바꾸기</button>
                 <button type="button" class="settings" onclick="refreshWeather()">새로고침</button>
             </div>
             <div class="weather-config" id="weatherConfig">
@@ -239,8 +273,10 @@
                 <button type="button" onclick="confirmWeatherRegion()">이 지역으로 설정</button>
                 <button type="button" onclick="locate(true)">내 위치로 찾기</button>
             </div>
-            <a class="weather-attribution" href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">날씨 데이터: Open-Meteo</a>
-            <a class="weather-attribution" href="https://www.geonames.org/" target="_blank" rel="noopener noreferrer">지역 데이터: GeoNames</a>
+            <a class="weather-attribution" href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">날씨
+                데이터: Open-Meteo</a>
+            <a class="weather-attribution" href="https://www.geonames.org/" target="_blank" rel="noopener noreferrer">지역
+                데이터: GeoNames</a>
             <span class="weather-badge" id="weatherBadge" role="status" aria-live="polite">위치 확인 중</span>
         </section>
         <section class="card" id="recommendCard">
@@ -252,7 +288,8 @@
                     class="feel-slider" type="range" min="0" max="4" step="0.01" value="1" aria-label="체감온도 1에서 5단계"
                     oninput="updateFeelFromSlider()">
                 <div class="feel-ticks" aria-hidden="true">
-                    <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+                    <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+                </div>
                 <div class="feel-end-labels"><span>차가워요</span><span>따뜻해요</span></div>
                 <div class="feel-inputs" aria-hidden="true"><input type="radio" name="feel" value="매우 추워요"><input
                         type="radio" name="feel" value="쌀쌀해요" checked><input type="radio" name="feel"
@@ -316,10 +353,13 @@
                         돌아가기</button><span>코디니의 추천</span></div>
                 <h2>마음에 드는 코디를 골라봐요</h2>
                 <p id="suggestCopy">작은 아바타에게 코디를 입혀봤어요.</p>
-                <div class="outfit-carousel" id="outfitCarousel" role="region" aria-roledescription="캐러셀" aria-label="추천 코디 카드" tabindex="0">
-                    <button type="button" class="outfit-arrow prev" id="outfitPrevious" onclick="moveOutfitCard(-1)" aria-label="이전 코디">‹</button>
+                <div class="outfit-carousel" id="outfitCarousel" role="region" aria-roledescription="캐러셀"
+                    aria-label="추천 코디 카드" tabindex="0">
+                    <button type="button" class="outfit-arrow prev" id="outfitPrevious" onclick="moveOutfitCard(-1)"
+                        aria-label="이전 코디">‹</button>
                     <div class="outfits" id="outfits"></div>
-                    <button type="button" class="outfit-arrow next" id="outfitNext" onclick="moveOutfitCard(1)" aria-label="다음 코디">›</button>
+                    <button type="button" class="outfit-arrow next" id="outfitNext" onclick="moveOutfitCard(1)"
+                        aria-label="다음 코디">›</button>
                     <div class="outfit-pagination" id="outfitPagination"></div>
                     <div class="outfit-count" id="outfitCount" aria-live="polite"></div>
                 </div>
@@ -329,15 +369,28 @@
             </div>
         </section>
         <section class="card calendar" id="calendarCard">
-            <div class="calhead"><button onclick="shiftMonth(-1)">‹</button><span class="month"
-                    id="monthTitle"></span><button onclick="shiftMonth(1)">›</button></div>
-            <div class="grid" id="calendarGrid"></div>
+            <div class="calendar-with-character">
+                <div class="calendar-main">
+                    <div class="calhead"><button onclick="shiftMonth(-1)" aria-label="이전 달">‹</button><span
+                            class="month" id="monthTitle"></span><button onclick="shiftMonth(1)"
+                            aria-label="다음 달">›</button></div>
+                    <div class="grid" id="calendarGrid"></div>
+                </div>
+                <aside class="calendar-character" aria-labelledby="calendarCharacterTitle">
+                    <span class="calendar-character-label">MY CHARACTER</span>
+                    <h2 id="calendarCharacterTitle">내 캐릭터</h2>
+                    <div id="calendarCharacterPreview" class="calendar-character-preview"></div>
+                    <p id="calendarCharacterCopy">나만의 캐릭터와 코디를 모아보세요.</p>
+                    <button type="button" class="primary" onclick="openCharacterSetup(true)">캐릭터 설정</button>
+                </aside>
+            </div>
         </section>
     </main>
     <section class="thinking" id="thinking" aria-live="polite">
         <div class="thinking-card">
-            <div class="think-mascot"><img class="thinking-pose active" src="assets/images/mascots/codini-thinking-1.png" alt="생각하는 코디니"><img
-                    class="thinking-pose" src="assets/images/mascots/codini-thinking-2.png" alt="고민하는 코디니"></div>
+            <div class="think-mascot"><img class="thinking-pose active"
+                    src="assets/images/mascots/codini-thinking-1.png" alt="생각하는 코디니"><img class="thinking-pose"
+                    src="assets/images/mascots/codini-thinking-2.png" alt="고민하는 코디니"></div>
             <h2>코디니가 생각하고 있어요</h2>
             <p>날씨와 약속에 딱 맞는 코디를 고르는 중이에요</p>
             <div class="thinking-dots"><i></i><i></i><i></i></div>
@@ -400,8 +453,9 @@
                                     value="초록"><i></i><span>초록</span></label><label style="--swatch:#373344"><input
                                     type="radio" name="clothingColor" value="검정"><i></i><span>검정</span></label><label
                                 style="--swatch:#d4a46d"><input type="radio" name="clothingColor"
-                                    value="베이지"><i></i><span>베이지</span></label><label class="no-color"><input type="radio"
-                                    name="clothingColor" value="상관없음" checked><span>상관없음</span></label></div>
+                                    value="베이지"><i></i><span>베이지</span></label><label class="no-color"><input
+                                    type="radio" name="clothingColor" value="상관없음" checked><span>상관없음</span></label>
+                        </div>
                     </fieldset>
                 </div>
             </div><button type="button" class="primary category-done" onclick="closeCategoryModal()">선택 완료</button>
@@ -426,20 +480,30 @@
     <div class="toast" id="toast"></div>
 
     <div id="featureTour" hidden>
-        <div class="tour-shade"></div><div class="tour-shade"></div><div class="tour-shade"></div><div class="tour-shade"></div>
+        <div class="tour-shade"></div>
+        <div class="tour-shade"></div>
+        <div class="tour-shade"></div>
+        <div class="tour-shade"></div>
         <div class="tour-outline"></div>
         <aside class="tour-card" aria-labelledby="tourTitle">
-            <div class="tour-companion"><img src="assets/images/mascots/onboarding-excited.png" alt="안내하는 코디니"><div><span>코디니랑 같이 해봐요</span><small id="tourProgress"></small></div></div>
+            <div class="tour-companion"><img src="assets/images/mascots/onboarding-excited.png" alt="안내하는 코디니">
+                <div><span>코디니랑 같이 해봐요</span><small id="tourProgress"></small></div>
+            </div>
             <div class="tour-meter" aria-hidden="true"><i id="tourMeterFill"></i></div>
-            <h2 id="tourTitle" tabindex="-1"></h2><p id="tourCopy"></p>
+            <h2 id="tourTitle" tabindex="-1"></h2>
+            <p id="tourCopy"></p>
             <p class="tour-weather-hint" id="tourWeatherHint" role="status" hidden></p>
-            <div class="tour-controls"><button id="tourSkip" type="button" onclick="finishFeatureTour()">건너뛰기</button><button id="tourPrevious" type="button" onclick="moveFeatureTour(-1)">이전</button><button id="tourNext" type="button" onclick="moveFeatureTour(1)">다음</button></div>
+            <div class="tour-controls"><button id="tourSkip" type="button"
+                    onclick="finishFeatureTour()">건너뛰기</button><button id="tourPrevious" type="button"
+                    onclick="moveFeatureTour(-1)">이전</button><button id="tourNext" type="button"
+                    onclick="moveFeatureTour(1)">다음</button></div>
         </aside>
     </div>
 
     <script src="scripts/state.js"></script>
     <script src="scripts/clothing.js"></script>
     <script src="scripts/config.js"></script>
+    <script src="scripts/qwen-endpoint.js"></script>
     <script src="scripts/auth.js"></script>
     <script src="scripts/auth-forms.js"></script>
     <script src="scripts/guest-usage.js"></script>
@@ -447,7 +511,9 @@
     <script src="scripts/weather.js"></script>
     <script src="scripts/weather-region-data.js"></script>
     <script src="scripts/weather-regions.js"></script>
-    <script src="scripts/recommendations.js"></script>
+    <script src="scripts/recommendations.js?v=20261103-9"></script>
+    <script src="scripts/avatar.js"></script>
+    <script src="scripts/outfit-images.js?v=20261105-1"></script>
     <script src="scripts/calendar.js"></script>
     <script src="scripts/transitions.js"></script>
     <script src="scripts/character.js"></script>

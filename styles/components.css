@@ -1136,12 +1136,13 @@
             object-fit: contain
         }
 
+        .character-preview .character-face,
         .character-preview .character-hair {
             position: absolute;
             inset: 0;
             width: 100%;
             height: 100%;
-            object-fit: fill;
+            object-fit: contain;
             opacity: 1;
             mix-blend-mode: normal
         }

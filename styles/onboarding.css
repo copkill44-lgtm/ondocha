@@ -991,8 +991,8 @@
         }
 
         #onboarding .onboard-full-art {
-            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 11%, #000 17%, #000 100%);
-            mask-image: linear-gradient(to bottom, transparent 0%, transparent 11%, #000 17%, #000 100%)
+            -webkit-mask-image: none;
+            mask-image: none
         }
 
 /* Keep both slide layers mounted so the outgoing artwork can fade out. */
@@ -1022,3 +1022,8 @@
 .signup-hit:hover{background:#fff;box-shadow:0 10px 25px #4b80bd30}
 .login-guest{top:73%;bottom:auto;background:transparent;color:#507eb5;font-size:clamp(12px,1.6dvh,16px)}
 .login-guest:hover{background:#ffffff60}
+
+/* Show the complete lettered artwork on every screen size. */
+#onboarding .onboarding-slide .onboard-full-art { object-fit: cover; object-position: center; opacity: 1; -webkit-mask-image: none; mask-image: none; }
+#onboarding .mobile-copy { display: none; }
+#onboarding .onboarding-card { background: #cce2fc; }

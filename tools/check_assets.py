@@ -15,7 +15,8 @@ def check_reference(reference, base):
         return
     path = (ROOT / unquote(url.path.lstrip("/"))) if url.path.startswith("/") else (base / unquote(url.path))
     resolved = path.resolve()
-    if not resolved.is_relative_to(ROOT) or not resolved.is_file():
+    exists = resolved.is_file() or (url.path.endswith("/") and resolved.is_dir())
+    if not resolved.is_relative_to(ROOT) or not exists:
         raise RuntimeError("Missing local asset: " + reference)
 
 

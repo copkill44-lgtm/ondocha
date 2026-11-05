@@ -53,5 +53,6 @@ function showCalendar() {
     $('recommendCard').style.display = 'none';
     $('calendarCard').classList.add('visible');
     document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));
+    $('navCalendar').classList.add('active');
     renderCalendar()
 }
