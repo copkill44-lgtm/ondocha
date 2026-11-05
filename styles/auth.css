@@ -14,3 +14,18 @@
 .guest-usage-notice { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; padding: 12px 14px; margin: 14px 0; border-radius: 14px; background: #edf4ff; color: #6384b1; font-size: 12px; }
 .guest-usage-notice[hidden] { display: none; }
 .guest-usage-notice button { border: 0; border-radius: 9px; padding: 7px 10px; background: #fff; color: #496a96; font: inherit; font-weight: 700; }
+
+/* Compact social sign-in below the email form. */
+.social-auth { display: flex; justify-content: center; gap: 18px; margin: 0; }
+.social-login { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 52px; width: 52px; height: 52px; min-height: 52px; padding: 14px; border: 1px solid transparent; border-radius: 50%; cursor: pointer; transition: transform .15s, box-shadow .15s; }
+.social-login svg { width: 24px; height: 24px; display: block; }
+.social-login:hover { transform: translateY(-2px); box-shadow: 0 5px 12px #24395b14; }
+.social-kakao { background: #fee500; color: #191919; }
+.social-google { background: #fff; border-color: #dce2e9; }
+.social-naver { background: #03c75a; color: #fff; }
+.social-login:focus-visible { outline: 3px solid #447ac1; outline-offset: 4px; }
+.social-login:disabled { opacity: .55; cursor: wait; }
+.social-auth-note { margin: 12px 0 0; color: #748397; text-align: center; font-size: 12px; line-height: 1.6; }
+.auth-divider { display: flex; align-items: center; gap: 12px; margin: 22px 0 16px; color: #748397; font-size: 12px; }
+.auth-divider::before, .auth-divider::after { content: ''; height: 1px; flex: 1; background: #dce4ee; }
+#accountFlow #loginView, #accountFlow #signupView { flex-shrink: 0; padding-bottom: 24px; }

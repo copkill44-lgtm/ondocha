@@ -14,7 +14,7 @@ let authInitializationError = '';
 function setAccountUi(user) {
     const button = document.getElementById('accountButton');
     const label = document.getElementById('accountLabel');
-    if (button) button.textContent = user ? '로그아웃' : '이메일 로그인';
+    if (button) button.textContent = user ? '로그아웃' : '로그인';
     if (label) {
         label.hidden = !user;
         label.textContent = user?.email || '';
