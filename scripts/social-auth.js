@@ -36,7 +36,12 @@ async function startSocialLogin(provider, messageId = 'loginMessage') {
         }
         const { data, error } = await supabaseClient.auth.signInWithOAuth({
             provider: providerId,
-            options: { redirectTo, skipBrowserRedirect: true }
+            options: {
+                redirectTo,
+                skipBrowserRedirect: true,
+                // This Kakao app has no permission to request account_email.
+                ...(provider === 'kakao' ? { scopes: 'profile_nickname profile_image' } : {})
+            }
         });
         if (error) throw error;
         if (!data?.url) throw new Error('missing_authorization_url');

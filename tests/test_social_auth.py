@@ -38,3 +38,11 @@ class SocialAuthTests(unittest.TestCase):
 
     def test_unknown_provider_ignored(self):
         self.assertEqual(self.run_js("await startSocialLogin('evil');return oauthCalls.length;"),0)
+
+    def test_kakao_does_not_request_email(self):
+        result=self.run_js("await startSocialLogin('kakao');return oauthCalls[0].options.scopes;")
+        self.assertEqual(result,'profile_nickname profile_image')
+
+    def test_google_keeps_default_scopes(self):
+        result=self.run_js("await startSocialLogin('google');return 'scopes' in oauthCalls[0].options;")
+        self.assertFalse(result)
