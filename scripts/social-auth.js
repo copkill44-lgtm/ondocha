@@ -6,16 +6,16 @@ async function startSocialLogin(provider, messageId = 'loginMessage') {
         setAuthMessage(messageId, '웹사이트 주소로 접속한 뒤 다시 시도해 주세요.');
         return;
     }
-    const providerId = provider === 'naver' ? ONDOCHA_CONFIG.naverOAuthProvider : provider;
-    if (!providerId || (provider === 'naver' && !/^custom:[a-z0-9-]+$/.test(providerId))) {
-        setAuthMessage(messageId, '네이버 로그인은 아직 준비 중이에요. 이메일로 계속해 주세요.');
-        return;
-    }
+    const providerId = provider;
     authActionBusy = true;
     const buttons = [...document.querySelectorAll('.social-login, .auth-form button')];
     buttons.forEach(button => button.disabled = true);
     setAuthMessage(messageId, '로그인 페이지로 연결하고 있어요…', 'info');
     try {
+        if (provider === 'naver') {
+            await beginNaverLogin();
+            return;
+        }
         await authInitialization;
         if (!supabaseClient) {
             authInitialization = initSupabaseAuth();
@@ -46,7 +46,11 @@ async function startSocialLogin(provider, messageId = 'loginMessage') {
         if (error) throw error;
         if (!data?.url) throw new Error('missing_authorization_url');
         window.location.assign(data.url);
-    } catch {
+    } catch (error) {
+        if (provider === 'naver' && error.message === 'naver_not_configured') {
+            setAuthMessage(messageId, '네이버 로그인은 아직 준비 중이에요. 이메일로 계속해 주세요.');
+            return;
+        }
         setAuthMessage(messageId, '로그인을 연결하지 못했어요. 잠시 후 다시 시도하거나 이메일로 계속해 주세요.');
     } finally {
         authActionBusy = false;

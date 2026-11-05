@@ -29,7 +29,8 @@ class PageReferences(HTMLParser):
 
 
 def check_assets():
-    PageReferences().feed((ROOT / "index.html").read_text(encoding="utf-8"))
+    for page in ROOT.glob("*.html"):
+        PageReferences().feed(page.read_text(encoding="utf-8"))
     for path in (ROOT / "styles").glob("*.css"):
         text = path.read_text(encoding="utf-8")
         for reference in re.findall(r"url\(\s*['\"]?([^)'\"]+)", text):

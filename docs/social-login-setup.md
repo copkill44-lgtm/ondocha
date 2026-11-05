@@ -2,7 +2,7 @@
 
 현재 로컬 코드에 로그인·회원가입 화면의 구글·카카오·네이버 버튼을 추가했습니다.
 구글·카카오 제공자가 꺼져 있으면 준비 중 안내를 표시합니다.
-네이버는 별도 연동 검증 후 config.js의 naverOAuthProvider를 설정해야 합니다.
+네이버는 전용 함수 배포와 Secrets 등록 후 사용할 수 있습니다.
 로그인·회원가입 폼 하단에 아이콘 버튼을 표시합니다. 실제 로그인에는 아래 제공자 설정이 필요합니다.
 
 ## 공통 설정
@@ -38,22 +38,11 @@ HTML·JavaScript·GitHub·채팅에 비밀 키를 넣지 않습니다.
 5. 이메일 제공 동의 항목을 확인합니다. 이메일을 받을 수 없는 앱은 Supabase의
    이메일 없는 사용자 허용 여부를 명시적으로 결정하고 실제 사용자로 검증합니다.
 
-## 네이버: 추가 연동이 필요함
+## 네이버: 전용 서버 연동
 
-네이버는 Supabase 기본 제공자가 아닙니다. Naver Developers에서 네이버 로그인 앱을
-등록한 뒤 Supabase의 Custom OAuth Provider 또는 서버 중계 방식이 필요합니다.
-네이버 프로필은 response 내부에 사용자 정보를 반환하므로 일반 OAuth2 제공자로
-URL만 입력해서 호환된다고 가정하면 안 됩니다. ID·이메일 프로필 매핑과
-PKCE 지원을 확인하고, 필요한 경우 서버에서 표준 프로필로 변환해야 합니다.
-
-네이버 인가 URL: https://nid.naver.com/oauth2.0/authorize
-토큰 URL: https://nid.naver.com/oauth2.0/token
-프로필 URL: https://openapi.naver.com/v1/nid/me
-
-Custom OAuth 설정 화면에서 표시하는 Callback URL을 네이버 앱에 등록합니다.
-서버 연동과 로그인 검증이 끝난 뒤 실제 제공자 식별자(예: custom:naver)를
-scripts/config.js의 naverOAuthProvider에 입력합니다.
-현재 빈 값이므로 네이버 버튼은 준비 중 안내만 표시합니다.
+네이버는 Custom Auth Provider 대신 전용 naver-auth Edge Function을 사용합니다.
+자세한 배포와 Callback URL 변경은 docs/naver-login-setup.md를 따릅니다.
+네이버 Client ID/Secret은 Supabase Edge Function Secrets에만 저장합니다.
 
 ## 실제 검증 후 배포
 

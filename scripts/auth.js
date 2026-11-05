@@ -17,7 +17,9 @@ function setAccountUi(user) {
     if (button) button.textContent = user ? '로그아웃' : '로그인';
     if (label) {
         label.hidden = !user;
-        label.textContent = user?.email || user?.user_metadata?.name || user?.user_metadata?.full_name || (user ? '내 계정' : '');
+        label.textContent = user?.email?.endsWith('@naver.ondocha.invalid')
+            ? (user.user_metadata?.name || '네이버 회원')
+            : (user?.email || user?.user_metadata?.name || user?.user_metadata?.full_name || (user ? '내 계정' : ''));
     }
 }
 

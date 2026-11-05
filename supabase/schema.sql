@@ -21,4 +21,3 @@ drop policy if exists "Update own app data" on public.user_app_data;
 create policy "Update own app data" on public.user_app_data
     for update to authenticated using ((select auth.uid()) = user_id)
     with check ((select auth.uid()) = user_id);
-ㅇ

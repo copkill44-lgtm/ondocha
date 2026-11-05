@@ -1,0 +1,3 @@
+# Naver users have no Supabase JWT before login; the handler verifies signed state.
+[functions.naver-auth]
+verify_jwt = false

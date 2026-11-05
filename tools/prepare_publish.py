@@ -10,7 +10,7 @@ ARCHIVE = ROOT / "website-publish-ready.zip"
 
 
 def prepare_publish():
-    sources = [ROOT / "index.html"]
+    sources = [ROOT / "index.html", ROOT / "naver-callback.html"]
     for folder in ("styles", "scripts", "assets/images", "assets/vendor"):
         sources.extend(path for path in (ROOT / folder).rglob("*") if path.is_file())
 

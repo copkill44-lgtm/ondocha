@@ -25,7 +25,7 @@ class SocialAuthTests(unittest.TestCase):
         self.assertEqual(result[:3],[0,None,False]);self.assertIn('준비 중',result[3])
 
     def test_unconfigured_naver_does_not_redirect(self):
-        result=self.run_js("await startSocialLogin('naver','signupMessage');return [oauthCalls.length,document.getElementById('signupMessage').textContent];")
+        result=self.run_js("beginNaverLogin=async()=>{throw new Error('naver_not_configured');};await startSocialLogin('naver','signupMessage');return [oauthCalls.length,document.getElementById('signupMessage').textContent];")
         self.assertEqual(result[0],0);self.assertIn('준비 중',result[1])
 
     def test_network_failure_does_not_authenticate(self):
@@ -46,3 +46,7 @@ class SocialAuthTests(unittest.TestCase):
     def test_google_keeps_default_scopes(self):
         result=self.run_js("await startSocialLogin('google');return 'scopes' in oauthCalls[0].options;")
         self.assertFalse(result)
+
+    def test_naver_uses_dedicated_server_not_supabase_oauth(self):
+        result=self.run_js("let started=0;beginNaverLogin=async()=>{started++;};await startSocialLogin('naver');return [started,oauthCalls.length,authActionBusy];")
+        self.assertEqual(result,[1,0,False])
