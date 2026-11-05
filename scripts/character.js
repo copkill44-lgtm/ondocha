@@ -89,7 +89,7 @@ function renderOnboarding() {
     });
     document.getElementById('onboardingStep').textContent = '0' + (onboardingIndex + 1) + ' / 03';
     document.getElementById('onboardingBack').hidden = onboardingIndex === 0;
-    document.getElementById('onboardingNext').textContent = onboardingIndex === slides.length - 1 ? '캐릭터 만들기' : '다음'
+    document.getElementById('onboardingNext').textContent = onboardingIndex === slides.length - 1 ? '시작하기' : '다음'
 }
 
 function goOnboarding(index) {

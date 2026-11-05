@@ -102,7 +102,7 @@ async function generateOutfitImage(index) {
         const body = new FormData();
         body.append('image', await characterReferenceBlob(JSON.parse(appearance)), 'character.png');
         body.append('outfit', JSON.stringify({
-            top: outfit.onepiece ? '' : outfit.top?.[0],
+            top: [outfit.onepiece ? '' : outfit.top?.[0], outfit.outerwear ? '겉옷: ' + outfit.outerwear : ''].filter(Boolean).join(' + '),
             bottom: outfit.onepiece?.[0] || outfit.bottom?.[0],
             shoes: outfit.shoes?.[0], accessory: outfit.accessory || ''
         }));

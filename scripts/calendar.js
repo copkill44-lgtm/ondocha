@@ -44,7 +44,7 @@ function saveLook() {
         entry = {
             name: $('eventName').value || '오늘의 코디',
             time: $('eventTime').value || '',
-            outfit: (x.onepiece ? x.onepiece[0] : x.top[0] + ' · ' + x.bottom[0]) + (x.accessory ? ' · 액세서리 ' + x.accessory : '') + ' · ' + x.shoes[0],
+            outfit: (x.onepiece ? x.onepiece[0] : x.top[0] + ' · ' + x.bottom[0]) + (x.outerwear ? ' · 겉옷 ' + x.outerwear : '') + (x.accessory ? ' · 액세서리 ' + x.accessory : '') + ' · ' + x.shoes[0],
             look: { ...JSON.parse(JSON.stringify(x)), visualIndex: selected },
             characterAppearance: { ...characterConfig },
             character: characterConfig.gender || 'female'
@@ -103,7 +103,7 @@ function savedOutfitMarkup(item) {
         body = x.onepiece ? x.onepiece[1] : x.top[1],
         name = x.onepiece ? x.onepiece[0] : x.top[0] + ' · ' + x.bottom[0],
         bottom = x.onepiece ? '' : x.bottom[1];
-    return '<div class="saved-outfit"><div class="saved-stage"><div class="look-avatar custom-look-avatar">' + avatarClothesMarkup(x, x.visualIndex || 0, item.characterAppearance || characterConfig) + '</div></div><div class="saved-outfit-names">' + escapeCalendarText(name) + '<br>' + escapeCalendarText(x.shoes[0]) + (x.accessory ? '<br>액세서리 ' + escapeCalendarText(x.accessory) : '') + '</div></div>'
+    return '<div class="saved-outfit"><div class="saved-stage"><div class="look-avatar custom-look-avatar">' + avatarClothesMarkup(x, x.visualIndex || 0, item.characterAppearance || characterConfig) + '</div></div><div class="saved-outfit-names">' + escapeCalendarText(name) + '<br>' + escapeCalendarText(x.shoes[0]) + (x.outerwear ? '<br>겉옷 ' + escapeCalendarText(x.outerwear) : '') + (x.accessory ? '<br>액세서리 ' + escapeCalendarText(x.accessory) : '') + '</div></div>'
 }
 
 function savedFeedbackMarkup(item) {

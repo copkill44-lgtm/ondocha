@@ -21,24 +21,50 @@ function updateFeelFromSlider() {
     slider.parentElement.querySelectorAll('.feel-ticks span').forEach((tick, i) => tick.classList.toggle('active', i === index));
 }
 
+function selectedClothingValues(group) {
+    return [...document.querySelectorAll('input[name="' + group + '"]:checked')].map(x => x.value);
+}
+function accessorySelectionText() {
+    return selectedClothingValues('accessoryCategory').join(' · ') || '없음';
+}
+function outerwearSelection() {
+    return selectedClothingValues('outerCategory').find(x => x !== '겉옷 없음') || '';
+}
+function normalizeAccessorySelection(input) {
+    const choices = [...document.querySelectorAll('input[name="accessoryCategory"]')];
+    const exclusive = value => value === '없음' || value === '액세서리 추천받기';
+    if (input.checked) choices.forEach(x => {
+        if (x !== input && (exclusive(input.value) || exclusive(x.value))) x.checked = false;
+    });
+    if (!choices.some(x => x.checked)) choices.find(x => x.value === '없음').checked = true;
+}
 function renderCategoryChoices(selectValue, selectedGroup) {
     let keep = selectedGroup === 'category' && selectValue ? selectValue : document.querySelector('input[name="category"]:checked')?.value || '긴치마',
         topKeep = selectedGroup === 'topCategory' && selectValue ? selectValue : document.querySelector('input[name="topCategory"]:checked')?.value || '상의 추천받기',
-        accessoryKeep = selectedGroup === 'accessoryCategory' && selectValue ? selectValue : document.querySelector('input[name="accessoryCategory"]:checked')?.value || '없음',
+        accessoryKeep = selectedClothingValues('accessoryCategory'),
+        outerKeep = outerwearSelection() || '겉옷 없음',
         bottomBox = document.getElementById('categoryList'),
         topBox = document.getElementById('topCategoryList'),
         accessoryBox = document.getElementById('accessoryCategoryList');
 
+    if (selectedGroup === 'accessoryCategory' && selectValue) {
+        accessoryKeep = ['없음', '액세서리 추천받기'].includes(selectValue) ? [selectValue] : [...accessoryKeep.filter(x => !['없음', '액세서리 추천받기'].includes(x)), selectValue];
+    }
+    if (!accessoryKeep.length) accessoryKeep = ['없음'];
+    if (selectedGroup === 'topCategory' && selectValue?.startsWith('겉옷 · ')) {
+        outerKeep = selectValue;
+        topKeep = selectedClothingValues('topCategory')[0] || '상의 추천받기';
+    }
     function makeChoice(name, group, checked) {
         let item = document.createElement('span');
         item.className = 'category-item';
         let label = document.createElement('label');
         label.className = 'choice';
         let radio = document.createElement('input');
-        radio.type = 'radio';
+        radio.type = group === 'accessoryCategory' ? 'checkbox' : 'radio';
         radio.name = group;
         radio.value = name;
-        radio.checked = name === checked;
+        radio.checked = Array.isArray(checked) ? checked.includes(name) : name === checked;
         let icon = document.createElement('span');
         icon.className = 'choice-icon';
         icon.innerHTML = clothingIconMarkup(name);
@@ -49,7 +75,7 @@ function renderCategoryChoices(selectValue, selectedGroup) {
             label.append(radio, text);
         } else label.append(radio, icon, text);
         item.appendChild(label);
-        let customList = group === 'topCategory' ? customTopCategories : group === 'accessoryCategory' ? customAccessoryCategories : customCategories;
+        let customList = (group === 'topCategory' || group === 'outerCategory') ? customTopCategories : group === 'accessoryCategory' ? customAccessoryCategories : customCategories;
         if (customList.includes(name)) {
             let remove = document.createElement('button');
             remove.type = 'button';
@@ -80,7 +106,7 @@ function renderCategoryChoices(selectValue, selectedGroup) {
     let customShort = customTopCategories.filter(x => x.startsWith('반팔 · ')),
         customLong = customTopCategories.filter(x => x.startsWith('긴팔 · ')),
         customOuter = customTopCategories.filter(x => x.startsWith('겉옷 · '));
-    topBox.replaceChildren(makeChoice('상의 추천받기', 'topCategory', topKeep), makeGroup('반팔', ['반팔', '티셔츠', '블라우스', ...customShort], 'topCategory', topKeep), makeGroup('긴팔', ['긴팔', '니트', '맨투맨', '셔츠', ...customLong], 'topCategory', topKeep), makeGroup('겉옷', ['가디건', '민소매', ...customOuter], 'topCategory', topKeep));
+    topBox.replaceChildren(makeChoice('상의 추천받기', 'topCategory', topKeep), makeGroup('반팔', ['반팔', '티셔츠', '블라우스', '민소매', ...customShort], 'topCategory', topKeep), makeGroup('긴팔', ['긴팔', '니트', '맨투맨', '셔츠', ...customLong], 'topCategory', topKeep), makeGroup('겉옷 · 상의와 함께 선택', ['겉옷 없음', '가디건', ...customOuter], 'outerCategory', outerKeep));
     let shorts = categoryOptions.filter(name => /짧은바지|반바지|쇼츠/.test(name)),
         longPants = categoryOptions.filter(name => /긴바지|긴 팬츠|바지/.test(name) && !shorts.includes(name)),
         skirts = categoryOptions.filter(name => /치마|스커트/.test(name)),
@@ -92,7 +118,7 @@ function renderCategoryChoices(selectValue, selectedGroup) {
 }
 
 function removeCategory(name, group = 'category') {
-    if (group === 'topCategory') {
+    if (group === 'topCategory' || group === 'outerCategory') {
         customTopCategories = customTopCategories.filter(item => item !== name);
         localStorage.setItem('custom-top-types', JSON.stringify(customTopCategories))
     } else if (group === 'accessoryCategory') {
@@ -102,6 +128,13 @@ function removeCategory(name, group = 'category') {
         customCategories = customCategories.filter(item => item !== name);
         categoryOptions = categoryOptions.filter(item => item !== name);
         localStorage.setItem('custom-clothing-types', JSON.stringify(customCategories))
+    }
+    if (group === 'accessoryCategory') {
+        document.querySelectorAll('input[name="accessoryCategory"]').forEach(input => {
+            if (input.value === name) input.checked = false;
+        });
+        renderCategoryChoices();
+        return;
     }
     let fallback = group === 'topCategory' ? '상의 추천받기' : group === 'accessoryCategory' ? '없음' : '긴치마';
     renderCategoryChoices(document.querySelector('input[name="' + group + '"]:checked')?.value === name ? fallback : undefined, group)
@@ -151,7 +184,7 @@ function addCustomClothing() {
         return
     }
     let value = subtype + ' · ' + name,
-        list = group === 'topCategory' ? customTopCategories : group === 'accessoryCategory' ? customAccessoryCategories : customCategories;
+        list = (group === 'topCategory' || group === 'outerCategory') ? customTopCategories : group === 'accessoryCategory' ? customAccessoryCategories : customCategories;
     if (list.includes(value)) {
         toast('이미 추가된 종류예요');
         return
@@ -216,7 +249,7 @@ function updateCategoryPreview() {
             accessoryCategory: ["액세서리", "accessoryCategoryList"]
         },
         selected = document.querySelector('input[name="' + group + '"]:checked'),
-        name = selected?.value || (group === "category" ? "긴치마" : group === "accessoryCategory" ? "없음" : "상의 추천받기"),
+        name = group === 'accessoryCategory' ? accessorySelectionText() : (selected?.value || (group === 'category' ? '긴치마' : '상의 추천받기')) + (group === 'topCategory' && outerwearSelection() ? ' + ' + outerwearSelection() : ''),
         icons = {
             "상의 추천받기": "👚",
             "니트": "🧶",
@@ -296,13 +329,14 @@ document.getElementById("categoryModal").addEventListener("change", event => {
         updateCategoryPreview();
         return
     }
-    if (!event.target.matches('input[type="radio"]')) return;
+    if (!event.target.matches('input[type="radio"],input[type="checkbox"]')) return;
+    if (event.target.name === 'accessoryCategory') normalizeAccessorySelection(event.target);
     let labels = {
             topCategory: "topCategoryValue",
             category: "categoryValue",
             accessoryCategory: "accessoryCategoryValue"
         },
-        value = event.target.value;
+        value = group === 'accessoryCategory' ? accessorySelectionText() : group === 'topCategory' ? (selectedClothingValues('topCategory')[0] || '상의 추천받기') + (outerwearSelection() ? ' + ' + outerwearSelection() : '') : event.target.value;
     if (group === "accessoryCategory" && value === "없음") value = "선택 안 함";
     $(labels[group]).textContent = value;
     updateCategoryPreview()

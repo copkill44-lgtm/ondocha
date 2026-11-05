@@ -20,7 +20,7 @@ function fetchAiRecommendations() {
     let feel = document.querySelector('input[name=feel]:checked')?.value,
         bottomCategory = document.querySelector('input[name=category]:checked')?.value,
         topCategory = document.querySelector('input[name=topCategory]:checked')?.value || '상의 추천받기',
-        accessory = document.querySelector('input[name=accessoryCategory]:checked')?.value || '없음';
+        accessory = accessorySelectionText();
     return fetch('/.netlify/functions/recommend', {
         method: 'POST',
         headers: {
@@ -34,6 +34,7 @@ function fetchAiRecommendations() {
                 apparentTempC: weatherApparentTemp
             },
             topCategory: topCategory + " (" + categoryPreferenceText("topCategory") + ")",
+            outerwear: outerwearSelection(),
             bottomCategory: bottomCategory + " (" + categoryPreferenceText("category") + ")",
             accessory: accessory + " (" + categoryPreferenceText("accessoryCategory") + ")",
             place: getFieldValue('place'),
@@ -52,7 +53,7 @@ function generateRecommendations(aiRecommendations) {
     let feel = document.querySelector('input[name=feel]:checked').value,
         category = document.querySelector('input[name=category]:checked').value + ' (' + categoryPreferenceText('category') + ')',
         topChoice = (document.querySelector('input[name=topCategory]:checked')?.value || '상의 추천받기') + ' (' + categoryPreferenceText('topCategory') + ')',
-        accessoryRaw = document.querySelector('input[name=accessoryCategory]:checked')?.value || '없음',
+        accessoryRaw = accessorySelectionText(),
         accessoryChoice = accessoryRaw === '없음' ? '' : accessoryRaw + ' (' + categoryPreferenceText('accessoryCategory') + ')',
         place = getFieldValue('place'),
         occasion = getFieldValue('occasion'),
@@ -174,9 +175,13 @@ function generateRecommendations(aiRecommendations) {
             }
         })
     }
+    looks.forEach(look => {
+        look.outerwear = outerwearSelection();
+        if (accessoryRaw !== '액세서리 추천받기') look.accessory = accessoryChoice;
+    });
     selected = 0;
     $('suggestCopy').textContent = weatherTemp === null ? 'AI가 체감온도와 선택한 옷, 약속에 맞춰 코디했어요. ' + time + ' · ' + place + ' · ' + occasion : city + ' ' + weatherTemp + '°C와 ' + feel + ' 느낌을 반영했어요. ' + time + ' · ' + place + ' · ' + occasion;
-    $('outfits').innerHTML = looks.map((x, i) => '<article class="look ' + (i === 0 ? 'selected' : '') + '"><div class="look-title">' + escapeCalendarText(x.aiTitle || ['포근한 데일리', '산뜻한 외출', '약속 코디', '포인트 룩'][i]) + '</div><div class="stage" style="--bg:' + ['#fff0f2', '#f3efff', '#eaf7f0', '#fff4df'][i] + '"><div class="look-avatar custom-look-avatar">' + avatarClothesMarkup(x, i) + '</div></div><div class="look-items">' + (x.onepiece ? '<strong>' + escapeCalendarText(x.onepiece[0]) + '</strong>' : '상의 <strong>' + escapeCalendarText(x.top[0]) + '</strong><br>하의 <strong>' + escapeCalendarText(x.bottom[0]) + '</strong>') + (x.accessory ? '<br>액세서리 <strong>' + escapeCalendarText(x.accessory) + '</strong>' : '') + '<br>신발 <strong>' + escapeCalendarText(x.shoes[0]) + '</strong>' + (x.reason ? '<br>' + escapeCalendarText(x.reason) : '') + '</div><button class="pick" onclick="selectLook(' + i + ')">' + (i === 0 ? '💗 선택한 코디' : '이 코디 고르기') + '</button></article>').join('');
+    $('outfits').innerHTML = looks.map((x, i) => '<article class="look ' + (i === 0 ? 'selected' : '') + '"><div class="look-title">' + escapeCalendarText(x.aiTitle || ['포근한 데일리', '산뜻한 외출', '약속 코디', '포인트 룩'][i]) + '</div><div class="stage" style="--bg:' + ['#fff0f2', '#f3efff', '#eaf7f0', '#fff4df'][i] + '"><div class="look-avatar custom-look-avatar">' + avatarClothesMarkup(x, i) + '</div></div><div class="look-items">' + (x.onepiece ? '<strong>' + escapeCalendarText(x.onepiece[0]) + '</strong>' : '상의 <strong>' + escapeCalendarText(x.top[0]) + '</strong><br>하의 <strong>' + escapeCalendarText(x.bottom[0]) + '</strong>') + (x.outerwear ? '<br>겉옷 <strong>' + escapeCalendarText(x.outerwear) + '</strong>' : '') + (x.accessory ? '<br>액세서리 <strong>' + escapeCalendarText(x.accessory) + '</strong>' : '') + '<br>신발 <strong>' + escapeCalendarText(x.shoes[0]) + '</strong>' + (x.reason ? '<br>' + escapeCalendarText(x.reason) : '') + '</div><button class="pick" onclick="selectLook(' + i + ')">' + (i === 0 ? '💗 선택한 코디' : '이 코디 고르기') + '</button></article>').join('');
     mountOutfitImageControls();
 
     resetOutfitCards();
