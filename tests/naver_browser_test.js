@@ -14,7 +14,7 @@ function setup(mode = 'ok') {
     const document = { getElementById:id=>id==='naverCallbackStatus'?status:back };
     const config = { supabaseUrl:'https://test.supabase.co',supabasePublishableKey:'public' };
     const fetcher = async (url, options) => {
-        const body = JSON.parse(options.body); calls.push({request:body});
+        const body = JSON.parse(options.body); calls.push({request:body,endpoint:url});
         if (body.action === 'start') return Response.json({ state,
             url: mode === 'evil-url' ? 'https://evil.example/?state='+state : 'https://nid.naver.com/oauth2.0/authorize?state='+state });
         return Response.json({token_hash:'one-time-hash',type:'magiclink'});
@@ -26,6 +26,7 @@ function setup(mode = 'ok') {
 Deno.test('browser stores verifier locally and sends only challenge at login start', async () => {
     const f=setup();await f.beginNaverLogin();
     const request=f.calls[0].request;
+    equal(f.calls[0].endpoint,'https://test.supabase.co/functions/v1/smart-service');
     equal(request.redirectTo,'https://copkill44-lgtm.github.io/ondocha/naver-callback.html');
     assert(/^[a-f0-9]{64}$/.test(request.challenge));assert(!('verifier' in request));
     const flow=JSON.parse([...f.stored.values()][0]);assert(flow.verifier!==request.challenge);

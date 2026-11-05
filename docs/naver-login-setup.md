@@ -35,11 +35,11 @@ SUPABASE_URL과 SUPABASE_SERVICE_ROLE_KEY는 Supabase가 기본 주입합니다.
 
 CLI가 연결된 환경에서는 저장소 루트에서:
 
-    supabase functions deploy naver-auth --project-ref rwfjbdhfabwgefkwnwgn --no-verify-jwt
+    supabase functions deploy smart-service --project-ref rwfjbdhfabwgefkwnwgn --no-verify-jwt
 
 대시보드에서는 Edge Functions > Deploy a new function > Via Editor:
 
-1. 함수 이름을 naver-auth로 지정합니다.
+1. 실제 배포 주소(slug)는 smart-service입니다. 기존 함수의 표시 이름은 naver-auth일 수 있습니다. 새로 만들지 말고 기존 함수를 편집합니다.
 2. .tools/naver-auth-deploy/index.ts의 전체 내용을 에디터 index.ts에 붙여넣습니다.
    이 파일은 handler.js와 호출 코드를 합친 로컬 생성물입니다. 비밀 키는 없습니다.
 3. Deploy를 누릅니다.
@@ -74,3 +74,5 @@ https://developers.naver.com/docs/login/api/api.md
 https://developers.naver.com/docs/login/profile/profile.md
 https://supabase.com/docs/reference/javascript/auth-admin-generatelink
 https://supabase.com/docs/guides/functions/secrets
+
+실제 프런트엔드 연결 주소: https://rwfjbdhfabwgefkwnwgn.supabase.co/functions/v1/smart-service

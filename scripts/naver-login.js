@@ -2,7 +2,7 @@
 const NAVER_FLOW_KEY = 'ondocha-naver-login';
 const naverHex = bytes => Array.from(new Uint8Array(bytes), b => b.toString(16).padStart(2, '0')).join('');
 async function naverRequest(payload) {
-    const response = await fetch(ONDOCHA_CONFIG.supabaseUrl + '/functions/v1/naver-auth', {
+    const response = await fetch(ONDOCHA_CONFIG.supabaseUrl + '/functions/v1/smart-service', {
         method: 'POST', headers: { 'Content-Type': 'application/json', apikey: ONDOCHA_CONFIG.supabasePublishableKey },
         body: JSON.stringify(payload), signal: AbortSignal.timeout(45000)
     });
