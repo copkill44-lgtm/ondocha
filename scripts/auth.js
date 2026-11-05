@@ -17,7 +17,7 @@ function setAccountUi(user) {
     if (button) button.textContent = user ? '로그아웃' : '로그인';
     if (label) {
         label.hidden = !user;
-        label.textContent = user?.email || '';
+        label.textContent = user?.email || user?.user_metadata?.name || user?.user_metadata?.full_name || (user ? '내 계정' : '');
     }
 }
 

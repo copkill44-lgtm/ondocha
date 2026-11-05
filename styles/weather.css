@@ -13,3 +13,43 @@
     #sky { padding-bottom: 50px; }
     #sky .weather-badge { left: 16px; right: auto; bottom: 10px; }
 }
+
+/* A quiet rain illustration stays beside the weather information. */
+#sky .rain-scene { display: none; position: absolute; width: min(44%, 410px); height: 100%; right: 2%; top: 0; pointer-events: none; }
+#sky:is([data-weather="rainy"], [data-weather="stormy"]) .rain-scene { display: block; }
+#sky[data-weather="rainy"] { background: linear-gradient(112deg, #526b8c 0%, #6f8eac 54%, #99b5ca 100%); }
+#sky:is([data-weather="rainy"], [data-weather="stormy"])::before,
+#sky:is([data-weather="rainy"], [data-weather="stormy"])::after { content: none; animation: none; }
+#sky:is([data-weather="rainy"], [data-weather="stormy"]) .sun { opacity: 0; }
+#sky:is([data-weather="rainy"], [data-weather="stormy"]) h1,
+#sky:is([data-weather="rainy"], [data-weather="stormy"]) #skyDetail { position: relative; z-index: 1; text-shadow: 0 1px 8px #263e5b20; }
+#sky:is([data-weather="rainy"], [data-weather="stormy"]) .weather-attribution { color: #deebf7; }
+#sky:is([data-weather="rainy"], [data-weather="stormy"]) .weather-config label { color: #e1edf8; }
+#sky .rain-cloud-front { filter: drop-shadow(0 9px 9px #344e6c20); animation: rainCloudSway 7s ease-in-out infinite; }
+#sky .rain-cloud-back { animation: rainCloudSway 9s ease-in-out -3s infinite reverse; opacity: .8; }
+#sky .rain-drop { animation: softRainFall var(--rain-speed) linear var(--rain-delay) infinite; }
+#sky .rain-ripple { transform-box: fill-box; transform-origin: center; animation: rainWaterRipple 2.8s ease-out var(--ripple-delay) infinite; }
+@keyframes softRainFall {
+    0% { transform: translate(5px, -20px); opacity: 0; }
+    20% { opacity: .75; }
+    75% { opacity: .5; }
+    100% { transform: translate(-9px, 28px); opacity: 0; }
+}
+@keyframes rainCloudSway {
+    0%,100% { transform: translate(0, 0); }
+    50% { transform: translate(7px, -4px); }
+}
+@keyframes rainWaterRipple {
+    0% { transform: scale(.45); opacity: 0; }
+    20% { opacity: .5; }
+    100% { transform: scale(1.7); opacity: 0; }
+}
+@media(max-width:640px) {
+    #sky .rain-scene { width: 180px; height: 180px; right: -40px; top: 10px; opacity: .65; }
+    #sky:is([data-weather="rainy"], [data-weather="stormy"]) .rain-scene { mask-image: linear-gradient(90deg, transparent, #000 35%); }
+}
+@media(prefers-reduced-motion:reduce) {
+    #sky .rain-cloud-front, #sky .rain-cloud-back, #sky .rain-drop, #sky .rain-ripple { animation: none; }
+    #sky .rain-drop { opacity: .45; }
+    #sky .rain-ripple { opacity: .25; }
+}

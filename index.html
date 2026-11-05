@@ -14,8 +14,8 @@
     <link rel="stylesheet" href="styles/carousel.css">
     <link rel="stylesheet" href="styles/calendar.css">
     <link rel="stylesheet" href="styles/auth.css?v=20261105-icons">
-    <link rel="stylesheet" href="styles/weather.css">
-    <link rel="stylesheet" href="styles/clothing.css">
+    <link rel="stylesheet" href="styles/weather.css?v=20261105-soft-rain">
+    <link rel="stylesheet" href="styles/clothing.css?v=20261105-local-palette">
     <link rel="stylesheet" href="styles/outfit-images.css">
     <script src="assets/vendor/supabase/supabase.js"></script>
 </head>
@@ -139,7 +139,7 @@
                 <button type="button" class="account-back" onclick="leaveEmailAuth()">‹ 이전</button>
                 <h2>다시 만나서 반가워요</h2>
                 <p class="account-caption">이메일과 비밀번호로 내 코디를 불러와요.</p>
-                <form class="auth-form" id="loginForm" onsubmit="submitEmailLogin(event)">
+<form class="auth-form" id="loginForm" onsubmit="submitEmailLogin(event)">
                     <label>이메일<input id="loginEmail" type="email" autocomplete="email" maxlength="254" required
                             placeholder="이메일을 입력하세요"></label>
                     <label>비밀번호<input id="loginPassword" type="password" autocomplete="current-password" required
@@ -163,7 +163,7 @@
                 <button type="button" class="account-back" onclick="leaveEmailAuth()">‹ 이전</button>
                 <h2>나만의 코디를 모아봐요</h2>
                 <p class="account-caption">이메일로 가입하고 확인 메일을 받아보세요.</p>
-                <form class="auth-form" id="signupForm" onsubmit="submitEmailSignup(event)">
+<form class="auth-form" id="signupForm" onsubmit="submitEmailSignup(event)">
                     <label>이메일<input id="signupEmail" type="email" autocomplete="email" maxlength="254" required
                             placeholder="이메일을 입력하세요"></label>
                     <label>비밀번호<input id="signupPassword" type="password" autocomplete="new-password" minlength="8"
@@ -272,6 +272,26 @@
         </header>
         <section class="sky" id="sky" aria-busy="false">
             <div class="sun"></div>
+            <svg class="rain-scene" viewBox="0 0 360 280" aria-hidden="true" focusable="false">
+                <defs>
+                    <linearGradient id="rainCloudFront" x1="0" y1="0" x2="0.3" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#dcebf7"/></linearGradient>
+                    <linearGradient id="rainCloudBack" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#b8d0e7"/><stop offset="1" stop-color="#8ba9c7"/></linearGradient>
+                    <radialGradient id="rainSkyGlow"><stop stop-color="#dfedfa" stop-opacity=".3"/><stop offset="1" stop-color="#dfedfa" stop-opacity="0"/></radialGradient>
+                    <linearGradient id="rainDropTint" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#d8f4ff" stop-opacity=".15"/><stop offset="1" stop-color="#e5f7ff" stop-opacity=".9"/></linearGradient>
+                </defs>
+                <ellipse cx="218" cy="117" rx="155" ry="136" fill="url(#rainSkyGlow)"/>
+                <g class="rain-cloud-back"><path d="M164 103c-17 0-27-10-27-23 0-12 9-22 21-24 5-17 18-27 35-27 20 0 34 13 37 30 14-4 29 6 29 21 0 13-10 23-24 23z" fill="url(#rainCloudBack)"/></g>
+                <g class="rain-drops" fill="none" stroke="url(#rainDropTint)" stroke-width="2.6" stroke-linecap="round"><path class="rain-drop" style="--rain-delay:-0.000s;--rain-speed:1.50s" d="M108 118l-3 11"/><path class="rain-drop" style="--rain-delay:-0.173s;--rain-speed:1.67s" d="M142 127l-3 14"/><path class="rain-drop" style="--rain-delay:-0.346s;--rain-speed:1.84s" d="M176 115l-3 10"/><path class="rain-drop" style="--rain-delay:-0.519s;--rain-speed:2.01s" d="M210 135l-3 15"/><path class="rain-drop" style="--rain-delay:-0.692s;--rain-speed:2.18s" d="M244 119l-3 12"/><path class="rain-drop" style="--rain-delay:-0.865s;--rain-speed:1.50s" d="M278 130l-3 9"/><path class="rain-drop" style="--rain-delay:-1.038s;--rain-speed:1.67s" d="M123 158l-3 9"/><path class="rain-drop" style="--rain-delay:-1.211s;--rain-speed:1.84s" d="M157 172l-3 13"/><path class="rain-drop" style="--rain-delay:-1.384s;--rain-speed:2.01s" d="M191 152l-3 12"/><path class="rain-drop" style="--rain-delay:-1.557s;--rain-speed:2.18s" d="M225 169l-3 10"/><path class="rain-drop" style="--rain-delay:-1.730s;--rain-speed:1.50s" d="M259 155l-3 14"/><path class="rain-drop" style="--rain-delay:-1.903s;--rain-speed:1.67s" d="M291 177l-3 9"/><path class="rain-drop" style="--rain-delay:-2.076s;--rain-speed:1.84s" d="M102 196l-3 8"/><path class="rain-drop" style="--rain-delay:-2.249s;--rain-speed:2.01s" d="M145 210l-3 11"/><path class="rain-drop" style="--rain-delay:-2.422s;--rain-speed:2.18s" d="M182 193l-3 10"/><path class="rain-drop" style="--rain-delay:-2.595s;--rain-speed:1.50s" d="M222 211l-3 13"/><path class="rain-drop" style="--rain-delay:-2.768s;--rain-speed:1.67s" d="M263 198l-3 9"/><path class="rain-drop" style="--rain-delay:-2.941s;--rain-speed:1.84s" d="M284 222l-3 8"/></g>
+                <g class="rain-ripples" fill="none" stroke="#d1e9f8" stroke-width="1.3">
+                    <ellipse class="rain-ripple" cx="133" cy="245" rx="12" ry="3" style="--ripple-delay:-.3s"/>
+                    <ellipse class="rain-ripple" cx="221" cy="255" rx="15" ry="3.5" style="--ripple-delay:-1.2s"/>
+                    <ellipse class="rain-ripple" cx="279" cy="239" rx="10" ry="2.5" style="--ripple-delay:-2s"/>
+                </g>
+                <g class="rain-cloud-front"><path d="M107 139C86 139 71 125 71 107C71 89 84 75 101 74C106 49 124 33 147 33C174 33 194 52 196 77C202 73 209 71 217 71C235 71 250 84 252 101C267 102 278 112 278 124C278 133 268 139 254 139Z" fill="url(#rainCloudFront)"/>
+                    <path d="M108 75c4-17 17-28 34-28" fill="none" stroke="#fff" stroke-opacity=".72" stroke-width="4" stroke-linecap="round"/>
+                </g>
+            </svg>
+
             <h1 id="skyTitle">오늘 하늘을 살펴보고 있어요</h1>
             <p id="skyDetail">위치를 허용하면 내 주변 날씨를 자동으로 알려드려요.</p>
             <div class="weather-actions">
@@ -440,7 +460,7 @@
                 type="button" class="category-modal-close" onclick="closeCategoryModal()" aria-label="닫기">×</button>
             <header class="clothing-dialog-header">
                 <h2 id="categoryModalTitle">옷 종류 선택</h2>
-                <p>취향에 맞는 옷과 색상을 골라주세요.</p>
+                <p id="categoryModalDescription">취향에 맞는 옷과 색상을 골라주세요.</p>
             </header>
             <div class="category-modal-layout">
                 <aside class="category-preview"><span class="preview-caption">미리보기</span>
@@ -448,7 +468,7 @@
                         추천받기</strong><small id="categoryPreviewStyle">무늬 없음 · 색상 미선택</small>
                 </aside>
                 <div class="category-editor">
-                    <h3>옷 선택</h3>
+                    <h3 id="categorySelectionTitle">옷 선택</h3>
                     <div class="category-list" id="topCategoryList"></div>
                     <div class="category-list" id="categoryList"></div>
                     <div class="category-list" id="accessoryCategoryList"></div>
@@ -458,17 +478,29 @@
                     </fieldset>
                     <fieldset class="preference-group">
                         <legend>색깔</legend>
-                        <div class="color-options"><label style="--swatch:#f7f5ef"><input type="radio"
-                                    name="clothingColor" value="아이보리"><i></i><span>아이보리</span></label><label
-                                style="--swatch:#e8a9b2"><input type="radio" name="clothingColor"
-                                    value="핑크"><i></i><span>핑크</span></label><label style="--swatch:#9cb7de"><input
-                                    type="radio" name="clothingColor" value="하늘색"><i></i><span>하늘색</span></label><label
-                                style="--swatch:#93c4a5"><input type="radio" name="clothingColor"
-                                    value="초록"><i></i><span>초록</span></label><label style="--swatch:#373344"><input
-                                    type="radio" name="clothingColor" value="검정"><i></i><span>검정</span></label><label
-                                style="--swatch:#d4a46d"><input type="radio" name="clothingColor"
-                                    value="베이지"><i></i><span>베이지</span></label><label class="no-color"><input
-                                    type="radio" name="clothingColor" value="상관없음" checked><span>상관없음</span></label>
+                        <div class="color-options"><label class="no-color"><input type="radio" name="clothingColor" value="상관없음" checked><span>상관없음</span></label>
+<label style="--swatch:#ef4444"><input type="radio" name="clothingColor" value="빨강"><i></i><span>빨강</span></label>
+<label style="--swatch:#f97316"><input type="radio" name="clothingColor" value="주황"><i></i><span>주황</span></label>
+<label style="--swatch:#facc15"><input type="radio" name="clothingColor" value="노랑"><i></i><span>노랑</span></label>
+<label style="--swatch:#22c55e"><input type="radio" name="clothingColor" value="초록"><i></i><span>초록</span></label>
+<label style="--swatch:#3b82f6"><input type="radio" name="clothingColor" value="파랑"><i></i><span>파랑</span></label>
+<label style="--swatch:#a855f7"><input type="radio" name="clothingColor" value="보라"><i></i><span>보라</span></label>
+<label style="--swatch:#ec4899"><input type="radio" name="clothingColor" value="핑크"><i></i><span>핑크</span></label>
+<label style="--swatch:#f7f5ef"><input type="radio" name="clothingColor" value="아이보리"><i></i><span>아이보리</span></label>
+<label style="--swatch:#202024"><input type="radio" name="clothingColor" value="검정"><i></i><span>검정</span></label>
+<label class="custom-color-choice"><input type="radio" name="clothingColor" value="custom"><i></i><span>직접 고르기</span></label></div>
+                        <div id="clothingColorWheelPanel" class="color-wheel-panel" hidden>
+                            <div id="clothingColorWheel" class="color-wheel" role="slider" tabindex="0" aria-label="색상과 채도 선택" aria-valuemin="0" aria-valuemax="359" aria-valuenow="0" aria-describedby="clothingColorWheelHelp">
+                                <span id="clothingColorMarker" class="color-wheel-marker"></span>
+                            </div>
+                            <div class="color-wheel-controls">
+                                <p id="clothingColorWheelHelp">원을 누르거나 드래그해서 색을 골라보세요.</p>
+                                <label for="clothingColorBrightness">밝기</label>
+                                <input id="clothingColorBrightness" type="range" min="0" max="100" value="100">
+                                <label for="clothingColorHex">선택한 색상</label>
+                                <div class="custom-color-value"><span id="clothingColorSwatch" aria-hidden="true"></span><input id="clothingColorHex" type="text" value="#9CB7DE" maxlength="7" pattern="#[0-9A-Fa-f]{6}" spellcheck="false" autocomplete="off" aria-label="색상 코드"></div>
+                                <small>방향키로 색상·채도를 조절할 수도 있어요.</small>
+                            </div>
                         </div>
                     </fieldset>
                 </div>
@@ -515,7 +547,7 @@
     </div>
 
     <script src="scripts/state.js"></script>
-    <script src="scripts/clothing.js?v=20261105-2"></script>
+    <script src="scripts/clothing.js?v=20261105-local-palette"></script>
     <script src="scripts/config.js"></script>
     <script src="scripts/qwen-endpoint.js"></script>
     <script src="scripts/auth.js"></script>

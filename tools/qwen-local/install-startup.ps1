@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 $scriptPath = Join-Path $PSScriptRoot 'start-public.ps1'
 $startup = [Environment]::GetFolderPath('Startup')
 $linkPath = Join-Path $startup 'Ondocha AI.lnk'

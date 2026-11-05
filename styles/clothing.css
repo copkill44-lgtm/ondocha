@@ -116,3 +116,25 @@
     #categoryModal .color-options .no-color { padding: 7px; font-size: 9px; }
 }
 @media(prefers-reduced-motion:reduce) { #categoryModal .category-list .choice { transition: none; } }
+
+
+/* Custom color wheel: hue around the edge, saturation towards the center. */
+#categoryModal .color-options .custom-color-choice i { background: conic-gradient(red, #ff0, #0f0, #0ff, #00f, #f0f, red); }
+#categoryModal .color-wheel-panel { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 18px; align-items: center; margin-top: 12px; padding: 14px; border: 1px solid #e4eaf3; border-radius: 16px; background: #f8faff; }
+#categoryModal .color-wheel-panel[hidden] { display: none; }
+#categoryModal .color-wheel { position: relative; width: 140px; height: 140px; border-radius: 50%; touch-action: none; cursor: crosshair; background: radial-gradient(circle, white 0%, transparent 70.71%), conic-gradient(red, #ff0, #0f0, #0ff, #00f, #f0f, red); box-shadow: 0 0 0 1px #dce5f1; }
+#categoryModal .color-wheel:focus-visible { outline: 3px solid #7599c9; outline-offset: 5px; }
+#categoryModal .color-wheel-marker { position: absolute; width: 14px; height: 14px; border: 2px solid white; border-radius: 50%; box-shadow: 0 0 0 1px #3e4e68, 0 1px 4px #0005; transform: translate(-50%, -50%); pointer-events: none; }
+#categoryModal .color-wheel-controls { display: grid; gap: 6px; min-width: 0; color: #6a7f9e; font-size: 11px; }
+#categoryModal .color-wheel-controls p { margin: 0 0 3px; line-height: 1.6; }
+#categoryModal .color-wheel-controls small { font-size: 9px; line-height: 1.5; color: #8a9bb2; }
+#categoryModal #clothingColorBrightness { width: 100%; min-height: 24px; margin: 0 0 4px; accent-color: #7599c9; }
+#categoryModal .custom-color-value { display: flex; align-items: center; gap: 7px; }
+#categoryModal #clothingColorSwatch { width: 28px; height: 28px; border: 1px solid #dce5f1; border-radius: 8px; flex: 0 0 28px; }
+#categoryModal #clothingColorHex { width: 100%; min-width: 0; max-width: 112px; padding: 6px 8px; border: 1px solid #dce5f1; border-radius: 8px; background: white; color: #4b6489; font: 12px monospace; }
+#categoryModal #clothingColorHex:invalid { border-color: #d97884; }
+@media(max-width:380px) {
+    #categoryModal .color-wheel-panel { grid-template-columns: 110px minmax(0, 1fr); padding: 11px; gap: 12px; }
+    #categoryModal .color-wheel { width: 110px; height: 110px; }
+}
+

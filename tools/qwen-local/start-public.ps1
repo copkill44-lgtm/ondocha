@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 $cache = Join-Path $projectRoot '.qwen-cache'
 $cloudflared = Join-Path $cache 'cloudflared.exe'

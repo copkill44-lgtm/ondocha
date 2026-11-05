@@ -210,6 +210,105 @@ function localDate(d) {
 }
 let clothingPreferences = JSON.parse(localStorage.getItem("clothing-preferences") || "{}");
 
+const clothingColorPalette = {"빨강": "#ef4444", "주황": "#f97316", "노랑": "#facc15", "초록": "#22c55e", "파랑": "#3b82f6", "보라": "#a855f7", "핑크": "#ec4899", "아이보리": "#f7f5ef", "검정": "#202024"};
+const legacyClothingColors = {하늘색: "#9cb7de", 베이지: "#d4a46d", 골드: "#d4af37", 실버: "#c0c0c0", 로즈골드: "#b76e79", 브론즈: "#cd7f32"};
+let clothingWheelState = {h: 215, s: .3, v: .87};
+function isClothingHex(value) { return /^#[0-9a-f]{6}$/i.test(value || ''); }
+function clothingPreviewColor(group) {
+    const color = (clothingPreferences[group] || {}).color;
+    return isClothingHex(color) ? color : clothingColorPalette[color] || '#f7f5ef';
+}
+function clothingHsvToHex({h, s, v}) {
+    const channel = n => {
+        const k = (n + h / 60) % 6;
+        return Math.round(255 * v * (1 - s * Math.max(0, Math.min(k, 4 - k, 1)))).toString(16).padStart(2, '0');
+    };
+    return '#' + channel(5) + channel(3) + channel(1);
+}
+function clothingHexToHsv(hex) {
+    const [r,g,b] = [1,3,5].map(i => parseInt(hex.slice(i,i+2),16) / 255);
+    const max = Math.max(r,g,b), min = Math.min(r,g,b), delta = max-min;
+    const hue = !delta ? 0 : max === r ? ((g-b)/delta)%6 : max === g ? (b-r)/delta+2 : (r-g)/delta+4;
+    return {h: (hue*60+360)%360, s: max ? delta/max : 0, v: max};
+}
+function syncClothingColorWheel() {
+    const pref = clothingPreferences[$('categoryModal').dataset.group] || {};
+    const custom = isClothingHex(pref.color);
+    $('clothingColorWheelPanel').hidden = !custom;
+    const hex = custom ? pref.color : isClothingHex(pref.customColor) ? pref.customColor : '#9cb7de';
+    clothingWheelState = clothingHexToHsv(hex);
+    renderClothingColorWheel();
+}
+function renderClothingColorWheel() {
+    const {h,s,v} = clothingWheelState;
+    const hex = clothingHsvToHex(clothingWheelState);
+    const radians = h*Math.PI/180;
+    $('clothingColorMarker').style.left = (50+Math.sin(radians)*s*50)+'%';
+    $('clothingColorMarker').style.top = (50-Math.cos(radians)*s*50)+'%';
+    $('clothingColorMarker').style.backgroundColor = hex;
+    const shade = 'rgba(0,0,0,'+(1-v)+')';
+    $('clothingColorWheel').style.backgroundImage = 'linear-gradient('+shade+','+shade+'), radial-gradient(circle, white 0%, transparent 70.71%), conic-gradient(red, #ff0, #0f0, #0ff, #00f, #f0f, red)';
+    $('clothingColorWheel').setAttribute('aria-valuenow',String(Math.round(h)));
+    $('clothingColorWheel').setAttribute('aria-valuetext',Math.round(h)+'도, '+Math.round(s*100)+'%, '+hex);
+    $('clothingColorBrightness').value = String(Math.round(v*100));
+    $('clothingColorHex').value = hex.toUpperCase();
+    $('clothingColorSwatch').style.backgroundColor = hex;
+}
+function saveClothingWheelColor() {
+    const group = $('categoryModal').dataset.group;
+    if (!['topCategory','category','accessoryCategory'].includes(group)) return;
+    const hex = clothingHsvToHex(clothingWheelState);
+    clothingPreferences[group] = {...(clothingPreferences[group] || {}), color: hex, customColor: hex};
+    document.querySelectorAll('input[name="clothingColor"]').forEach(input => input.checked = input.value === 'custom');
+    $('clothingColorWheelPanel').hidden = false;
+    localStorage.setItem('clothing-preferences',JSON.stringify(clothingPreferences));
+    renderClothingColorWheel();
+    updateCategoryPreview();
+}
+function pickClothingWheelPoint(event) {
+    const bounds = $('clothingColorWheel').getBoundingClientRect();
+    const dx = (event.clientX-bounds.left-bounds.width/2)/(bounds.width/2);
+    const dy = (event.clientY-bounds.top-bounds.height/2)/(bounds.height/2);
+    clothingWheelState.h = (Math.atan2(dx,-dy)*180/Math.PI+360)%360;
+    clothingWheelState.s = Math.min(1,Math.hypot(dx,dy));
+    saveClothingWheelColor();
+}
+$('clothingColorWheel').addEventListener('pointerdown',event => {
+    if (!event.isPrimary || event.button !== 0) return;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    event.currentTarget.focus({preventScroll:true});
+    pickClothingWheelPoint(event);
+});
+$('clothingColorWheel').addEventListener('pointermove',event => {
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) pickClothingWheelPoint(event);
+});
+$('clothingColorWheel').addEventListener('keydown',event => {
+    if (!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key)) return;
+    event.preventDefault();
+    const step = event.shiftKey ? 10 : 1;
+    if (event.key === 'ArrowLeft') clothingWheelState.h = (clothingWheelState.h-5*step+360)%360;
+    if (event.key === 'ArrowRight') clothingWheelState.h = (clothingWheelState.h+5*step)%360;
+    if (event.key === 'ArrowUp') clothingWheelState.s = Math.min(1,clothingWheelState.s+.01*step);
+    if (event.key === 'ArrowDown') clothingWheelState.s = Math.max(0,clothingWheelState.s-.01*step);
+    saveClothingWheelColor();
+});
+$('clothingColorBrightness').addEventListener('input',event => {
+    clothingWheelState.v = Number(event.target.value)/100;
+    saveClothingWheelColor();
+});
+$('clothingColorHex').addEventListener('input',event => {
+    event.target.setCustomValidity('');
+});
+$('clothingColorHex').addEventListener('change',event => {
+    if (!isClothingHex(event.target.value)) {
+        event.target.setCustomValidity('색상 코드를 #123ABC 형식으로 입력해 주세요.');
+        event.target.reportValidity();
+        return;
+    }
+    clothingWheelState = clothingHexToHsv(event.target.value);
+    saveClothingWheelColor();
+});
+
 function categoryPreferenceText(group) {
     let pref = clothingPreferences[group] || {};
     return "무늬 " + (pref.pattern || "없음") + ", 색상 " + (pref.color || "상관없음")
@@ -274,14 +373,7 @@ function updateCategoryPreview() {
     const previewItem = name.endsWith('추천받기')
         ? ({ topCategory: '티셔츠', category: '긴바지', accessoryCategory: '' })[group]
         : name;
-    $("categoryPreviewIcon").innerHTML = previewItem ? clothingIconMarkup(previewItem, ({
-        아이보리: "#f7f5ef",
-        핑크: "#e8a9b2",
-        하늘색: "#9cb7de",
-        초록: "#93c4a5",
-        검정: "#50536b",
-        베이지: "#d4a46d"
-    })[(clothingPreferences[group] || {}).color] || "#f7f5ef") : '';
+    $("categoryPreviewIcon").innerHTML = previewItem ? clothingIconMarkup(previewItem, clothingPreviewColor(group)) : '';
     $("categoryPreviewIcon").hidden = !previewItem;
     $("categoryPreviewName").textContent = name;
     $("categoryPreviewStyle").textContent = categoryPreferenceText(group);
@@ -297,10 +389,21 @@ function openCategoryModal(group) {
         },
         pref = clothingPreferences[group] || {};
     modal.dataset.group = group;
+    const isAccessory = group === 'accessoryCategory';
+    $('categorySelectionTitle').textContent = isAccessory ? '액세서리 선택' : '옷 선택';
+    $('categoryModalDescription').textContent = isAccessory ? '취향에 맞는 액세서리와 색상을 골라주세요.' : '취향에 맞는 옷과 색상을 골라주세요.';
+    // Keep previously saved colors available through the custom picker.
+    if (legacyClothingColors[pref.color]) {
+        pref.color = legacyClothingColors[pref.color];
+        pref.customColor = pref.color;
+        clothingPreferences[group] = pref;
+        localStorage.setItem('clothing-preferences', JSON.stringify(clothingPreferences));
+    }
     $("categoryModalTitle").textContent = names[group][0] + " 설정";
     ["topCategoryList", "categoryList", "accessoryCategoryList"].forEach(id => $(id).style.display = id === names[group][1] ? "flex" : "none");
     document.querySelectorAll('input[name="clothingPattern"]').forEach(x => x.checked = x.value === (pref.pattern || "없음"));
-    document.querySelectorAll('input[name="clothingColor"]').forEach(x => x.checked = x.value === (pref.color || "상관없음"));
+    document.querySelectorAll('input[name="clothingColor"]').forEach(x => x.checked = x.value === (isClothingHex(pref.color) ? "custom" : pref.color || "상관없음"));
+    syncClothingColorWheel();
     updateCategoryPreview();
     modal.classList.add("open");
     modal.setAttribute("aria-hidden", "false");
@@ -323,8 +426,9 @@ document.getElementById("categoryModal").addEventListener("change", event => {
     if (event.target.matches('input[name="clothingPattern"],input[name="clothingColor"]')) {
         let pref = clothingPreferences[group] || {};
         if (event.target.name === "clothingPattern") pref.pattern = event.target.value;
-        else pref.color = event.target.value;
+        else pref.color = event.target.value === 'custom' ? (isClothingHex(pref.customColor) ? pref.customColor : '#9cb7de') : event.target.value;
         clothingPreferences[group] = pref;
+        if (event.target.name === "clothingColor") syncClothingColorWheel();
         localStorage.setItem("clothing-preferences", JSON.stringify(clothingPreferences));
         updateCategoryPreview();
         return
