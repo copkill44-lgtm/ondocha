@@ -64,6 +64,11 @@ function finishEmailAuth() {
         if (id === 'welcome') screen.style.display = 'none';
         screen.setAttribute('aria-hidden', 'true');
     }
+    if (accountNeedsCharacterSetup) {
+        document.getElementById('app').style.display = 'none';
+        openCharacterSetup();
+        return;
+    }
     showRecommendationHome();
     if (typeof maybeStartAccountTour === 'function') maybeStartAccountTour();
 }

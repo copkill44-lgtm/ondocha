@@ -10,6 +10,7 @@ let suspendCloudSync = false,
     processingAuthId = null,
     authSyncPromise = null;
 let authInitializationError = '';
+let accountNeedsCharacterSetup = false;
 
 function setAccountUi(user) {
     const button = document.getElementById('accountButton');
@@ -107,6 +108,7 @@ async function synchronizeAuthUser(user) {
     if (!user) {
         const wasSignedIn = !!currentAuthUser;
         currentAuthUser = null;
+        accountNeedsCharacterSetup = false;
         setAccountUi(null);
         if (wasSignedIn || localStorage.getItem('codini-data-owner')) {
             suspendCloudSync = true;
@@ -131,6 +133,8 @@ async function synchronizeAuthUser(user) {
         } = await supabaseClient.from('user_app_data').select('data').eq('user_id', user.id).maybeSingle();
         if (error) throw error;
         if (currentAuthUser?.id !== user.id) return;
+        accountNeedsCharacterSetup = !data?.data?.['codini-character'];
+        if (accountNeedsCharacterSetup) localStorage.removeItem('codini-character');
         if (data?.data && typeof data.data === 'object') {
             for (const key of CLOUD_DATA_KEYS) {
                 const value = data.data[key];

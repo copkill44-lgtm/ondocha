@@ -192,6 +192,7 @@ function completeCharacterSetup() {
     if (setup.classList.contains('leaving')) return;
     renderCharacter();
     localStorage.setItem('codini-character', JSON.stringify(characterConfig));
+    accountNeedsCharacterSetup = false;
     if (characterEditing) {
         document.querySelectorAll('#outfits .look-avatar').forEach((avatar, index) => {
             if (looks[index]) avatar.innerHTML = avatarClothesMarkup(looks[index], index);
@@ -227,4 +228,5 @@ function startAfterCharacterPraise() {
         preventScroll: true
     });
     setTimeout(() => app.classList.remove('slide-in-right'), 360);
+    if (typeof maybeStartAccountTour === 'function') maybeStartAccountTour();
 }

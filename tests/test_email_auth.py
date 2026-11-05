@@ -76,16 +76,16 @@ class EmailAuthTests(unittest.TestCase):
   self.assertIsNone(result[0]);self.assertIn('비밀번호',result[1]);self.assertFalse(result[2])
  def test_success_preserves_password_whitespace_and_saves_no_password(self):
   result=self.run_js("document.getElementById('loginEmail').value=' person@example.com ';document.getElementById('loginPassword').value=' password1 ';await submitEmailLogin(submitEvent('loginForm'));return [currentAuthUser.id,calls.loginPayload,JSON.stringify(calls.saved),calls.home];")
-  self.assertEqual(result[0],'account-a');self.assertEqual(result[1]['password'],' password1 ');self.assertEqual(result[1]['email'],'person@example.com');self.assertNotIn('password1',result[2]);self.assertEqual(result[3],1)
+  self.assertEqual(result[0],'account-a');self.assertEqual(result[1]['password'],' password1 ');self.assertEqual(result[1]['email'],'person@example.com');self.assertNotIn('password1',result[2]);self.assertEqual(result[3],0)
  def test_restored_session_opens_home_without_setup(self):
-  result=self.run_js("await initSupabaseAuth();return [calls.home,calls.setup,currentAuthUser.id];")
+  result=self.run_js("remoteRow={data:{'codini-character':JSON.stringify({hair:'open',skin:'default',eyes:'default'})}};await initSupabaseAuth();return [calls.home,calls.setup,currentAuthUser.id];")
   self.assertEqual(result,[1,0,'account-a'])
  def test_signed_out_visit_does_not_open_member_home(self):
   result=self.run_js("authResponse={data:{session:null},error:null};await initSupabaseAuth();return [calls.home,calls.setup];")
   self.assertEqual(result,[0,0])
- def test_login_without_character_goes_directly_home(self):
+ def test_login_without_character_opens_setup(self):
   result=self.run_js("await submitEmailLogin(submitEvent('loginForm'));return [calls.home,calls.setup];")
-  self.assertEqual(result,[1,0])
+  self.assertEqual(result,[0,1])
  def test_guest_has_five_uses_then_login_is_required(self):
   result=self.run_js("for(let i=0;i<5;i++){if(!canRequestRecommendation())throw Error('too early');recordGuestRecommendation();}return [guestRecommendationsUsed(),canRequestRecommendation(),lastView];")
   self.assertEqual(result,[5,False,'loginView'])
@@ -116,5 +116,15 @@ class EmailAuthTests(unittest.TestCase):
  def test_cloud_read_failure_blocks_upload(self):
   result=self.run_js("cloudError={code:'42501'};await processAuthUser(user);await saveCloudState();return [authDataReady,calls.save];")
   self.assertEqual(result,[False,0])
+
+ def test_guest_character_cannot_skip_new_account_setup(self):
+  result=self.run_js("localStorage.setItem('codini-character',JSON.stringify({hair:'tied'}));await submitEmailLogin(submitEvent('loginForm'));return [calls.setup,calls.home,localStorage.getItem('codini-character')];")
+  self.assertEqual(result,[1,0,None])
+ def test_unfinished_session_returns_to_setup(self):
+  result=self.run_js("remoteRow={data:{}};await initSupabaseAuth();return [calls.setup,calls.home];")
+  self.assertEqual(result,[1,0])
+ def test_completed_account_skips_setup(self):
+  result=self.run_js("remoteRow={data:{'codini-character':JSON.stringify({hair:'tied',skin:'default',eyes:'default'})}};await submitEmailLogin(submitEvent('loginForm'));return [calls.setup,calls.home];")
+  self.assertEqual(result,[0,1])
 
 if __name__=='__main__':unittest.main(verbosity=2)
