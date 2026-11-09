@@ -26,6 +26,7 @@ function updateGuestUsage() {
 }
 
 function recordGuestRecommendation() {
+    if (currentAuthUser) { updateGuestUsage(); return; }
     guestUsageMemory = Math.min(GUEST_RECOMMENDATION_LIMIT, guestRecommendationsUsed() + 1);
     try { localStorage.setItem(GUEST_USAGE_KEY, String(guestUsageMemory)); } catch { /* In-memory fallback. */ }
     updateGuestUsage();

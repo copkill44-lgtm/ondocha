@@ -22,6 +22,7 @@ function setAccountUi(user) {
             ? (user.user_metadata?.name || '네이버 회원')
             : (user?.email || user?.user_metadata?.name || user?.user_metadata?.full_name || (user ? '내 계정' : ''));
     }
+    if (typeof updateGuestUsage === 'function') updateGuestUsage();
 }
 
 function localAppData() {
