@@ -3,3 +3,8 @@
 .ai-image-button:disabled { opacity:.55; cursor:wait; }
 .ai-image-button:focus-visible { outline:3px solid #789ed1; outline-offset:3px; }
 .custom-look-avatar .ai-outfit-image { width:100%; height:100%; object-fit:contain; display:block; }
+
+.outfit-preview-label { margin: 8px 0; color: #74869f; text-align: center; font-size: 11px; line-height: 1.6; }
+.outfit-ai-extra { margin: 8px 0 12px; padding: 10px 12px; border: 1px solid #e2eaf5; border-radius: 12px; }
+.outfit-ai-extra summary { cursor: pointer; color: #6c86a7; font-size: 12px; }
+.outfit-ai-extra summary:focus-visible { outline: 2px solid #789ed1; outline-offset: 3px; }
