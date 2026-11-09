@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>오늘의 코디 온도차</title>
     <script>document.documentElement.classList.add('auth-checking');</script>
-    <link rel="stylesheet" href="styles/base.css">
+    <link rel="stylesheet" href="styles/base.css?v=20261109-nav-bar-1">
     <link rel="stylesheet" href="styles/components.css">
     <link rel="stylesheet" href="styles/onboarding.css?v=20261109-mobile-3">
     <link rel="stylesheet" href="styles/character.css?v=20261109-blue-1">
@@ -263,7 +263,7 @@
         <header class="top">
             <div class="brand">☁ 오늘의 코디 온도차</div>
             <button type="button" class="tour-replay" onclick="startFeatureTour()">사용법 안내</button>
-            <nav class="nav"><button class="active" id="navHome" onclick="showHome()">코디 추천</button><button
+            <nav class="nav" aria-label="주요 메뉴"><button class="active" id="navHome" onclick="showHome()">코디 추천</button><button
                     id="navCalendar" onclick="showCalendar()">코디 캘린더</button><button type="button" id="navCharacter"
                     onclick="openCharacterSetup(true)">캐릭터 설정</button></nav>
             <div class="account-area"><span id="accountLabel" hidden></span><button type="button" class="account-button"
