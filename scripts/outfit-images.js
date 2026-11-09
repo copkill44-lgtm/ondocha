@@ -49,6 +49,24 @@ function qwenEndpoint(path) {
     if (!local && !shared && !base) throw new Error('AI ?? ?? ??? ?? ???? ????.');
     return base + path;
 }
+// A temporary tunnel changes when restarted; do not trust a cached script address.
+async function refreshQwenConnection(signal) {
+    if (['127.0.0.1', 'localhost'].includes(location.hostname) && location.port === '8000') return;
+    const endpointFile = new URL('scripts/qwen-endpoint.js', document.baseURI);
+    endpointFile.searchParams.set('connection', Date.now());
+    try {
+        const response = await fetch(endpointFile, { cache: 'no-store', signal: AbortSignal.timeout(8000) });
+        if (response.ok) {
+            const source = await response.text();
+            const match = source.match(/window\.ONDOCHA_QWEN_URL\s*=\s*"(https:\/\/[a-z0-9-]+\.trycloudflare\.com)"/);
+            if (match) window.ONDOCHA_QWEN_URL = match[1];
+        }
+    } catch {
+        // Use the bundled address if refreshing configuration is temporarily unavailable.
+    }
+    if (signal.aborted) throw new DOMException('Cancelled', 'AbortError');
+}
+
 function cancelActiveOutfitJob() {
     if (activeOutfitJobId) {
         try { navigator.sendBeacon(qwenEndpoint('/api/outfit-image/' + encodeURIComponent(activeOutfitJobId) + '/cancel'), ''); } catch {}
@@ -158,6 +176,7 @@ async function generateOutfitImage(index) {
         let headers = {};
         let endpoint = '/api/outfit-image';
         if (usesLocalQwen()) {
+            await refreshQwenConnection(controller.signal);
             endpoint = qwenEndpoint('/api/outfit-image');
         } else {
             const { data, error } = await supabaseClient.auth.getSession();
