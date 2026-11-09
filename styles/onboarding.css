@@ -1073,3 +1073,23 @@
     #onboarding .onboarding-dots { bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
     #onboarding .onboarding-actions button { min-height: 48px; min-width: 80px; padding: 10px 18px; }
 }
+
+/* A phone can report a desktop viewport; use the same device decision as picture. */
+
+    html.onboarding-portrait #onboarding { height: 100dvh; overflow: hidden; }
+    html.onboarding-portrait #onboarding .onboarding-card { height: 100%; min-height: 0; }
+    html.onboarding-portrait #onboarding .onboarding-slides { bottom: calc(110px + env(safe-area-inset-bottom, 0px)); }
+    html.onboarding-portrait #onboarding .onboarding-slide .onboard-full-art {
+        object-fit: contain;
+        object-position: center;
+        opacity: 1;
+    }
+    html.onboarding-portrait #onboarding .mobile-copy { display: none; }
+    html.onboarding-portrait #onboarding .onboarding-actions {
+        bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+        left: max(16px, env(safe-area-inset-left, 0px));
+        right: max(16px, env(safe-area-inset-right, 0px));
+    }
+    html.onboarding-portrait #onboarding .onboarding-dots { bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+    html.onboarding-portrait #onboarding .onboarding-actions button { min-height: 48px; min-width: 80px; padding: 10px 18px; }
+
