@@ -24,6 +24,7 @@ function autoDate() {
 }
 
 function showRecommendationHome() {
+    if (typeof hideCommunity === 'function') hideCommunity();
     for (const id of ['welcome', 'onboarding', 'accountFlow', 'characterSetup', 'characterPraise']) {
         const screen = document.getElementById(id);
         screen.classList.remove('visible', 'leaving');
@@ -43,6 +44,7 @@ function showRecommendationHome() {
 }
 
 function showHome() {
+    if (typeof hideCommunity === 'function') hideCommunity();
     $('calendarCard').classList.remove('visible');
     $('recommendCard').style.display = 'block';
     document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));
@@ -50,6 +52,7 @@ function showHome() {
 }
 
 function showCalendar() {
+    if (typeof hideCommunity === 'function') hideCommunity();
     $('recommendCard').style.display = 'none';
     $('calendarCard').classList.add('visible');
     document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));

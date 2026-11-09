@@ -1,0 +1,70 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../"><link rel="stylesheet" href="styles/base.css"><link rel="stylesheet" href="styles/community.css"></head><body>
+<main class="shell" id="app"><nav class="nav"><button id="navHome">Home</button><button id="navCalendar">Calendar</button><button id="navCommunity">Community</button></nav><div id="sky"></div><div id="recommendCard"></div><div id="calendarCard"></div>
+<section id="communityCard" hidden><div id="communityStatus"></div><div class="community-grid" id="communityFeed"></div><button id="communityMore" hidden>More</button></section></main>
+<dialog class="community-dialog" id="communityComposer"><form onsubmit="publishCommunityPost(event)"><div id="communityComposerPreview"></div><input id="communityNickname" required maxlength="24"><textarea id="communityCaption"></textarea><p id="communityPublishStatus"></p><button id="communityPublishButton">Post</button></form></dialog><div id="toast"></div>
+<script>
+const $=id=>document.getElementById(id);
+let currentAuthUser=null,loginRequests=0,lastToast='',missingTables=false;
+let looks=[{top:['Knit'],bottom:['Skirt'],shoes:['Sneakers']}],selected=0,characterConfig={hair:'open',skin:'default',eyes:'default'};
+function openEmailAuth(){loginRequests++}function setAuthMessage(){}function renderCalendar(){}function localDate(){return '2026-11-09'}
+window.confirm=()=>true;
+const seed={id:'11111111-1111-4111-8111-111111111111',user_id:'owner',author_name:'First friend',caption:'<img src=x onerror="window.injected=true">',outfit:looks[0],appearance:characterConfig,visual_index:0,created_at:'2026-11-09T09:00:00Z'};
+const records={community_posts:[structuredClone(seed)],community_likes:[],community_comments:[]};
+let writes=0;
+const supabaseClient={from(table){
+ const state={op:'read',filters:[],payload:null,start:0,end:99};
+ const query={
+ select(){return query},order(){return query},eq(key,value){state.filters.push(r=>r[key]===value);return query},
+ in(key,values){state.filters.push(r=>values.includes(r[key]));return query},
+ range(a,b){state.start=a;state.end=b;return query},limit(n){state.end=n-1;return query},
+ insert(payload){state.op='insert';state.payload=payload;return query},delete(){state.op='delete';return query},
+ then(resolve,reject){return Promise.resolve().then(()=>{
+  if(missingTables)return {data:null,error:{code:'PGRST205'}};
+  const match=r=>state.filters.every(fn=>fn(r));
+  if(state.op==='insert'){
+   writes++;records[table].push({...state.payload,id:crypto.randomUUID(),created_at:new Date().toISOString()});return {data:null,error:null};
+  }
+  if(state.op==='delete'){writes++;records[table]=records[table].filter(r=>!match(r));return {data:null,error:null};}
+  let rows=records[table].filter(match).slice(state.start,state.end+1).map(r=>structuredClone(r));
+  if(table==='community_posts') rows=rows.map(r=>({...r,community_likes:[{count:records.community_likes.filter(x=>x.post_id===r.id).length}],community_comments:[{count:records.community_comments.filter(x=>x.post_id===r.id).length}]}));
+  return {data:rows,error:null};
+ }).then(resolve,reject)}
+ };return query;
+}};
+</script><script src="scripts/avatar.js"></script><script src="scripts/navigation.js"></script><script src="scripts/transitions.js"></script><script src="scripts/community.js"></script>
+<script>
+const check=(condition,message)=>{if(!condition)throw Error(message)};
+const flush=()=>new Promise(resolve=>setTimeout(resolve,30));
+(async()=>{
+try{
+ await loadCommunity();check(document.querySelectorAll('.community-post').length===1,'public feed');
+ check(!document.querySelector('.community-caption img') && !window.injected,'caption injection');
+ const post=communityPosts[0];
+ await toggleCommunityLike(post,document.querySelector('.community-heart'));
+ check(loginRequests===1 && writes===0,'guest cannot like');
+ currentAuthUser={id:'member',user_metadata:{name:'Test friend'}};
+ await toggleCommunityLike(post,document.querySelector('.community-heart'));
+ check(records.community_likes.length===1 && document.querySelector('.community-heart').getAttribute('aria-pressed')==='true','heart added');
+ await toggleCommunityLike(post,document.querySelector('.community-heart'));check(records.community_likes.length===0,'heart removed');
+ const panel=document.querySelector('.community-comments'),countButton=document.querySelectorAll('.community-post-actions button')[1];
+ await toggleCommunityComments(post,panel,countButton);check(!panel.hidden && panel.querySelector('form'),'comment panel');
+ panel.querySelector('input').value='<b>Nice outfit</b>';panel.querySelector('form').dispatchEvent(new Event('submit',{cancelable:true}));
+ await flush();check(records.community_comments.length===1 && !panel.querySelector('.community-comment b'),'comment text escaped');
+ check(countButton.textContent.includes('1'),'comment count');
+ panel.querySelector('.community-comment button').click();await flush();check(records.community_comments.length===0,'own comment deletion');
+ openCommunityComposer();check(document.getElementById('communityComposer').open,'composer opens');
+ check(document.querySelector('#communityComposerPreview svg') && document.getElementById('communityNickname').value==='Test friend','character snapshot');
+ document.getElementById('communityCaption').value='My outfit';
+ await publishCommunityPost({preventDefault(){}});await flush();
+ check(records.community_posts.length===2 && !document.getElementById('communityComposer').open,'publish');
+ check(records.community_posts[1].appearance.hair==='open','appearance saved');
+ check(document.querySelectorAll('.community-post-head > button').length===1,'only own delete button');
+ await deleteCommunityPost(communityPosts.find(p=>p.user_id==='member'));check(records.community_posts.length===1,'own post deletion');
+ check(communityAppearance({hair:'constructor',skin:'__proto__',eyes:'bad'}).hair==='open','appearance allowlist');
+ showHome();await new Promise(r=>setTimeout(r,200));check(document.getElementById('communityCard').hidden,'home hides feed');
+ missingTables=true;await loadCommunity();check(document.getElementById('communityStatus').textContent.length>0,'missing database message');
+ missingTables=false;await loadCommunity();check(communityPosts.length===1,'recovery after error');
+ document.body.dataset.test='PASS: public read, guest guard, heart toggle, comments, ownership controls, publish, sanitization, navigation and error recovery';
+}catch(error){document.body.dataset.test='FAIL: '+error.message;}
+})();
+</script></body></html>

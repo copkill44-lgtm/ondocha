@@ -1,0 +1,50 @@
+
+#communityCard[hidden],.community-comments[hidden],#communityMore[hidden]{display:none}
+.community-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px}
+.community-heading h1{margin:4px 0 8px;color:#3e587b;font:28px Jua,sans-serif}
+.community-eyebrow{color:#86a3c9;font-size:11px;letter-spacing:2px;font-weight:800}
+.community-heading p{color:#8a98ad;font-size:13px;margin:0;line-height:1.7}
+.community-toolbar{display:flex;justify-content:space-between;gap:12px;margin:0 0 18px}
+.community-text-button{border:0;background:transparent;color:#7791b1;padding:5px;cursor:pointer;font:inherit;font-size:12px}
+.community-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.community-post{min-width:0;border:1px solid #e2eaf5;border-radius:20px;padding:14px;background:#fff}
+.community-post-head,.community-author{display:flex;align-items:center;gap:8px}
+.community-post-head{justify-content:space-between;margin-bottom:12px}
+.community-author{min-width:0;color:#586c87;font-size:12px}
+.community-author strong{overflow-wrap:anywhere}
+.community-author-badge{flex-shrink:0;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;color:#6c92c4;background:#edf4fd}
+.community-outfit-stage{display:grid;place-items:center;height:250px;border-radius:15px;background:linear-gradient(145deg,#f1f7ff,#f9fbff)}
+.community-outfit-stage svg{display:block;width:120px;height:240px}
+.community-caption{color:#53657d;font-size:13px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}
+.community-items{color:#8b9bb0;font-size:11px;line-height:1.7;overflow-wrap:anywhere}
+.community-post-actions{display:flex;align-items:center;gap:14px;padding-top:10px;border-top:1px solid #eff3f8}
+.community-post-actions>:last-child{margin-left:auto}
+.community-heart{border:0;background:transparent;color:#8a9bb1;cursor:pointer;font:inherit;font-size:14px;padding:5px 0}
+.community-heart[aria-pressed="true"]{color:#ef83a0}
+.community-date{display:block;margin-top:8px;font-size:10px;color:#a1adbe}
+.community-status{text-align:center;color:#8b9cb4;padding:15px;font-size:13px;line-height:1.8}
+.community-status:empty{display:none}
+.community-more{display:block;margin:24px auto 0}
+.community-comments{border-top:1px solid #edf2f8;margin-top:12px;padding-top:8px}
+.community-comment{border-bottom:1px solid #f0f4f8;padding:9px 0;font-size:12px}
+.community-comment strong{color:#6d829f}
+.community-comment p{margin:5px 0;color:#66768c;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6}
+.community-comment-form{display:flex;gap:6px;margin-top:12px}
+.community-comment-form input,.community-share-url{min-width:0;width:100%;border:1px solid #dce7f5;border-radius:9px;padding:9px;font:inherit;font-size:12px}
+.community-comment-form button{flex-shrink:0;border:0;background:#eaf2fd;border-radius:9px;color:#5b83b8;padding:8px;font:inherit;font-size:12px;cursor:pointer}
+.community-muted{font-size:12px;color:#8b9cb4;line-height:1.7}
+.community-dialog{width:min(480px,calc(100% - 28px));max-height:calc(100dvh - 32px);overflow:auto;border:1px solid #e2eaf5;border-radius:23px;padding:24px;color:#536b8c}
+.community-dialog::backdrop{background:#273b5a66;backdrop-filter:blur(4px)}
+.community-dialog h2{font:24px Jua,sans-serif;margin:0 0 8px}
+.community-dialog label{display:grid;gap:7px;font-size:12px;margin-top:15px}
+.community-dialog input,.community-dialog textarea{width:100%;border:1px solid #dce7f5;border-radius:10px;padding:10px;font:inherit;resize:vertical}
+.community-dialog-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+.community-dialog .community-outfit-stage{height:200px}
+.community-dialog .community-outfit-stage svg{width:95px;height:190px}
+.community-share-button{margin:12px 0;border:1px solid #ccdef4;border-radius:12px;background:#f2f7ff;color:#5f85b5;padding:12px 20px;font:inherit;cursor:pointer}
+#communityCard button:disabled,.community-dialog button:disabled{opacity:.55;cursor:wait}
+#communityCard button:focus-visible,.community-dialog :is(button,input,textarea):focus-visible{outline:2px solid #739dd1;outline-offset:3px}
+@media(max-width:1000px){.community-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#app .top .nav{gap:0}#app .top .nav button{padding-left:7px;padding-right:7px}}
+@media(max-width:600px){.community-grid{grid-template-columns:1fr}.community-heading{align-items:flex-start;flex-direction:column}.community-heading h1{font-size:26px}}
+
+#sky[hidden]{display:none}

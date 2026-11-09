@@ -2,6 +2,7 @@
 // Authentication must start even if an unrelated form or weather widget fails.
 authInitialization = initSupabaseAuth().finally(() => {
     document.documentElement.classList.remove('auth-checking');
+    if (typeof openSharedCommunity === 'function') openSharedCommunity();
 });
 updateGuestUsage();
 let now = new Date();

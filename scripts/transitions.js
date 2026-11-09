@@ -12,6 +12,7 @@ function transitionPage(change, direction) {
 }
 showHome = function() {
     transitionPage(() => {
+        if (typeof hideCommunity === 'function') hideCommunity();
         $('calendarCard').classList.remove('visible');
         $('recommendCard').style.display = 'block';
         document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));
@@ -20,6 +21,7 @@ showHome = function() {
 };
 showCalendar = function() {
     transitionPage(() => {
+        if (typeof hideCommunity === 'function') hideCommunity();
         $('recommendCard').style.display = 'none';
         $('calendarCard').classList.add('visible');
         document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));

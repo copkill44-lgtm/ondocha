@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="styles/auth.css?v=20261105-icons">
     <link rel="stylesheet" href="styles/weather.css?v=20261105-soft-rain">
     <link rel="stylesheet" href="styles/clothing.css?v=20261105-local-palette">
+    <link rel="stylesheet" href="styles/community.css?v=20261109-1">
     <link rel="stylesheet" href="styles/outfit-images.css?v=20261109-instant-1">
     <script src="assets/vendor/supabase/supabase.js"></script>
 </head>
@@ -265,7 +266,7 @@
             <button type="button" class="tour-replay" onclick="startFeatureTour()">사용법 안내</button>
             <nav class="nav" aria-label="주요 메뉴"><button class="active" id="navHome" onclick="showHome()">코디 추천</button><button
                     id="navCalendar" onclick="showCalendar()">코디 캘린더</button><button type="button" id="navCharacter"
-                    onclick="openCharacterSetup(true)">캐릭터 설정</button></nav>
+                    onclick="openCharacterSetup(true)">캐릭터 설정</button><button type="button" id="navCommunity" onclick="showCommunity()">커뮤니티</button></nav>
             <div class="account-area"><span id="accountLabel" hidden></span><button type="button" class="account-button"
                     id="accountButton" onclick="handleAccountButton()">이메일 로그인</button></div><span class="today"
                 id="today"></span>
@@ -397,6 +398,7 @@
                     <div class="outfit-pagination" id="outfitPagination"></div>
                     <div class="outfit-count" id="outfitCount" aria-live="polite"></div>
                 </div>
+                <button type="button" class="community-share-button" onclick="openCommunityComposer()">선택한 코디 커뮤니티에 올리기</button>
                 <div class="date-row"><label>일정 이름 <input id="eventName" type="text"
                             placeholder="예: 친구와 저녁 약속"></label><button class="primary" onclick="saveLook()">선택한 코디를 캘린더에
                         저장</button></div>
@@ -419,7 +421,20 @@
                 </aside>
             </div>
         </section>
+<section class="card community" id="communityCard" hidden aria-labelledby="communityTitle">
+<header class="community-heading"><div><span class="community-eyebrow">OUR OUTFITS</span><h1 id="communityTitle">오늘의 코디, 함께 나눠요</h1><p>추천받은 코디를 올리고 서로의 취향을 발견해 보세요.</p></div><button type="button" class="primary" onclick="openCommunityComposer()">＋ 내 코디 올리기</button></header>
+<div class="community-toolbar"><button type="button" class="community-text-button" onclick="showAllCommunity()">모든 코디 보기</button><button type="button" class="community-text-button" onclick="loadCommunity()">새로고침 ↻</button></div>
+<p class="community-status" id="communityStatus" role="status" aria-live="polite"></p><div class="community-grid" id="communityFeed"></div>
+<button type="button" class="community-share-button community-more" id="communityMore" onclick="loadCommunity(true)" hidden>코디 더 보기</button>
+</section>
     </main>
+<dialog class="community-dialog" id="communityComposer" aria-labelledby="communityComposerTitle"><form onsubmit="publishCommunityPost(event)">
+<h2 id="communityComposerTitle">내 코디 나누기</h2><p class="community-muted">닉네임과 캐릭터 착장이 모두에게 공개돼요.</p><div id="communityComposerPreview"></div>
+<label>공개 닉네임<input id="communityNickname" maxlength="24" required autocomplete="nickname"></label>
+<label>오늘 코디 이야기<textarea id="communityCaption" maxlength="500" rows="3" placeholder="이 코디로 어떤 하루를 보내고 싶나요?"></textarea></label>
+<p id="communityPublishStatus" role="status" aria-live="polite" class="community-muted"></p>
+<div class="community-dialog-actions"><button type="button" class="community-text-button" onclick="document.getElementById('communityComposer').close()">취소</button><button type="submit" class="primary" id="communityPublishButton">코디 올리기</button></div>
+</form></dialog>
     <section class="thinking" id="thinking" aria-live="polite">
         <div class="thinking-card">
             <div class="think-mascot"><img class="thinking-pose active"
@@ -551,12 +566,12 @@
     <script src="scripts/clothing.js?v=20261105-local-palette"></script>
     <script src="scripts/config.js?v=20261109-qwen-2"></script>
     <script src="scripts/qwen-endpoint.js?v=20261109-reconnect-2"></script>
-    <script src="scripts/auth.js?v=20261109-guest-fix-1"></script>
+    <script src="scripts/auth.js?v=20261109-community-1"></script>
     <script src="scripts/auth-forms.js?v=20261105-first-character"></script>
     <script src="scripts/naver-login.js?v=20261105-2"></script>
     <script src="scripts/social-auth.js?v=20261105-naver-1"></script>
     <script src="scripts/guest-usage.js?v=20261109-guest-fix-1"></script>
-    <script src="scripts/navigation.js"></script>
+    <script src="scripts/navigation.js?v=20261109-community-1"></script>
     <script src="scripts/weather.js"></script>
     <script src="scripts/weather-region-data.js"></script>
     <script src="scripts/weather-regions.js"></script>
@@ -564,13 +579,14 @@
     <script src="scripts/avatar.js"></script>
     <script src="scripts/outfit-images.js?v=20261109-instant-1"></script>
     <script src="scripts/calendar.js?v=20261105-2"></script>
-    <script src="scripts/transitions.js"></script>
+    <script src="scripts/transitions.js?v=20261109-community-1"></script>
     <script src="scripts/character.js?v=20261109-picker-1"></script>
     <script src="scripts/character-picker.js?v=20261109-2"></script>
     <script src="scripts/screen-transitions.js"></script>
     <script src="scripts/tour.js"></script>
     <script src="scripts/carousel.js?v=20261109-instant-1"></script>
-    <script src="scripts/init.js"></script>
+    <script src="scripts/community.js?v=20261109-1"></script>
+    <script src="scripts/init.js?v=20261109-community-1"></script>
 </body>
 
 </html>
