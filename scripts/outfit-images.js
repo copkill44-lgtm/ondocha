@@ -197,7 +197,14 @@ async function generateOutfitImage(index) {
         outfitImageCache.set(outfit, { appearance, url });
         if (looks[index] === outfit && JSON.stringify(characterConfig) === appearance && card.isConnected) show(url);
     } catch (error) {
-        status.textContent = error.name === 'AbortError' ? '생성이 지연되고 있어요. Qwen 실행 창을 확인해 주세요.' : error.message;
+        if (error instanceof TypeError && /fetch|network|load failed/i.test(error.message)) {
+            automaticOutfitAttempts.delete(card);
+            status.textContent = 'AI 서버 연결이 끊겼어요. 기본 착장을 표시합니다. 잠시 후 다른 코디로 넘겼다가 돌아오면 다시 연결해요.';
+        } else {
+            status.textContent = error.name === 'AbortError'
+                ? '이미지 생성이 지연되고 있어요. 잠시 후 다시 확인해 주세요.'
+                : error.message;
+        }
     } finally {
         clearTimeout(timer);
         cancelActiveOutfitJob();
