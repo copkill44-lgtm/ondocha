@@ -1,11 +1,50 @@
 // Generated previews stay in memory; large images are not copied into account storage.
 const outfitImageCache = new WeakMap();
+// Keep completed previews across reloads for presentation rehearsals.
+function outfitPreviewKey(outfit, appearance) {
+    return JSON.stringify([1, ONDOCHA_CONFIG.outfitImageProvider, appearance, outfit.onepiece ? null : outfit.top?.[0],
+        outfit.onepiece?.[0] || outfit.bottom?.[0], outfit.outerwear || '', outfit.shoes?.[0], outfit.accessory || '']);
+}
+function storedOutfitPreview(key, url) {
+    return new Promise(resolve => {
+        if (!window.indexedDB) { resolve(null); return; }
+        let settled = false;
+        const finish = value => { if (!settled) { settled = true; clearTimeout(timer); resolve(value); } };
+        const timer = setTimeout(() => finish(null), 1000);
+        let request;
+        try { request = indexedDB.open('ondocha-outfit-previews', 1); } catch { finish(null); return; }
+        request.onupgradeneeded = () => request.result.createObjectStore('previews');
+        request.onerror = () => finish(null);
+        request.onblocked = () => finish(null);
+        request.onsuccess = () => {
+            const db = request.result;
+            if (settled) { db.close(); return; }
+            try {
+                const tx = db.transaction('previews', url ? 'readwrite' : 'readonly');
+                const store = tx.objectStore('previews');
+                const operation = url ? store.put({ url, saved: Date.now() }, key) : store.get(key);
+                let value = null;
+                operation.onsuccess = () => { value = operation.result; };
+                if (url) {
+                    const all = store.getAll();
+                    const keys = store.getAllKeys();
+                    keys.onsuccess = () => {
+                        const entries = keys.result.map((key, i) => ({ key, saved: all.result[i].saved }));
+                        entries.sort((a, b) => b.saved - a.saved).slice(16).forEach(entry => store.delete(entry.key));
+                    };
+                }
+                tx.oncomplete = () => { db.close(); finish(url || value?.url || null); };
+                tx.onerror = tx.onabort = () => { db.close(); finish(null); };
+            } catch { db.close(); finish(null); }
+        };
+    });
+}
 let outfitImageBusy = false;
 let activeOutfitJobId = null;
 let activeOutfitController = null;
 function qwenEndpoint(path) {
     const local = ['127.0.0.1', 'localhost'].includes(location.hostname) && location.port === '8000';
-    const shared = location.hostname.endsWith('.trycloudflare.com');
+    const shared = location.origin === (window.ONDOCHA_QWEN_URL || '').replace(/\/$/, '');
     const base = local || shared ? '' : (window.ONDOCHA_QWEN_URL || '');
     if (!local && !shared && !base) throw new Error('AI ?? ?? ??? ?? ???? ????.');
     return base + path;
@@ -26,13 +65,32 @@ function mountOutfitImageControls() {
         status.className = 'ai-image-status';
         status.setAttribute('role', 'status');
         status.textContent = usesLocalQwen() ? 'PC에서 Qwen으로 내 캐릭터의 착장을 만들어요.' : currentAuthUser ? '선택한 캐릭터로 AI 착장을 만들어요.' : '로그인하면 내 캐릭터의 AI 착장을 만들 수 있어요.';
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'ai-image-button';
-        button.textContent = 'AI 착장 이미지 만들기';
-        button.addEventListener('click', () => generateOutfitImage(index));
-        card.querySelector('.stage').after(status, button);
+        card.querySelector('.stage').after(status);
     });
+}
+
+// Only the visible recommendation starts a new generation.
+let pendingOutfitPreview = null;
+const automaticOutfitAttempts = new WeakMap();
+function requestVisibleOutfitImage(index) {
+    const card = document.querySelectorAll('#outfits .look')[index];
+    if (!card || !looks[index]) return;
+    pendingOutfitPreview = { index, card, outfit: looks[index], appearance: JSON.stringify(characterConfig) };
+    runPendingOutfitPreview();
+}
+function runPendingOutfitPreview() {
+    if (outfitImageBusy || !pendingOutfitPreview) return;
+    const task = pendingOutfitPreview;
+    pendingOutfitPreview = null;
+    if (!task.card.isConnected || task.card.hidden || looks[task.index] !== task.outfit ||
+        JSON.stringify(characterConfig) !== task.appearance) return;
+    if (automaticOutfitAttempts.get(task.card) === task.appearance) return;
+    if (!usesLocalQwen() && (!currentAuthUser || !supabaseClient)) {
+        task.card.querySelector('.ai-image-status').textContent = '로그인하면 AI 착장 이미지가 자동으로 표시돼요.';
+        return;
+    }
+    automaticOutfitAttempts.set(task.card, task.appearance);
+    void generateOutfitImage(task.index);
 }
 
 async function characterReferenceBlob(config) {
@@ -78,21 +136,29 @@ async function generateOutfitImage(index) {
     if (cached?.appearance === appearance) { show(cached.url); return; }
     if (outfitImageBusy) { toast('진행 중인 이미지가 완성되면 다시 눌러 주세요.'); return; }
     outfitImageBusy = true;
-    document.querySelectorAll('.ai-image-button').forEach(button => button.disabled = true);
-    const activeButton = card.querySelector('.ai-image-button');
-    activeButton.textContent = '이미지 생성 중…';
     card.setAttribute('aria-busy', 'true');
     status.textContent = '내 캐릭터가 옷을 입는 중이에요. 잠시 기다려 주세요…';
     const controller = new AbortController();
     activeOutfitController = controller;
     const timer = setTimeout(() => controller.abort(), usesLocalQwen() ? 3600000 : 150000);
     try {
+        const previewKey = outfitPreviewKey(outfit, appearance);
+        status.textContent = '저장된 AI 착장을 확인하고 있어요…';
+        const savedPreview = await storedOutfitPreview(previewKey);
+        if (controller.signal.aborted) throw new DOMException('Cancelled', 'AbortError');
+        if (savedPreview && /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(savedPreview)) {
+            outfitImageCache.set(outfit, { appearance, url: savedPreview });
+            if (looks[index] === outfit && JSON.stringify(characterConfig) === appearance && card.isConnected) {
+                show(savedPreview);
+                status.textContent = '저장된 AI 착장 · 미리 생성한 이미지예요.';
+            }
+            return;
+        }
+        status.textContent = '새 AI 착장을 생성하고 있어요. 첫 생성은 시간이 걸릴 수 있어요.';
         let headers = {};
         let endpoint = '/api/outfit-image';
         if (usesLocalQwen()) {
-            if (!['127.0.0.1', 'localhost'].includes(location.hostname) || location.port !== '8000') {
-                throw new Error('Qwen 실행 후 http://127.0.0.1:8000 에서 사이트를 열어 주세요.');
-            }
+            endpoint = qwenEndpoint('/api/outfit-image');
         } else {
             const { data, error } = await supabaseClient.auth.getSession();
             if (error || !data.session) throw new Error('다시 로그인한 뒤 시도해 주세요.');
@@ -114,7 +180,7 @@ async function generateOutfitImage(index) {
             const jobId = result.jobId;
             activeOutfitJobId = jobId;
             while (true) {
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                await new Promise(resolve => setTimeout(resolve, 500));
                 if (controller.signal.aborted) throw new DOMException('Timeout', 'AbortError');
                 const progress = await fetch(qwenEndpoint('/api/outfit-image/' + encodeURIComponent(jobId)), { signal: controller.signal });
                 result = await progress.json();
@@ -127,6 +193,7 @@ async function generateOutfitImage(index) {
         if (!/^[A-Za-z0-9+/=]+$/.test(result.image || '')) throw new Error('이미지를 받지 못했어요.');
         const mimeType = ['image/png', 'image/jpeg', 'image/webp'].includes(result.mimeType) ? result.mimeType : 'image/png';
         const url = 'data:' + mimeType + ';base64,' + result.image;
+        void storedOutfitPreview(previewKey, url);
         outfitImageCache.set(outfit, { appearance, url });
         if (looks[index] === outfit && JSON.stringify(characterConfig) === appearance && card.isConnected) show(url);
     } catch (error) {
@@ -136,8 +203,7 @@ async function generateOutfitImage(index) {
         cancelActiveOutfitJob();
         activeOutfitController = null;
         outfitImageBusy = false;
-        activeButton.textContent = 'AI 착장 이미지 만들기';
         card.removeAttribute('aria-busy');
-        document.querySelectorAll('.ai-image-button').forEach(button => button.disabled = false);
+        runPendingOutfitPreview();
     }
 }

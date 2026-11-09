@@ -183,3 +183,93 @@
     .character-customization select,.wizard-actions button { transition:none; }
     .wizard-actions button:hover,.wizard-actions button:active { transform:none; }
 }
+
+/* Illustrated character wardrobe. */
+#characterSetup .character-customization[hidden] { display: none; }
+#characterSetup .character-wizard {
+    width: min(680px, 100%); height: min(920px, calc(100dvh - 32px));
+    padding: 22px; gap: 12px; overflow: auto; background: #f8fbff;
+    border: 1px solid #dce7f5;
+}
+#characterSetup .wizard-head { text-align: center; }
+#characterSetup .wizard-head h1 { font-size: 26px; margin: 4px 0; color: #496a96; }
+#characterSetup .wizard-grid {
+    display: grid; grid-template-columns: 1fr;
+    grid-template-rows: minmax(160px, 1fr) auto; gap: 12px; align-items: stretch;
+}
+#characterSetup .character-preview-card {
+    position: relative; display: flex; align-items: center; justify-content: center;
+    min-height: 0; overflow: hidden; border-radius: 20px;
+    border: 1px solid #dce8f6;
+    background: radial-gradient(ellipse at 50% 35%, #fff 0%, #edf5ff 65%, #dfedfa 100%);
+}
+#characterSetup .character-preview-card::before {
+    content: ''; position: absolute; width: 150px; height: 18px; bottom: 12px;
+    border-radius: 50%; background: #a3bed940;
+}
+#characterSetup .character-preview {
+    height: 100%; max-height: 350px; width: auto; max-width: 100%;
+    min-height: 0; aspect-ratio: 1 / 2; flex: 0 1 auto; z-index: 1;
+}
+#characterSetup .character-preview-card p { display: none; }
+#characterSetup .underwear-note { display: none; }
+#characterSetup .underwear-copy { text-align: center; margin: 8px 0 0; color: #8496ad; font-size: 11px; }
+.character-picker { background: #fff; border: 1px solid #d8e5f4; border-radius: 18px; overflow: hidden; }
+.character-picker-tabs { display: grid; grid-template-columns: repeat(3, 1fr); padding: 6px; gap: 5px; background: #e8f1fc; }
+.character-picker-tabs button {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 9px; border: 0; border-radius: 11px; background: transparent;
+    color: #8096b2; font: inherit; font-weight: 700; cursor: pointer;
+}
+.character-picker-tabs button[aria-selected="true"] { background: #fff; color: #4f7fba; box-shadow: 0 2px 7px #527fa514; }
+.character-picker-tabs svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.character-picker-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 14px 10px; }
+.character-picker-heading h2 { margin: 0; font-size: 13px; color: #496a96; }
+.character-picker-heading > span { color: #8c9fb7; font-size: 11px; white-space: nowrap; }
+.character-choice-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding: 0 12px 12px; max-height: 260px; overflow-y: auto; }
+.character-choice {
+    position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px;
+    min-width: 0; padding: 6px 5px; border: 2px solid #e2ebf6; border-radius: 13px;
+    background: #f7faff; color: #748ca8; cursor: pointer; font: inherit;
+}
+.character-choice:hover { border-color: #aec9ec; background: #edf5ff; }
+.character-choice[aria-pressed="true"] { border-color: #769ed0; background: #e8f2ff; color: #466f9f; }
+.character-choice-picture { display: block; width: 100%; height: 75px; }
+.character-choice-name { font-size: 11px; line-height: 1.4; }
+.character-choice-check { display: none; position: absolute; top: 5px; right: 5px; width: 19px; height: 19px; border-radius: 50%; background: #769ed0; color: #fff; font-size: 12px; line-height: 19px; }
+.character-choice[aria-pressed="true"] .character-choice-check { display: block; }
+.character-choice:focus-visible, .character-picker-tabs button:focus-visible { outline: 3px solid #4d7fb9; outline-offset: -3px; }
+#characterSetup .wizard-actions { display: flex; gap: 10px; }
+#characterSetup .wizard-actions .primary { flex: 1; background: #769bd0; }
+@media (max-width: 640px) {
+    #characterSetup { padding: 8px; }
+    #characterSetup .character-wizard { height: calc(100dvh - 16px); padding: 14px; gap: 9px; }
+    #characterSetup .wizard-grid { grid-template-rows: minmax(120px, 1fr) auto; gap: 9px; }
+    #characterSetup .character-preview { max-height: 300px; }
+    .character-choice-picture { height: 62px; }
+    .character-choice-grid { max-height: 230px; gap: 6px; padding: 0 9px 9px; }
+    .character-picker-heading { padding: 9px 12px; }
+    #characterSetup .wizard-head h1 { font-size: 23px; }
+}
+@media (max-height: 650px) {
+    #characterSetup .character-wizard { min-height: 550px; }
+    #characterSetup { overflow-y: auto; }
+}
+
+#characterSetup .character-wizard, #characterSetup .wizard-grid, #characterSetup .character-preview-card { min-width: 0; }
+#characterSetup .wizard-grid { grid-template-columns: minmax(0, 1fr); }
+#characterSetup .character-preview-card { background: radial-gradient(ellipse at 50% 35%, #fff 0%, #edf5ff 65%, #dfedfa 100%) !important; }
+
+/* Reserve two rows for every category so switching tabs never moves the preview. */
+#characterSetup .character-choice-grid {
+    height: 244px;
+    max-height: none;
+    align-content: start;
+    scrollbar-gutter: stable;
+}
+#characterSetup .character-picker-heading { height: 42px; }
+#characterSetup .character-picker-tabs button { user-select: none; }
+@media (max-width: 640px) {
+    #characterSetup .character-choice-grid { height: 212px; }
+    #characterSetup .character-picker-heading { height: 36px; }
+}

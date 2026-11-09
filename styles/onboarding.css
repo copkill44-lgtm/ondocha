@@ -1027,3 +1027,49 @@
 #onboarding .onboarding-slide .onboard-full-art { object-fit: cover; object-position: center; opacity: 1; -webkit-mask-image: none; mask-image: none; }
 #onboarding .mobile-copy { display: none; }
 #onboarding .onboarding-card { background: #cce2fc; }
+
+/* Use the supplied portrait artwork without cropping on mobile. */
+#onboarding .onboard-picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+@media (max-width: 650px) {
+    #onboarding .onboarding-card {
+        min-height: 0;
+        height: 100dvh;
+    }
+
+    #onboarding .onboarding-slide .onboard-full-art {
+        object-fit: contain;
+        object-position: center;
+    }
+
+    #onboarding .onboarding-actions {
+        bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+    }
+
+    #onboarding .onboarding-dots {
+        bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+    }
+}
+/* Match the portrait artwork breakpoint in the picture sources. */
+@media (max-width: 900px), (max-width: 1024px) and (pointer: coarse) {
+    #onboarding { height: 100dvh; overflow: hidden; }
+    #onboarding .onboarding-card { height: 100%; min-height: 0; }
+    #onboarding .onboarding-slides { bottom: calc(110px + env(safe-area-inset-bottom, 0px)); }
+    #onboarding .onboarding-slide .onboard-full-art {
+        object-fit: contain;
+        object-position: center;
+        opacity: 1;
+    }
+    #onboarding .mobile-copy { display: none; }
+    #onboarding .onboarding-actions {
+        bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+        left: max(16px, env(safe-area-inset-left, 0px));
+        right: max(16px, env(safe-area-inset-right, 0px));
+    }
+    #onboarding .onboarding-dots { bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+    #onboarding .onboarding-actions button { min-height: 48px; min-width: 80px; padding: 10px 18px; }
+}

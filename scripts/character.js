@@ -47,6 +47,7 @@ function renderCharacter() {
         img.src = characterImageLayers(characterConfig).hair;
         img.alt = selectedHair[1]
     }
+    if (typeof syncCharacterPicker === 'function') syncCharacterPicker();
     if (wasInitialized && previousAppearance !== JSON.stringify(characterConfig) &&
         !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         const preview = document.getElementById('characterPreview');

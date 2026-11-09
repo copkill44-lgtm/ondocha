@@ -6,3 +6,7 @@ verify_jwt = false
 [functions.smart-service]
 verify_jwt = false
 entrypoint = "./functions/naver-auth/index.ts"
+
+# Handler validates the user with Auth before calling the paid image API.
+[functions.outfit-image]
+verify_jwt = false
