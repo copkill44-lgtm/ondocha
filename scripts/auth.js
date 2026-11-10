@@ -15,7 +15,7 @@ let accountNeedsCharacterSetup = false;
 function setAccountUi(user) {
     const button = document.getElementById('accountButton');
     const label = document.getElementById('accountLabel');
-    if (button) button.textContent = user ? '마이페이지' : '로그인';
+    if (button) button.textContent = '마이페이지';
     if (label) {
         label.hidden = true;
         label.textContent = user?.email?.endsWith('@naver.ondocha.invalid')
@@ -213,10 +213,6 @@ async function initSupabaseAuth() {
 }
 
 async function handleAccountButton() {
-    if (!currentAuthUser) {
-        openEmailAuth('loginView');
-        return;
-    }
     openMyPage();
 }
 
