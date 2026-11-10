@@ -17,7 +17,7 @@
 5. 함수의 Verify JWT를 끕니다. handler.ts가 Auth 서버로 사용자 인증을 직접 확인합니다.
 6. 로그인하고 캐릭터 채팅창에서 질문합니다.
 
-기본 모델은 llama-3.3-70b-versatile이며 GROQ_CHAT_MODEL Secret으로 바꿀 수 있습니다.
+기본 모델은 qwen/qwen3.8-27b이며 GROQ_CHAT_MODEL Secret으로 바꿀 수 있습니다.
 키를 브라우저 JS나 GitHub 파일에 넣지 않습니다.
 함수가 없거나 키가 등록되지 않았으면 '연결 준비 중' 안내를 표시합니다.
 키가 없을 때 정해진 문구를 AI 답변처럼 만들어 보여주지 않습니다.
@@ -27,3 +27,5 @@
 Deno 서버 테스트: .tools/deno/deno.exe test supabase/functions/codini-chat/handler_test.ts
 브라우저 모의 검사: tests/codini_chat_browser_test.html
 실제 AI 응답은 API 키 등록 및 함수 배포 후 확인합니다.
+
+Dashboard: paste the entire dashboard.ts file into the function editor as index.ts, name the function codini-chat, then deploy. No additional handler.ts file is needed for this combined version.
