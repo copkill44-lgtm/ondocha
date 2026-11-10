@@ -31,3 +31,12 @@ Deno 서버 테스트: .tools/deno/deno.exe test supabase/functions/codini-chat/
 Dashboard: paste the entire dashboard.ts file into the function editor as index.ts, name the function codini-chat, then deploy. No additional handler.ts file is needed for this combined version.
 
 Current live Dashboard function slug: smooth-endpoint. The browser calls /functions/v1/smooth-endpoint. codini-chat.ts is the source filename, not the URL slug.
+
+## 언어 설정
+
+첫 화면 왼쪽 아래의 언어 선택 또는 마이페이지에서 한국어 / English를 선택합니다.
+설정은 이 기기의 `ondocha-language` 키에 저장되며 계정의 코디 데이터와 분리됩니다.
+옷 선택값, 닉네임, 댓글 원문은 번역하지 않습니다.
+영어 화면의 AI 채팅·추천 이유를 활성화하려면 수정한 `dashboard.ts`를 현재 운영 함수
+`smooth-endpoint`에 재배포하세요. 클라이언트는 `language: "en"`을 전달합니다.
+한국어가 포함된 기존 안내 이미지는 영어 모드에서 텍스트 안내로 대체합니다.

@@ -219,7 +219,7 @@ async function handleAccountButton() {
 
 async function logoutAccount() {
     if (!currentAuthUser || authActionBusy) return;
-    if (!window.confirm('로그아웃할까요?')) return;
+    if (!window.confirm(typeof uiText === 'function' ? uiText('로그아웃할까요?') : '로그아웃할까요?')) return;
     authActionBusy = true;
     try {
         // Flush pending edits before ending the session.

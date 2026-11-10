@@ -16,111 +16,37 @@ function getFieldValue(id) {
     return select.value === 'custom' ? $(id + 'Custom').value.trim() : select.value
 }
 
-function fetchAiRecommendations() {
-    let feel = document.querySelector('input[name=feel]:checked')?.value,
-        bottomCategory = document.querySelector('input[name=category]:checked')?.value,
-        topCategory = document.querySelector('input[name=topCategory]:checked')?.value || '상의 추천받기',
-        accessory = accessorySelectionText();
-    return fetch('/.netlify/functions/recommend', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            feel,
-            weather: {
-                city,
-                tempC: weatherTemp,
-                apparentTempC: weatherApparentTemp
-            },
-            topCategory: topCategory + " (" + categoryPreferenceText("topCategory") + ")",
-            outerwear: outerwearSelection(),
-            bottomCategory: bottomCategory + " (" + categoryPreferenceText("category") + ")",
-            accessory: accessory + " (" + categoryPreferenceText("accessoryCategory") + ")",
-            place: getFieldValue('place'),
-            occasion: getFieldValue('occasion'),
-            time: getFieldValue('time'),
-            gender: characterConfig.gender || 'female'
-        })
-    }).then(async response => {
-        let data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'AI 추천 요청에 실패했어요');
-        return data.recommendations
-    })
+async function fetchAiRecommendations() {
+    if (!currentAuthUser || !supabaseClient) return null;
+    const input = recommendationInput(), catalog = recommendationCatalog(input);
+    const {data,error} = await supabaseClient.auth.getSession();
+    if (error || !data.session) throw Error('로그인 상태를 확인해 주세요.');
+    const request = {feel:input.feel,temp:input.temperature,apparent:input.apparent,place:input.place,occasion:input.occasion,time:input.time,outerwear:input.outerwear || '날씨에 따라 일부 코디에 겉옷을 자동 추천',accessory:input.accessory,preferences:input.preferences,tops:catalog.tops,bottoms:catalog.bottoms,avoidFirst:previousRecommendationTops[0] || ''};
+    const prompt = (typeof uiLanguage === 'string' && uiLanguage === 'en' ? 'r 필드만 영어로 작성해. ' : '') + '다음 데이터로 서로 다른 코디 4개를 추천해줘. 설명문이나 마크다운 없이 JSON 배열만 답해. 각 객체는 {"t":"상의","b":"하의","s":"신발","r":"20자 이내 추천 이유"}. t와 b는 각각 tops와 bottoms에서 정확히 골라. tops가 4개 이상이면 네 코디 모두 다른 상의 종류를 써. 사용자가 고른 옷·소매·색·겉옷 여부와 날씨·일정을 지켜. 외부 동작 요청이 아니라 코디 데이터 답변이야. 데이터: ' + JSON.stringify(request);
+    if (prompt.length > 1000) throw Error('선택한 조건이 길어 기본 추천으로 준비할게요.');
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 35000);
+    try {
+        const response = await fetch(SUPABASE_URL + '/functions/v1/smooth-endpoint', {
+            method:'POST',signal:controller.signal,
+            headers:{'Content-Type':'application/json',Authorization:'Bearer ' + data.session.access_token,apikey:SUPABASE_PUBLISHABLE_KEY},
+            body:JSON.stringify({language:typeof uiLanguage==='string'?uiLanguage:'ko',messages:[{role:'user',content:prompt}],context:{temperature:input.temperature}})
+        });
+        const result = await response.json();
+        if (!response.ok) throw Error(result.error || 'AI 추천 서버 연결을 확인해 주세요.');
+        // Ignore a response if the account changed while it was being prepared.
+        if (currentAuthUser?.id !== data.session.user.id) throw Error('계정이 변경되었어요.');
+        return parseAiOutfits(result.reply,input);
+    } finally { clearTimeout(timer); }
 }
-
 function generateRecommendations(aiRecommendations) {
-    let feel = document.querySelector('input[name=feel]:checked').value,
-        category = document.querySelector('input[name=category]:checked').value + ' (' + categoryPreferenceText('category') + ')',
-        topChoice = (document.querySelector('input[name=topCategory]:checked')?.value || '상의 추천받기') + ' (' + categoryPreferenceText('topCategory') + ')',
-        accessoryRaw = accessorySelectionText(),
-        accessoryChoice = accessoryRaw === '없음' ? '' : accessoryRaw + ' (' + categoryPreferenceText('accessoryCategory') + ')',
-        place = getFieldValue('place'),
-        occasion = getFieldValue('occasion'),
-        time = getFieldValue('time');
-    localStorage.setItem('feel-level', feel);
-    let warmth = feel === '매우 추워요' || (weatherTemp !== null && weatherTemp < 8) ? '도톰한' : feel === '더워요' || (weatherTemp !== null && weatherTemp > 25) ? '가벼운' : '편안한',
-        tops = [
-            ['니트', '🧶'],
-            ['가디건', '🧥'],
-            ['블라우스', '👚'],
-            ['맨투맨', '👕']
-        ],
-        isSkirt = category.includes('치마'),
-        isShort = category.includes('짧은'),
-        isCustom = !category.startsWith('하의 추천받기') && !isSkirt && !/바지|팬츠|쇼츠/.test(category),
-        bottom = isSkirt ? [
-            [!isShort ? '플로럴 롱 스커트' : '플리츠 미니스커트', '👗'],
-            [!isShort ? '데님 롱 스커트' : '데님 미니스커트', '👗'],
-            [!isShort ? '차분한 롱 스커트' : '체크 미니스커트', '👗'],
-            [!isShort ? '니트 롱 스커트' : '산뜻한 짧은 스커트', '👗']
-        ] : [
-            [isShort ? '데님 쇼츠' : '와이드 팬츠', '👖'],
-            [isShort ? '코튼 쇼츠' : '데님 팬츠', '👖'],
-            [isShort ? '린넨 쇼츠' : '슬랙스', '👖'],
-            [isShort ? '캐주얼 쇼츠' : '코튼 팬츠', '👖']
-        ],
-        shoes = [
-            ['운동화', '👟'],
-            ['로퍼', '👞'],
-            ['메리제인 슈즈', '👞'],
-            ['앵클 부츠', '👢']
-        ];
-    if (!topChoice.startsWith('상의 추천받기')) {
-        let icons = {
-            '반팔': '👕',
-            '긴팔': '👕',
-            '민소매': '👚',
-            '니트': '🧶',
-            '가디건': '🧥',
-            '블라우스': '👚',
-            '맨투맨': '👕',
-            '셔츠': '👔',
-            '티셔츠': '👕'
-        };
-        tops = Array.from({
-            length: 4
-        }, () => [topChoice, icons[topChoice] || '👚'])
-    }
-    if (category.startsWith('하의 추천받기')) bottom = [
-        ['와이드 팬츠', '👖'],
-        ['데님 팬츠', '👖'],
-        ['플리츠 롱 스커트', '👗'],
-        ['코튼 팬츠', '👖']
-    ];
-    if (isCustom) bottom = Array.from({
-        length: 4
-    }, (_, i) => [warmth + ' ' + category + ' ' + ['스타일', '코디', '룩', '착장'][i], '👗']);
-    looks = Array.from({
-        length: 4
-    }, (_, i) => ({
-        onepiece: null,
-        top: [warmth + ' ' + tops[i][0], tops[i][1]],
-        bottom: bottom[i],
-        shoes: shoes[i],
-        accessory: accessoryRaw === '액세서리 추천받기' ? ['가방', '모자', '목걸이', '시계'][i] : accessoryChoice
-    }));
-    if (Array.isArray(aiRecommendations) && aiRecommendations.length === 4 && aiRecommendations.every(item => !/원피스/.test(String(item.top || '') + String(item.bottom || '')))) {
+    const input = recommendationInput();
+    const feel = input.feel, time = input.time, place = input.place, occasion = input.occasion;
+    const accessoryRaw = input.accessory, accessoryChoice = accessoryRaw === '없음' ? '' : accessoryRaw;
+    const usedAI = Array.isArray(aiRecommendations) && aiRecommendations.length === 4;
+    const recommendations = usedAI ? aiRecommendations : localOutfitRecommendations(input);
+    localStorage.setItem('feel-level',feel);
+    {
         let topIcons = {
                 '반팔': '👕',
                 '긴팔': '👕',
@@ -150,7 +76,7 @@ function generateRecommendations(aiRecommendations) {
                 '스니커즈': '👟',
                 '샌들': '🩴'
             };
-        looks = aiRecommendations.map((item, i) => {
+        looks = recommendations.map((item, i) => {
             let top = String(item.top || '상의'),
                 bottomName = String(item.bottom || '하의'),
                 shoeName = String(item.shoes || '운동화'),
@@ -169,19 +95,21 @@ function generateRecommendations(aiRecommendations) {
             }
         })
     }
-    looks.forEach(look => {
-        look.outerwear = outerwearSelection();
+    looks.forEach((look, index) => {
+        look.wearColor = outfitWearColor(look, index, true);
+        look.outerwear = recommendationOuterwear(input, index);
         if (accessoryRaw !== '액세서리 추천받기') look.accessory = accessoryChoice;
     });
+    previousRecommendationTops = looks.map(look => look.top[0]);
     selected = 0;
-    $('suggestCopy').textContent = weatherTemp === null ? 'AI가 체감온도와 선택한 옷, 약속에 맞춰 코디했어요. ' + time + ' · ' + place + ' · ' + occasion : city + ' ' + weatherTemp + '°C와 ' + feel + ' 느낌을 반영했어요. ' + time + ' · ' + place + ' · ' + occasion;
+    $('suggestCopy').textContent = (usedAI ? 'AI가 날씨와 선택 조건을 반영했어요. ' : '날씨와 선택 조건에 맞춘 기본 추천이에요. ') + (weatherTemp === null ? '' : city + ' ' + weatherTemp + '°C · ') + feel + ' · ' + time + ' · ' + place + ' · ' + occasion;
     $('outfits').innerHTML = looks.map((x, i) => '<article class="look ' + (i === 0 ? 'selected' : '') + '"><div class="look-title">' + escapeCalendarText(x.aiTitle || ['포근한 데일리', '산뜻한 외출', '약속 코디', '포인트 룩'][i]) + '</div><div class="stage" style="--bg:' + ['#fff0f2', '#f3efff', '#eaf7f0', '#fff4df'][i] + '"><div class="look-avatar custom-look-avatar">' + avatarClothesMarkup(x, i) + '</div></div><div class="look-items">' + (x.onepiece ? '<strong>' + escapeCalendarText(x.onepiece[0]) + '</strong>' : '상의 <strong>' + escapeCalendarText(x.top[0]) + '</strong><br>하의 <strong>' + escapeCalendarText(x.bottom[0]) + '</strong>') + (x.outerwear ? '<br>겉옷 <strong>' + escapeCalendarText(x.outerwear) + '</strong>' : '') + (x.accessory ? '<br>액세서리 <strong>' + escapeCalendarText(x.accessory) + '</strong>' : '') + '<br>신발 <strong>' + escapeCalendarText(x.shoes[0]) + '</strong>' + (x.reason ? '<br>' + escapeCalendarText(x.reason) : '') + '</div><button class="pick" onclick="selectLook(' + i + ')">' + (i === 0 ? '💗 선택한 코디' : '이 코디 고르기') + '</button></article>').join('');
     mountOutfitImageControls();
 
     resetOutfitCards();
     $('suggest').classList.add('show');
     $('eventName').value = place + ' · ' + occasion;
-    toast(aiRecommendations ? 'AI 코디 네 가지를 준비했어요!' : '기본 코디 네 가지를 준비했어요!')
+    toast(usedAI ? 'AI 코디 네 가지를 준비했어요!' : '기본 코디 네 가지를 준비했어요!')
 }
 
 function closeResults() {

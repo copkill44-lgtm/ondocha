@@ -32,6 +32,7 @@ function communityAppearance(config = {}) {
 function communityOutfit(outfit = {}) {
     const text = value => String(value || '').slice(0,100), result = {};
     for (const key of ['top','bottom','shoes','onepiece']) if (Array.isArray(outfit[key])) result[key] = [text(outfit[key][0])];
+    if (/^#[0-9a-f]{6}$/i.test(outfit.wearColor || '')) result.wearColor = outfit.wearColor;
     result.outerwear = text(outfit.outerwear); result.accessory = text(outfit.accessory);
     return result;
 }
@@ -135,7 +136,7 @@ async function toggleCommunityLike(post,button) {
     finally{button.disabled=false;}
 }
 async function deleteCommunityPost(post) {
-    if(currentAuthUser?.id!==post.user_id || !confirm('이 코디 게시물을 삭제할까요? 댓글과 하트도 함께 삭제돼요.')) return;
+    if(currentAuthUser?.id!==post.user_id || !confirm(typeof uiText === 'function' ? uiText('이 코디 게시물을 삭제할까요? 댓글과 하트도 함께 삭제돼요.') : '이 코디 게시물을 삭제할까요? 댓글과 하트도 함께 삭제돼요.')) return;
     try {
         const {error}=await supabaseClient.from('community_posts').delete().eq('id',post.id).eq('user_id',currentAuthUser.id);
         if(error) throw error;

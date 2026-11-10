@@ -47,3 +47,11 @@ Deno.test('chat missing key, provider quota, and burst limit',async()=>{
  const normal=setup();for(let i=0;i<15;i++)check((await normal.handler(request(valid))).status===200,'within burst');
  check((await normal.handler(request(valid))).status===429,'burst guard');
 });
+
+Deno.test('chat uses English only when the requested language is en',async()=>{
+ for(const [language,expected] of [['en','English'],['ko','Korean'],['invalid','Korean']]){
+  const {handler,calls}=setup();
+  check((await handler(request({...valid,language}))).status===200,'language request');
+  check(calls[1].body.messages[0].content.includes('Answer naturally in '+expected),'requested response language');
+ }
+});

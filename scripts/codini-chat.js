@@ -56,7 +56,7 @@ async function sendCodiniChat(event){
   const response=await fetch(SUPABASE_URL+'/functions/v1/smooth-endpoint',{
    method:'POST',signal:controller.signal,
    headers:{'Content-Type':'application/json',Authorization:'Bearer '+data.session.access_token,apikey:SUPABASE_PUBLISHABLE_KEY},
-   body:JSON.stringify({messages:[...codiniChatHistory.slice(-10),{role:'user',content:text}],context:codiniChatContext()})
+   body:JSON.stringify({language:typeof uiLanguage==='string'?uiLanguage:'ko',messages:[...codiniChatHistory.slice(-10),{role:'user',content:text}],context:codiniChatContext()})
   });
   const result=await response.json().catch(()=>({}));
   if(!response.ok){

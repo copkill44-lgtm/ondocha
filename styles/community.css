@@ -48,3 +48,5 @@
 @media(max-width:600px){.community-grid{grid-template-columns:1fr}.community-heading{align-items:flex-start;flex-direction:column}.community-heading h1{font-size:26px}}
 
 #sky[hidden]{display:none}
+
+#suggest > .community-share-button { display: block; width: fit-content; max-width: 100%; box-sizing: border-box; margin: 16px auto; }
