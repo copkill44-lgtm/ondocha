@@ -17,7 +17,7 @@ function setAccountUi(user) {
     const label = document.getElementById('accountLabel');
     if (button) button.textContent = user ? '마이페이지' : '로그인';
     if (label) {
-        label.hidden = !user;
+        label.hidden = true;
         label.textContent = user?.email?.endsWith('@naver.ondocha.invalid')
             ? (user.user_metadata?.nickname || user.user_metadata?.name || '네이버 회원')
             : (user?.user_metadata?.nickname || user?.email || user?.user_metadata?.name || user?.user_metadata?.full_name || (user ? '내 계정' : ''));

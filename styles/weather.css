@@ -53,3 +53,5 @@
     #sky .rain-drop { opacity: .45; }
     #sky .rain-ripple { opacity: .25; }
 }
+
+#sky .weather-date { position: relative; z-index: 1; margin: 0 0 8px; color: #7795b9; font-size: 12px; line-height: 1.5; }
