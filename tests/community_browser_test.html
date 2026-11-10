@@ -31,12 +31,16 @@ const supabaseClient={from(table){
  }).then(resolve,reject)}
  };return query;
 }};
-</script><script src="scripts/avatar.js"></script><script src="scripts/navigation.js"></script><script src="scripts/transitions.js"></script><script src="scripts/community.js"></script>
+</script><script src="scripts/avatar.js"></script><script src="scripts/navigation.js"></script><script src="scripts/transitions.js"></script><script src="scripts/community-moderation.js"></script><script src="scripts/community.js"></script>
 <script>
 const check=(condition,message)=>{if(!condition)throw Error(message)};
 const flush=()=>new Promise(resolve=>setTimeout(resolve,30));
 (async()=>{
 try{
+
+ check(communityHasInappropriateText('씨 발') && communityHasInappropriateText('씨.발'),'obfuscated abusive text blocked');
+ check(communityHasInappropriateText('FUCK') && communityHasInappropriateText('야동'),'English and sexual terms blocked');
+ check(!communityHasInappropriateText('새로운 스타일의 시발점') && !communityHasInappropriateText('혼자지만 입어보지 않을래요?') && !communityHasInappropriateText('classic outfit'),'normal text accepted');
  await loadCommunity();check(document.querySelectorAll('.community-post').length===1,'public feed');
  check(!document.querySelector('.community-caption img') && !window.injected,'caption injection');
  const post=communityPosts[0];
@@ -48,13 +52,24 @@ try{
  await toggleCommunityLike(post,document.querySelector('.community-heart'));check(records.community_likes.length===0,'heart removed');
  const panel=document.querySelector('.community-comments'),countButton=document.querySelectorAll('.community-post-actions button')[1];
  await toggleCommunityComments(post,panel,countButton);check(!panel.hidden && panel.querySelector('form'),'comment panel');
+
+ panel.querySelector('input').value='씨.발';
+ const beforeBlockedComment=writes;
+ panel.querySelector('form').dispatchEvent(new Event('submit',{cancelable:true}));
+ await flush();check(writes===beforeBlockedComment,'bad comment not sent');
  panel.querySelector('input').value='<b>Nice outfit</b>';panel.querySelector('form').dispatchEvent(new Event('submit',{cancelable:true}));
  await flush();check(records.community_comments.length===1 && !panel.querySelector('.community-comment b'),'comment text escaped');
  check(countButton.textContent.includes('1'),'comment count');
  panel.querySelector('.community-comment button').click();await flush();check(records.community_comments.length===0,'own comment deletion');
  openCommunityComposer();check(document.getElementById('communityComposer').open,'composer opens');
  check(document.querySelector('#communityComposerPreview svg') && document.getElementById('communityNickname').value==='Test friend','character snapshot');
+
+ document.getElementById('communityCaption').value='씨 발';
+ const beforeBlockedPost=writes;
+ await publishCommunityPost({preventDefault(){}});
+ check(writes===beforeBlockedPost && document.getElementById('communityComposer').open,'bad post not sent');
  document.getElementById('communityCaption').value='My outfit';
+
  await publishCommunityPost({preventDefault(){}});await flush();
  check(records.community_posts.length===2 && !document.getElementById('communityComposer').open,'publish');
  check(records.community_posts[1].appearance.hair==='open','appearance saved');

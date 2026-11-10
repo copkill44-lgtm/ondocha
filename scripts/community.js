@@ -44,6 +44,7 @@ function communityAvatar(post) {
     return stage;
 }
 function communityError(error) {
+    if(error?.message?.includes('COMMUNITY_TEXT_BLOCKED')) return '욕설·비하·성적인 표현이 포함되어 있어요. 표현을 바꿔 주세요.';
     if (['42P01','PGRST205','PGRST200'].includes(error?.code)) return '커뮤니티를 준비 중이에요. 잠시 후 다시 확인해 주세요.';
     if (error?.code === '42501') return '로그인 상태를 확인하고 다시 시도해 주세요.';
     return '연결하지 못했어요. 잠시 후 다시 시도해 주세요.';
@@ -105,7 +106,7 @@ function renderCommunity() {
     communityPosts.forEach(post=>{
         const card=communityElement('article','community-post');card.id='community-post-'+post.id;
         const head=communityElement('div','community-post-head'),author=communityElement('div','community-author');
-        author.append(communityElement('span','community-author-badge',String(post.author_name||'코디 친구').slice(0,1)),communityElement('strong','',post.author_name||'코디 친구'));head.append(author);
+        author.append(communityElement('span','community-author-badge',String(communityDisplayText(post.author_name)||'코디 친구').slice(0,1)),communityElement('strong','',communityDisplayText(post.author_name)||'코디 친구'));head.append(author);
         if(currentAuthUser?.id===post.user_id) head.append(communityButton('삭제',()=>deleteCommunityPost(post),'community-text-button'));
         const actions=communityElement('div','community-post-actions'),liked=communityLiked.has(post.id);
         const like=communityButton((liked?'♥ ':'♡ ')+(post.community_likes?.[0]?.count||0),b=>toggleCommunityLike(post,b),'community-heart');
@@ -115,7 +116,7 @@ function renderCommunity() {
         actions.append(like,comment,communityButton('공유 ↗',()=>shareCommunityPost(post,card),'community-text-button'));
         const date=communityElement('time','community-date');date.dateTime=post.created_at;
         const d=new Date(post.created_at);date.textContent=Number.isNaN(d.getTime())?'':d.toLocaleDateString('ko-KR');
-        card.append(head,communityAvatar(post),communityElement('p','community-items',communityOutfitText(communityOutfit(post.outfit))),communityElement('p','community-caption',post.caption),actions,date,comments);
+        card.append(head,communityAvatar(post),communityElement('p','community-items',communityOutfitText(communityOutfit(post.outfit))),communityElement('p','community-caption',communityDisplayText(post.caption)),actions,date,comments);
         feed.append(card);
     });
 }
@@ -157,7 +158,7 @@ async function renderCommunityComments(post,panel,countButton) {
         if(!data.length) panel.append(communityElement('p','community-muted','첫 댓글을 남겨 보세요.'));
         data.reverse().forEach(comment=>{
             const row=communityElement('div','community-comment');
-            row.append(communityElement('strong','',comment.author_name),communityElement('p','',comment.body));
+            row.append(communityElement('strong','',communityDisplayText(comment.author_name)),communityElement('p','',communityDisplayText(comment.body)));
             if(currentAuthUser?.id===comment.user_id) row.append(communityButton('삭제',async button=>{
                 button.disabled=true;
                 try {
@@ -178,6 +179,8 @@ async function renderCommunityComments(post,panel,countButton) {
         form.addEventListener('submit',async event=>{
             event.preventDefault();
             if(submit.disabled || !communityRequireLogin() || !input.value.trim()) return;
+            const warning=communityModerationMessage(input.value)||communityModerationMessage(communityName());
+            if(warning){toast(warning);input.focus();return;}
             submit.disabled=true;
             try {
                 const r=await supabaseClient.from('community_comments').insert({post_id:post.id,user_id:currentAuthUser.id,author_name:communityName(),body:input.value.trim()});
@@ -221,6 +224,8 @@ async function publishCommunityPost(event) {
     try {
         const author=document.getElementById('communityNickname').value.trim();
         if(!author){status.textContent='공개할 닉네임을 입력해 주세요.';return;}
+        const warning=communityModerationMessage(author)||communityModerationMessage(document.getElementById('communityCaption').value);
+        if(warning){status.textContent=warning;return;}
         const {error}=await supabaseClient.from('community_posts').insert({...communityDraft,user_id:currentAuthUser.id,author_name:author.slice(0,24),caption:document.getElementById('communityCaption').value.trim().slice(0,500)});
         if(error)throw error;
         document.getElementById('communityComposer').close();communityDraft=null;
