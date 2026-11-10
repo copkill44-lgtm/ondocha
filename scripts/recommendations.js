@@ -68,8 +68,7 @@ function generateRecommendations(aiRecommendations) {
         ],
         isSkirt = category.includes('치마'),
         isShort = category.includes('짧은'),
-        isDress = category.includes('원피스'),
-        isCustom = !category.startsWith('하의 추천받기') && !isSkirt && !isDress && !/바지|팬츠|쇼츠/.test(category),
+        isCustom = !category.startsWith('하의 추천받기') && !isSkirt && !/바지|팬츠|쇼츠/.test(category),
         bottom = isSkirt ? [
             [!isShort ? '플로럴 롱 스커트' : '플리츠 미니스커트', '👗'],
             [!isShort ? '데님 롱 스커트' : '데님 미니스커트', '👗'],
@@ -114,19 +113,14 @@ function generateRecommendations(aiRecommendations) {
     }, (_, i) => [warmth + ' ' + category + ' ' + ['스타일', '코디', '룩', '착장'][i], '👗']);
     looks = Array.from({
         length: 4
-    }, (_, i) => isDress ? {
-        onepiece: [warmth + ' 니트 원피스', '👗'],
-        bottom: ['원피스', ''],
-        shoes: shoes[i],
-        accessory: accessoryRaw === '액세서리 추천받기' ? ['가방', '모자', '목걸이', '시계'][i] : accessoryChoice
-    } : {
+    }, (_, i) => ({
         onepiece: null,
         top: [warmth + ' ' + tops[i][0], tops[i][1]],
         bottom: bottom[i],
         shoes: shoes[i],
         accessory: accessoryRaw === '액세서리 추천받기' ? ['가방', '모자', '목걸이', '시계'][i] : accessoryChoice
-    });
-    if (Array.isArray(aiRecommendations) && aiRecommendations.length === 4) {
+    }));
+    if (Array.isArray(aiRecommendations) && aiRecommendations.length === 4 && aiRecommendations.every(item => !/원피스/.test(String(item.top || '') + String(item.bottom || '')))) {
         let topIcons = {
                 '반팔': '👕',
                 '긴팔': '👕',

@@ -51,7 +51,7 @@
             display: none;
             width: 100%;
             text-align: center;
-            animation: onboardIn .28s ease-out
+            animation: onboardIn .65s ease-out
         }
 
         .onboarding-slide.active {

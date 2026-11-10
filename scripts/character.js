@@ -73,7 +73,7 @@ function startApp() {
         page.setAttribute('aria-hidden', 'false');
         onboardingIndex = 0;
         renderOnboarding()
-    }, 260)
+    }, 700)
 }
 
 function renderOnboarding() {

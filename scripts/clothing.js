@@ -1,5 +1,5 @@
 // clothing.js — Clothing choices and preferences
-const baseCategories = ['긴치마', '짧은치마', '짧은바지', '긴바지', '원피스'];
+const baseCategories = ['긴치마', '짧은치마', '짧은바지', '긴바지'];
 let customCategories = JSON.parse(localStorage.getItem('custom-clothing-types') || '[]');
 let customTopCategories = JSON.parse(localStorage.getItem('custom-top-types') || '[]'),
     customAccessoryCategories = JSON.parse(localStorage.getItem('custom-accessory-types') || '[]');
@@ -39,6 +39,7 @@ function normalizeAccessorySelection(input) {
     if (!choices.some(x => x.checked)) choices.find(x => x.value === '없음').checked = true;
 }
 function renderCategoryChoices(selectValue, selectedGroup) {
+    categoryOptions = categoryOptions.filter(name => !/원피스/.test(name));
     let keep = selectedGroup === 'category' && selectValue ? selectValue : document.querySelector('input[name="category"]:checked')?.value || '긴치마',
         topKeep = selectedGroup === 'topCategory' && selectValue ? selectValue : document.querySelector('input[name="topCategory"]:checked')?.value || '상의 추천받기',
         accessoryKeep = selectedClothingValues('accessoryCategory'),
@@ -110,9 +111,8 @@ function renderCategoryChoices(selectValue, selectedGroup) {
     let shorts = categoryOptions.filter(name => /짧은바지|반바지|쇼츠/.test(name)),
         longPants = categoryOptions.filter(name => /긴바지|긴 팬츠|바지/.test(name) && !shorts.includes(name)),
         skirts = categoryOptions.filter(name => /치마|스커트/.test(name)),
-        dresses = categoryOptions.filter(name => /원피스/.test(name)),
-        custom = categoryOptions.filter(name => !shorts.includes(name) && !longPants.includes(name) && !skirts.includes(name) && !dresses.includes(name));
-    bottomBox.replaceChildren(makeChoice('하의 추천받기', 'category', keep), ...[makeGroup('반바지', shorts, 'category', keep), makeGroup('긴바지', longPants, 'category', keep), makeGroup('치마', skirts, 'category', keep), makeGroup('원피스', dresses, 'category', keep), ...(custom.length ? [makeGroup('기타', custom, 'category', keep)] : [])].filter(group => group.querySelectorAll('.category-item').length));
+        custom = categoryOptions.filter(name => !shorts.includes(name) && !longPants.includes(name) && !skirts.includes(name));
+    bottomBox.replaceChildren(makeChoice('하의 추천받기', 'category', keep), ...[makeGroup('반바지', shorts, 'category', keep), makeGroup('긴바지', longPants, 'category', keep), makeGroup('치마', skirts, 'category', keep), ...(custom.length ? [makeGroup('기타', custom, 'category', keep)] : [])].filter(group => group.querySelectorAll('.category-item').length));
     let accessories = ['액세서리 추천받기', '없음', '가방', '모자', '스카프', '목걸이', '귀걸이', '시계', ...customAccessoryCategories];
     accessoryBox.replaceChildren(...accessories.map(name => makeChoice(name, 'accessoryCategory', accessoryKeep)))
 }
@@ -144,7 +144,7 @@ function updateCustomClothingSubtypes() {
     let group = document.getElementById('customClothingGroup').value,
         options = {
             topCategory: ['반팔', '긴팔', '겉옷'],
-            category: ['반바지', '긴바지', '치마', '원피스'],
+            category: ['반바지', '긴바지', '치마'],
             accessoryCategory: ['가방', '모자', '스카프', '목걸이', '귀걸이', '시계']
         },
         select = document.getElementById('customClothingSubtype');

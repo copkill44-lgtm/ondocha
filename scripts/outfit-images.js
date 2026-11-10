@@ -78,6 +78,7 @@ window.addEventListener('pagehide', cancelActiveOutfitJob);
 function usesLocalQwen() { return ONDOCHA_CONFIG.outfitImageProvider === 'qwen-local'; }
 
 function mountOutfitImageControls() {
+    if (ONDOCHA_CONFIG.outfitImageProvider === 'disabled') return;
     document.querySelectorAll('#outfits .look').forEach((card, index) => {
         const label = document.createElement('p');
         label.className = 'outfit-preview-label';
@@ -124,6 +125,7 @@ async function characterReferenceBlob(config) {
 }
 
 async function generateOutfitImage(index) {
+    if (ONDOCHA_CONFIG.outfitImageProvider === 'disabled') return;
     if (!usesLocalQwen() && (!currentAuthUser || !supabaseClient)) {
         toast('AI 착장 이미지는 로그인 후 만들 수 있어요.');
         return;

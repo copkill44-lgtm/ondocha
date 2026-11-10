@@ -819,7 +819,7 @@ button {
 }
 
 .welcome.leaving {
-    animation: welcomeOut .3s ease-in both
+    animation: welcomeOut .7s ease-in-out both
 }
 
 @keyframes slideOutLeft {
