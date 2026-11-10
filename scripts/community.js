@@ -17,7 +17,7 @@ function communityButton(text, action, cls = '') {
 }
 function communityName() {
     const m = currentAuthUser?.user_metadata || {};
-    return String(m.name || m.full_name || m.nickname || '코디 친구').trim().slice(0,24) || '코디 친구';
+    return String(m.nickname || m.name || m.full_name || '코디 친구').trim().slice(0,24) || '코디 친구';
 }
 function communityRequireLogin() {
     if (currentAuthUser && supabaseClient) return true;

@@ -1,0 +1,41 @@
+<!doctype html><meta charset="utf-8"><base href="../">
+<script>
+let currentAuthUser={id:'member',email:'member@example.com',user_metadata:{name:'Original'}};
+let events={},authActionBusy=false,calls=0,fail=false;
+let supabaseClient={auth:{updateUser:async({data})=>{calls++;if(fail)return {error:Error('offline')};return {data:{user:{...currentAuthUser,user_metadata:{...currentAuthUser.user_metadata,...data}}},error:null}}}};
+function setAccountUi(){}function openEmailAuth(){}function logoutAccount(){}function showCalendar(){}function openCharacterSetup(){}
+</script>
+    <dialog id="myPage" class="mypage-dialog" aria-labelledby="myPageTitle">
+        <header class="mypage-heading"><div><p class="mypage-eyebrow">나의 온도차</p><h2 id="myPageTitle">마이페이지</h2></div><button type="button" class="mypage-close" onclick="closeMyPage()" aria-label="마이페이지 닫기" autofocus>×</button></header>
+        <section class="mypage-profile" aria-label="계정 정보"><span class="mypage-icon" aria-hidden="true">☁</span><div><h3 id="myPageName"></h3><p id="myPageEmail"></p></div></section>
+        <form class="mypage-nickname" id="myPageNicknameForm" onsubmit="saveMyPageNickname(event)">
+            <label for="myPageNickname">닉네임</label>
+            <div><input id="myPageNickname" type="text" maxlength="24" required autocomplete="nickname" placeholder="사용할 닉네임을 입력해 주세요"><button type="submit" id="myPageNicknameSave">저장</button></div>
+            <p id="myPageNicknameStatus" role="status" aria-live="polite">커뮤니티에 공개되는 이름이에요.</p>
+        </form>
+        <dl class="mypage-stats"><div><dt>저장한 코디</dt><dd id="myPageOutfits"></dd></div><div><dt>나의 체감 온도</dt><dd id="myPageFeel"></dd></div></dl>
+        <div class="mypage-links"><button type="button" onclick="myPageNavigate('character')">내 캐릭터 꾸미기 <span aria-hidden="true">→</span></button><button type="button" onclick="myPageNavigate('calendar')">코디 캘린더 보기 <span aria-hidden="true">→</span></button></div>
+        <button type="button" id="myPageAccountAction" class="mypage-account" onclick="myPageAccountAction()">로그인 / 회원가입</button>
+    </dialog>
+<script src="scripts/community-moderation.js"></script><script src="scripts/community.js"></script><script src="scripts/mypage.js"></script>
+<script>
+(async()=>{try{
+openMyPage();
+document.getElementById('myPageNickname').value='New name';
+await saveMyPageNickname({preventDefault(){}});
+if(calls!==1 || currentAuthUser.user_metadata.nickname!=='New name' || communityName()!=='New name')throw Error('save and community name');
+closeMyPage();openMyPage();
+if(document.getElementById('myPageNickname').value!=='New name')throw Error('restore nickname');
+document.getElementById('myPageNickname').value='';
+await saveMyPageNickname({preventDefault(){}});
+if(calls!==1)throw Error('empty nickname');
+document.getElementById('myPageNickname').value='씨 발';
+await saveMyPageNickname({preventDefault(){}});
+if(calls!==1)throw Error('blocked nickname');
+fail=true;document.getElementById('myPageNickname').value='Failed name';await saveMyPageNickname({preventDefault(){}});
+if(currentAuthUser.user_metadata.nickname!=='New name' || document.getElementById('myPageNicknameSave').disabled)throw Error('failure changed profile');
+currentAuthUser=null;closeMyPage();openMyPage();
+if(!document.getElementById('myPageNicknameForm').hidden)throw Error('guest form');
+document.body.dataset.test='PASS: save, community nickname, reopen, invalid input, moderation, failure and guest controls';
+}catch(e){document.body.dataset.test='FAIL: '+e.message;}})();
+</script>

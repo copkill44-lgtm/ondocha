@@ -29,3 +29,36 @@
 .auth-divider { display: flex; align-items: center; gap: 12px; margin: 22px 0 16px; color: #748397; font-size: 12px; }
 .auth-divider::before, .auth-divider::after { content: ''; height: 1px; flex: 1; background: #dce4ee; }
 #accountFlow #loginView, #accountFlow #signupView { flex-shrink: 0; padding-bottom: 24px; }
+
+/* Account overview */
+.mypage-dialog { width: min(480px, calc(100% - 32px)); max-height: calc(100dvh - 40px); overflow-y: auto; box-sizing: border-box; padding: 28px; border: 1px solid #dce8f7; border-radius: 26px; background: #f8fbff; color: #42638b; box-shadow: 0 24px 80px #274a7333; font-family: 'Noto Sans KR', sans-serif; }
+.mypage-dialog::backdrop { background: #233b5866; backdrop-filter: blur(4px); }
+.mypage-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.mypage-eyebrow { margin: 0 0 5px; color: #7a9dc7; font-size: 12px; }
+.mypage-heading h2 { margin: 0; font-size: 25px; }
+.mypage-close { width: 40px; height: 40px; border: 0; border-radius: 50%; background: #eaf2fc; color: #5278a7; font-size: 26px; cursor: pointer; }
+.mypage-profile { display: flex; align-items: center; gap: 16px; margin: 24px 0; }
+.mypage-icon { display: grid; place-items: center; flex: 0 0 64px; height: 64px; border-radius: 22px; background: #e3efff; font-size: 34px; }
+.mypage-profile h3 { margin: 0 0 6px; font-size: 18px; }
+.mypage-profile p { margin: 0; color: #778ca6; font-size: 13px; overflow-wrap: anywhere; line-height: 1.6; }
+.mypage-profile > div { min-width: 0; }
+.mypage-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0 0 22px; }
+.mypage-stats > div { padding: 18px 14px; border: 1px solid #e2ebf7; border-radius: 16px; background: #fff; }
+.mypage-stats dt { font-size: 12px; color: #8394ab; }
+.mypage-stats dd { margin: 10px 0 0; font-size: 16px; font-weight: 700; overflow-wrap: anywhere; }
+.mypage-links { display: grid; gap: 10px; }
+.mypage-links button { display: flex; justify-content: space-between; gap: 12px; width: 100%; padding: 17px; border: 1px solid #e2ebf7; border-radius: 14px; background: #fff; color: #5278a7; font: inherit; text-align: left; cursor: pointer; }
+.mypage-account { display: block; margin: 24px auto 0; padding: 10px 20px; border: 0; border-radius: 10px; background: #e9f1fc; color: #607da2; font: inherit; font-size: 13px; cursor: pointer; }
+.mypage-account:disabled { opacity: .55; cursor: wait; }
+.mypage-dialog button:focus-visible { outline: 3px solid #6b9cd9; outline-offset: 3px; }
+@media (max-width: 420px) { .mypage-dialog { padding: 22px 18px; } }
+.mypage-nickname{margin:0 0 22px}
+.mypage-nickname[hidden]{display:none}
+.mypage-nickname label{display:block;margin-bottom:8px;font-size:13px;font-weight:700}
+.mypage-nickname>div{display:flex;gap:8px}
+.mypage-nickname input{min-width:0;flex:1;padding:12px;border:1px solid #d6e4f5;border-radius:11px;background:#fff;color:#42638b;font:inherit;font-size:13px}
+.mypage-nickname button{flex-shrink:0;border:0;border-radius:11px;padding:10px 18px;background:#789ed0;color:#fff;font:inherit;font-size:13px;cursor:pointer}
+.mypage-nickname button:disabled{opacity:.6;cursor:wait}
+.mypage-nickname input:focus-visible{outline:2px solid #6b9cd9;outline-offset:2px}
+.mypage-nickname p{margin:8px 0 0;color:#8398b2;font-size:11px;line-height:1.7}
+.mypage-profile h3{overflow-wrap:anywhere}
