@@ -1,0 +1,23 @@
+
+.codini-chat[hidden],.codini-chat-panel[hidden],.codini-chat-login[hidden]{display:none}
+.codini-chat{position:fixed;right:24px;bottom:max(20px,env(safe-area-inset-bottom));z-index:40;font-family:'Noto Sans KR',sans-serif}
+.codini-chat-launcher{display:flex;align-items:center;gap:10px;border:0;background:transparent;padding:0;cursor:pointer}
+.codini-chat-launcher img{display:block;width:76px;height:76px;object-fit:contain;filter:drop-shadow(0 4px 9px #648bb433)}
+.codini-chat-launcher>span{padding:10px 14px;border:1px solid #dce8f6;border-radius:15px;background:#fff;color:#688ab4;font-size:12px;box-shadow:0 4px 18px #5a7ea214}
+.codini-chat-panel{position:absolute;right:0;bottom:90px;width:360px;height:min(530px,calc(100dvh - 140px));display:flex;flex-direction:column;overflow:hidden;border:1px solid #d8e6f7;border-radius:22px;background:#fbfdff;box-shadow:0 16px 60px #345b8a26}
+.codini-chat-head{display:flex;align-items:center;gap:10px;padding:16px;background:#edf5ff;border-bottom:1px solid #e2edf9;color:#4f739e}
+.codini-chat-head>div{flex:1}.codini-chat-head strong{display:block;font-size:14px}.codini-chat-head span{display:block;font-size:10px;color:#8b9fb9;margin-top:4px}
+.codini-chat-head button{border:0;background:transparent;color:#6b8cb3;font-size:24px;padding:3px;cursor:pointer}
+.codini-chat-messages{min-height:0;flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:12px;overscroll-behavior:contain}
+.codini-message{max-width:88%;padding:11px 13px;border-radius:15px;font-size:12px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}
+.codini-message.assistant{align-self:flex-start;background:#edf3fb;color:#536f93;border-bottom-left-radius:4px}
+.codini-message.user{align-self:flex-end;background:#799ed0;color:#fff;border-bottom-right-radius:4px}
+.codini-chat-suggestions{display:flex;gap:6px;padding:0 12px;flex-wrap:wrap}.codini-chat-suggestions button{border:1px solid #e1eafa;background:#fff;border-radius:99px;padding:6px 9px;color:#7b95b5;font-size:10px;cursor:pointer}
+.codini-chat-status{margin:6px 14px;color:#8a9bb1;font-size:11px;line-height:1.6}.codini-chat-status:empty{display:none}
+.codini-chat-form{display:flex;gap:8px;padding:10px 12px 4px}.codini-chat-form input{min-width:0;flex:1;border:1px solid #dce7f4;border-radius:12px;padding:11px;background:#fff;color:#526c8f;font:inherit;font-size:12px}
+.codini-chat-form>button{width:39px;flex-shrink:0;border:0;border-radius:12px;background:#799ed0;color:#fff;font-size:23px;cursor:pointer}
+.codini-chat button:disabled{opacity:.5;cursor:wait}.codini-chat-note{margin:4px 12px 10px;text-align:center;font-size:9px;line-height:1.6;color:#9ba9bd}
+.codini-chat-login{margin:5px 14px;border:0;border-radius:10px;padding:9px;background:#e6f0ff;color:#5d80ae;cursor:pointer}
+.codini-chat :is(input,button):focus-visible{outline:2px solid #709acf;outline-offset:3px}
+.codini-chat-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+@media(max-width:600px){.codini-chat{right:12px;bottom:max(12px,env(safe-area-inset-bottom))}.codini-chat-panel{width:min(360px,calc(100vw - 24px));bottom:80px;height:min(510px,calc(100dvh - 115px))}.codini-chat-launcher img{width:64px;height:64px}.codini-chat-launcher>span{font-size:11px;padding:8px 11px}}

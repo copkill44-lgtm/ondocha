@@ -1,0 +1,27 @@
+<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../"><link rel="stylesheet" href="styles/codini-chat.css"><div id="app" style="display:block"></div>
+<script>
+let currentAuthUser=null,looks=[{top:['Shirt'],bottom:['Pants'],shoes:['Sneakers']}],selected=0,weatherTemp=12;
+const SUPABASE_URL='https://example.invalid',SUPABASE_PUBLISHABLE_KEY='public';
+let supabaseClient={auth:{getSession:async()=>({data:{session:{access_token:'test'}}})}};
+function motionReductionEnabled(){return true}function openEmailAuth(){}let sent=0,offline=false,body=null;
+window.fetch=async(url,options)=>{sent++;body=JSON.parse(options.body);if(offline)return {ok:false,status:503,json:async()=>({error:'Not connected'})};return {ok:true,json:async()=>({reply:'<img src=x onerror=alert(1)> Try blue.'})};};
+</script><script src="scripts/codini-chat.js"></script><script>
+(async()=>{try{
+const check=(x,m)=>{if(!x)throw Error(m)};
+toggleCodiniChat(true);check(!document.getElementById('codiniChatPanel').hidden,'open');
+const input=document.getElementById('codiniChatInput');
+input.value='Hello';await sendCodiniChat({preventDefault(){}});
+check(sent===0&&!document.getElementById('codiniChatLogin').hidden,'guest guard');
+currentAuthUser={id:'member'};codiniChatAuthChanged();input.value='My shirt?';
+await sendCodiniChat({preventDefault(){}});
+check(sent===1&&codiniChatHistory.length===2,'conversation');
+check(!document.querySelector('.codini-chat-messages img'),'reply is text');
+check(body.context.temperature===12&&body.context.outfit.top==='Shirt','context');
+offline=true;input.value='Try again';await sendCodiniChat({preventDefault(){}});
+check(input.value==='Try again'&&!input.disabled&&codiniChatHistory.length===2,'error retry');
+currentAuthUser={id:'other'};codiniChatAuthChanged();
+check(codiniChatHistory.length===0&&!input.value&&document.querySelectorAll('.codini-message').length===1,'account separation');
+toggleCodiniChat(false);check(document.getElementById('codiniChatPanel').hidden,'close');
+document.body.dataset.test='PASS: launcher, guest guard, conversation, context, safe rendering, retry and account separation';
+}catch(e){document.body.dataset.test='FAIL: '+e.message;}})();
+</script>

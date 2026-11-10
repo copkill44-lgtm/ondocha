@@ -24,6 +24,7 @@ function setAccountUi(user) {
     }
     if (typeof updateGuestUsage === 'function') updateGuestUsage();
     if (typeof communityAuthChanged === 'function') communityAuthChanged();
+    if (typeof codiniChatAuthChanged === 'function') codiniChatAuthChanged();
 }
 
 function localAppData() {

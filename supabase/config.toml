@@ -10,3 +10,7 @@ entrypoint = "./functions/naver-auth/index.ts"
 # Handler validates the user with Auth before calling the paid image API.
 [functions.outfit-image]
 verify_jwt = false
+
+# The handler validates the user with Supabase Auth.
+[functions.codini-chat]
+verify_jwt = false
