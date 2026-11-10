@@ -211,12 +211,32 @@ function localDate(d) {
 let clothingPreferences = JSON.parse(localStorage.getItem("clothing-preferences") || "{}");
 
 const clothingColorPalette = {"빨강": "#ef4444", "주황": "#f97316", "노랑": "#facc15", "초록": "#22c55e", "파랑": "#3b82f6", "보라": "#a855f7", "핑크": "#ec4899", "아이보리": "#f7f5ef", "검정": "#202024"};
+
+const accessoryColorPalette={"골드":"#d4af37","실버":"#c0c0c0","로즈골드":"#b76e79","브론즈":"#cd7f32","진주색":"#f4f0e5","검정":"#202024","브라운":"#8b5e3c","베이지":"#d4b896","화이트":"#ffffff"};
+function renderClothingColorOptions(group){
+ const container=document.querySelector('#categoryModal .color-options');
+ const palette=group==='accessoryCategory'?accessoryColorPalette:clothingColorPalette;
+ container.replaceChildren();
+ const add=(value,cls,color)=>{
+  const label=document.createElement('label'),input=document.createElement('input'),name=document.createElement('span');
+  label.className=cls;input.type='radio';input.name='clothingColor';input.value=value;
+  name.textContent=value==='custom'?'직접 고르기':value;
+  if(color)label.style.setProperty('--swatch',color);
+  label.append(input);
+  if(value!=='상관없음')label.append(document.createElement('i'));
+  label.append(name);container.append(label);
+ };
+ add('상관없음','no-color');
+ Object.entries(palette).forEach(([name,color])=>add(name,'',color));
+ add('custom','custom-color-choice');
+}
+
 const legacyClothingColors = {하늘색: "#9cb7de", 베이지: "#d4a46d", 골드: "#d4af37", 실버: "#c0c0c0", 로즈골드: "#b76e79", 브론즈: "#cd7f32"};
 let clothingWheelState = {h: 215, s: .3, v: .87};
 function isClothingHex(value) { return /^#[0-9a-f]{6}$/i.test(value || ''); }
 function clothingPreviewColor(group) {
     const color = (clothingPreferences[group] || {}).color;
-    return isClothingHex(color) ? color : clothingColorPalette[color] || '#f7f5ef';
+    return isClothingHex(color) ? color : accessoryColorPalette[color] || clothingColorPalette[color] || legacyClothingColors[color] || '#f7f5ef';
 }
 function clothingHsvToHex({h, s, v}) {
     const channel = n => {
@@ -390,11 +410,18 @@ function openCategoryModal(group) {
         pref = clothingPreferences[group] || {};
     modal.dataset.group = group;
     const isAccessory = group === 'accessoryCategory';
+    renderClothingColorOptions(group);
     $('categorySelectionTitle').textContent = isAccessory ? '액세서리 선택' : '옷 선택';
     $('categoryModalDescription').textContent = isAccessory ? '취향에 맞는 액세서리와 색상을 골라주세요.' : '취향에 맞는 옷과 색상을 골라주세요.';
     // Keep previously saved colors available through the custom picker.
-    if (legacyClothingColors[pref.color]) {
+    if (legacyClothingColors[pref.color] && !(isAccessory && accessoryColorPalette[pref.color])) {
         pref.color = legacyClothingColors[pref.color];
+        pref.customColor = pref.color;
+        clothingPreferences[group] = pref;
+        localStorage.setItem('clothing-preferences', JSON.stringify(clothingPreferences));
+    }
+    if (isAccessory && clothingColorPalette[pref.color] && !accessoryColorPalette[pref.color]) {
+        pref.color = clothingColorPalette[pref.color];
         pref.customColor = pref.color;
         clothingPreferences[group] = pref;
         localStorage.setItem('clothing-preferences', JSON.stringify(clothingPreferences));
