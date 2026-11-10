@@ -35,7 +35,7 @@ function showOutfitCard(index, animate = true) {
     document.getElementById('outfitPrevious').disabled = index === 0;
     document.getElementById('outfitNext').disabled = index === cards.length - 1;
     document.getElementById('outfitCount').textContent = (index + 1) + ' / ' + cards.length + ' · 한 장씩 둘러보고 마음에 드는 코디를 골라요';
-    if (animate && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (animate && !motionReductionEnabled()) {
         cards[index].animate([{
             opacity: 0,
             transform: 'translateX(' + direction * 22 + 'px)'

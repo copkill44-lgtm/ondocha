@@ -1,0 +1,14 @@
+/* Keep final visual states while stopping CSS movement and transitions. */
+html.reduce-motion *,html.reduce-motion *::before,html.reduce-motion *::after {
+ animation-delay:0s!important;
+ animation-duration:.01ms!important;
+ animation-iteration-count:1!important;
+ transition-delay:0s!important;
+ transition-duration:0s!important;
+ scroll-behavior:auto!important;
+}
+.mypage-settings{margin:20px 0;padding:16px;border:1px solid #e2ebf7;border-radius:14px;background:#fff}
+.mypage-settings h3{margin:0 0 12px;font-size:14px}
+.mypage-motion-toggle{display:flex;align-items:center;justify-content:space-between;gap:14px;font-size:13px;cursor:pointer}
+.mypage-motion-toggle input{width:20px;height:20px;flex-shrink:0;accent-color:#789ed0}
+.mypage-settings p{margin:8px 0 0;color:#8394ab;font-size:11px;line-height:1.7}

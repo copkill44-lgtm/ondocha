@@ -1,4 +1,5 @@
 function openMyPage() {
+    syncMotionSettings();
     const user = currentAuthUser;
     const metadata = user?.user_metadata || {};
     document.getElementById('myPageName').textContent = metadata.nickname || metadata.name || metadata.full_name || (user ? '온도차 회원' : '방문자님');

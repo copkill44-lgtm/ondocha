@@ -86,7 +86,7 @@ function showFeatureTourStep() {
     document.getElementById('tourNext').textContent = featureTourIndex === featureTourSteps.length - 1 ? '시작' : '다음으로 →';
     document.getElementById('tourMeterFill').style.width = ((featureTourIndex + 1) / featureTourSteps.length * 100) + '%';
     updateTourWeatherGate();
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reduceMotion = motionReductionEnabled();
     target.scrollIntoView({
         behavior: reduceMotion ? 'instant' : 'smooth',
         block: featureTourIndex === 0 ? 'start' : 'center'

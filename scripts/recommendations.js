@@ -259,7 +259,7 @@ function recommend() {
                 } finally {
                     modal.classList.remove('visible');
                     document.getElementById('suggest').scrollIntoView({
-                        behavior: 'smooth',
+                        behavior: motionReductionEnabled() ? 'auto' : 'smooth',
                         block: 'center'
                     })
                 }

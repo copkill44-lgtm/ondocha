@@ -49,7 +49,7 @@ function renderCharacter() {
     }
     if (typeof syncCharacterPicker === 'function') syncCharacterPicker();
     if (wasInitialized && previousAppearance !== JSON.stringify(characterConfig) &&
-        !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        !motionReductionEnabled()) {
         const preview = document.getElementById('characterPreview');
         if (preview && typeof preview.animate === 'function') {
             preview.getAnimations().forEach(animation => animation.cancel());

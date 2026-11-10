@@ -1,0 +1,25 @@
+<!doctype html><meta charset="utf-8"><base href="../"><link rel="stylesheet" href="styles/motion-settings.css">
+<input type="checkbox" id="disableAnimations"><div id="app"></div><div id="effect" style="animation:motion-test 5s infinite;transition:opacity 3s"></div><style>@keyframes motion-test{to{transform:translateX(50px)}}</style>
+<script>const $=id=>document.getElementById(id);localStorage.removeItem('ondocha-motion-preference');</script>
+<script src="scripts/motion-settings.js"></script><script src="scripts/transitions.js"></script>
+<script>
+(async()=>{try{
+setAnimationsDisabled(true);
+if(!motionReductionEnabled() || !document.documentElement.classList.contains('reduce-motion') || !document.getElementById('disableAnimations').checked)throw Error('off state');
+if(localStorage.getItem(MOTION_PREFERENCE_KEY)!=='off')throw Error('persistence');
+if(parseFloat(getComputedStyle(document.getElementById('effect')).animationDuration)>.001)throw Error('CSS motion');
+let changed=false;transitionPage(()=>changed=true,'left');
+if(!changed || document.getElementById('app').className)throw Error('instant page transition');
+setAnimationsDisabled(false);
+if(motionReductionEnabled() || document.documentElement.classList.contains('reduce-motion'))throw Error('on state');
+if(localStorage.getItem(MOTION_PREFERENCE_KEY)!=='on')throw Error('save on');
+setAnimationsDisabled(true);
+const iframe=document.createElement('iframe');
+const result=new Promise((resolve,reject)=>{iframe.onload=()=>{try{resolve(iframe.contentWindow.motionReductionEnabled())}catch(e){reject(e)}}});
+iframe.srcdoc='<script src="'+new URL('scripts/motion-settings.js',document.baseURI).href+'"><\/script>';
+document.body.append(iframe);
+if(!await result)throw Error('restore saved setting');
+iframe.remove();localStorage.removeItem(MOTION_PREFERENCE_KEY);
+document.body.dataset.test='PASS: toggle, CSS movement stopped, instant transition, preference persistence and restore';
+}catch(e){document.body.dataset.test='FAIL: '+e.message;}})();
+</script>

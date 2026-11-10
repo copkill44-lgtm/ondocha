@@ -1,5 +1,6 @@
 // transitions.js — Page and weather transitions
 function transitionPage(change, direction) {
+    if (motionReductionEnabled()) { change(); return; }
     const app = $('app');
     app.classList.remove('slide-in-left', 'slide-in-right', 'slide-out-left', 'slide-out-right');
     app.classList.add('slide-out-' + direction);

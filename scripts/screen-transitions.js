@@ -3,7 +3,7 @@
 let screenFadeBusy = false;
 async function fadeScreenChange(outgoing, change, incoming) {
     if (screenFadeBusy) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !outgoing || !outgoing.getClientRects().length) {
+    if (motionReductionEnabled() || !outgoing || !outgoing.getClientRects().length) {
         change();
         return;
     }
@@ -22,7 +22,7 @@ async function fadeScreenChange(outgoing, change, incoming) {
         await leaving.finished;
         change();
         const target = incoming();
-        if (target) {
+        if (target && !motionReductionEnabled()) {
             entering = target.animate([{
                 opacity: 0
             }, {
