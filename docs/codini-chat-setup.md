@@ -29,3 +29,5 @@ Deno 서버 테스트: .tools/deno/deno.exe test supabase/functions/codini-chat/
 실제 AI 응답은 API 키 등록 및 함수 배포 후 확인합니다.
 
 Dashboard: paste the entire dashboard.ts file into the function editor as index.ts, name the function codini-chat, then deploy. No additional handler.ts file is needed for this combined version.
+
+Current live Dashboard function slug: smooth-endpoint. The browser calls /functions/v1/smooth-endpoint. codini-chat.ts is the source filename, not the URL slug.

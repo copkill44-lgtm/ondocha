@@ -53,7 +53,7 @@ async function sendCodiniChat(event){
  try{
   const {data,error}=await supabaseClient.auth.getSession();
   if(error||!data.session)throw Error('로그인 상태를 확인하고 다시 시도해 주세요.');
-  const response=await fetch(SUPABASE_URL+'/functions/v1/codini-chat',{
+  const response=await fetch(SUPABASE_URL+'/functions/v1/smooth-endpoint',{
    method:'POST',signal:controller.signal,
    headers:{'Content-Type':'application/json',Authorization:'Bearer '+data.session.access_token,apikey:SUPABASE_PUBLISHABLE_KEY},
    body:JSON.stringify({messages:[...codiniChatHistory.slice(-10),{role:'user',content:text}],context:codiniChatContext()})

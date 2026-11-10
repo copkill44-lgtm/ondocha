@@ -14,3 +14,8 @@ verify_jwt = false
 # The handler validates the user with Supabase Auth.
 [functions.codini-chat]
 verify_jwt = false
+
+# Dashboard chat deployment uses this existing function slug.
+[functions.smooth-endpoint]
+verify_jwt = false
+entrypoint = "./functions/codini-chat/index.ts"
