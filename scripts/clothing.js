@@ -111,7 +111,7 @@ function renderCategoryChoices(selectValue, selectedGroup) {
     const customOuter = customTopCategories.filter(name => name.startsWith('겉옷 · '));
     if (/^(반팔|긴팔)/.test(topKeep)) topSleeveChoice = topKeep.startsWith('긴팔') ? '긴팔' : '반팔';
     if (/민소매|나시/.test(topKeep)) topSleeveChoice = '그 외';
-    const types = topSleeveChoice === '그 외' ? ['민소매'] : ['티셔츠', '셔츠', '블라우스', '니트', '맨투맨', '후드티'];
+    const types = topSleeveChoice === '그 외' ? ['민소매'] : ['티셔츠', '셔츠', '니트', '맨투맨', '후드티'];
     if (topKeep === '반팔' || topKeep === '긴팔') topKeep += ' 티셔츠';
     else if (types.includes(topKeep) && topKeep !== '민소매') topKeep = topSleeveChoice + ' ' + topKeep;
     const sleeveGroup = document.createElement('div');
@@ -140,7 +140,7 @@ function renderCategoryChoices(selectValue, selectedGroup) {
         makeChoice('상의 추천받기', 'topCategory', topKeep),
         sleeveGroup,
         makeGroup('옷 종류', [...types.map(name => name === '민소매' ? name : topSleeveChoice + ' ' + name), ...customTops], 'topCategory', topKeep),
-        makeGroup('겉옷', ['바람막이', '가디건', '패딩', ...customOuter], 'outerCategory', outerKeep)
+        makeGroup('겉옷', ['바람막이', '가디건', '패딩', '후드집업', ...customOuter], 'outerCategory', outerKeep)
     );
     const bottomGroups = {
         '반바지': categoryOptions.filter(name => /반바지|쇼츠|버뮤다|짧은바지/.test(name)),
@@ -207,7 +207,7 @@ function removeCategory(name, group = 'category') {
 function updateCustomClothingSubtypes() {
     let group = document.getElementById('customClothingGroup').value,
         options = {
-            topCategory: ['티셔츠', '셔츠', '블라우스', '니트', '맨투맨', '후드티', '민소매', '겉옷'],
+            topCategory: ['티셔츠', '셔츠', '니트', '맨투맨', '후드티', '민소매', '겉옷'],
             category: ['반바지', '긴바지', '치마'],
             accessoryCategory: ['가방', '모자', '스카프', '목걸이', '귀걸이', '시계']
         },
@@ -414,6 +414,9 @@ function clothingIconMarkup(name, color = "#f7f5ef") {
     };
     if (bottomIcons[name]) {
         return '<svg viewBox="0 0 120 120" aria-hidden="true"><image href="assets/images/icon/' + bottomIcons[name] + '.png?v=20261110-1" x="5" y="5" width="110" height="110" preserveAspectRatio="xMidYMid meet"/></svg>';
+    }
+    if (name === '후드집업') {
+        return '<svg viewBox="0 0 120 120" aria-hidden="true"><svg x="5" y="5" width="110" height="110" viewBox="203 191 895 845" preserveAspectRatio="xMidYMid meet"><image href="assets/images/icon/후드집업.png?v=20261112-1" width="1312" height="1199"/></svg></svg>';
     }
     const isLongSleeve = /긴팔|긴소매/.test(name);
     const iconType = /바람막이/.test(name) ? 'windbreaker'

@@ -2,8 +2,9 @@
 function refreshOnboardingLayout() {
     const touchDevice = navigator.maxTouchPoints > 0 || matchMedia('(pointer: coarse)').matches;
     const deviceWidth = Math.min(screen.width, screen.height);
-    const portraitArtwork = matchMedia('(max-width: 900px)').matches ||
-        (touchDevice && deviceWidth > 0 && deviceWidth <= 900);
+    const portraitViewport = window.innerHeight >= window.innerWidth;
+    const portraitArtwork = portraitViewport && (matchMedia('(max-width: 900px)').matches ||
+        (touchDevice && deviceWidth > 0 && deviceWidth <= 900));
     document.documentElement.classList.toggle('onboarding-portrait', portraitArtwork);
     document.querySelectorAll('#onboarding .onboard-picture').forEach(picture => {
         const source = picture.querySelector('source');

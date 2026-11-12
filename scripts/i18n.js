@@ -1,7 +1,7 @@
 // Translate presentation text only. Form values and stored wardrobe data stay stable.
 const UI_TRANSLATIONS = Object.fromEntries(`
 오늘의 코디 온도차|Ondocha · Today's Outfit
-☁ 오늘의 코디 온도차|☁ Ondocha
+☁ 온도차|☁ Ondocha
 온도차|Ondocha
 내 코디를 불러오고 있어요…|Loading your outfits…
 옷장 문 열기|Open my wardrobe
@@ -225,6 +225,7 @@ STEP 1 · 나만의 캐릭터|STEP 1 · Your character
 바람막이|Windbreaker
 가디건|Cardigan
 패딩|Puffer jacket
+후드집업|Zip-up hoodie
 기본 바지|Classic pants
 데님 바지|Jeans
 카고 바지|Cargo pants
@@ -306,6 +307,8 @@ English|English
 이 기기에 언어 설정이 저장돼요.|Your language is saved on this device.
 `.trim().split('\n').map(line => { const at=line.indexOf('|');return [line.slice(0,at),line.slice(at+1)]; }));
 Object.assign(UI_TRANSLATIONS, {
+ '관리자':'Administrator','공지 작성':'New notice','공지 수정':'Edit notice','수정':'Edit','제목':'Title','내용':'Body','영어 내용 (선택)':'English version (optional)','분류':'Category','중요 공지':'Pinned notice','닫기':'Close',
+ '공지사항':'Notices','온도차의 새로운 소식과 이용 안내를 확인하세요.':'News, updates and guides for Ondocha.','공지 검색':'Search notices','공지 분류':'Notice category','전체':'All','이용 안내':'Guide','업데이트':'Update','검색 결과가 없어요.':'No notices match your search.',
  '설정':'Settings','일':'Sun','월':'Mon','화':'Tue','수':'Wed','목':'Thu','금':'Fri','토':'Sat',
  '이 코디 게시물을 삭제할까요? 댓글과 하트도 함께 삭제돼요.':'Delete this outfit post, including its comments and likes?',
  '로그아웃하지 못했어요. 연결을 확인하고 다시 시도해 주세요.':'Could not log out. Check your connection and try again.',
@@ -379,7 +382,15 @@ function mountLanguageSettings() {
     const setting=document.createElement('section');setting.className='mypage-settings';setting.innerHTML='<label class="language-setting">언어 <select data-language-select onchange="setUiLanguage(this.value)"><option value="ko">한국어</option><option value="en">English</option></select></label><p>이 기기에 언어 설정이 저장돼요.</p>';
     document.querySelector('#myPage .mypage-links').before(setting);
     const pages=[['Find your comfort','Outfit ideas that fit how you feel.'],['Make it your own','Choose clothes, colors and styles you love.'],['Dress for your day','Weather, plans and your comfort, all considered.']];
-    document.querySelectorAll('#onboarding .onboarding-slide').forEach((slide,i)=>{const card=document.createElement('div');card.className='english-onboarding';card.dataset.noTranslate='';card.innerHTML='<img src="assets/images/mascots/onboarding-curious.png" alt="Codini"><h2>'+pages[i][0]+'</h2><p>'+pages[i][1]+'</p>';slide.append(card)});
+    document.querySelectorAll('#onboarding .onboarding-slide').forEach((slide,i)=>{
+        const card=document.createElement('div');
+        card.className='english-onboarding';
+        card.dataset.noTranslate='';
+        const portrait='assets/images/onboarding/ondocha_english_'+(i*2+1)+'.png?v=20261112-1';
+        const desktop='assets/images/onboarding/ondocha_english_'+(i*2+2)+'.png?v=20261112-1';
+        card.innerHTML='<picture class="onboard-picture"><source media="(max-width: 900px), (max-width: 1024px) and (pointer: coarse)" srcset="'+portrait+'"><img class="onboard-full-art" src="'+desktop+'" alt="'+pages[i][0]+'. '+pages[i][1]+'"></picture>';
+        slide.append(card);
+    });
     setUiLanguage(uiLanguage);
     let scheduled=false;
     new MutationObserver(()=>{if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;translateUi()})}).observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['placeholder','title','aria-label','alt']});

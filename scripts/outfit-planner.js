@@ -16,7 +16,7 @@ function recommendationCatalog(input) {
     const adjustment = {'매우 추워요':-8,'쌀쌀해요':-4,'괜찮아요':0,'따뜻해요':3,'더워요':6}[input.feel] || 0;
     const comfort = (input.apparent ?? input.temperature ?? 20) + adjustment;
     const cold = comfort < 15, hot = comfort >= 25;
-    const kinds = cold ? ['니트','맨투맨','후드티','셔츠','티셔츠','블라우스'] : ['티셔츠','셔츠','블라우스','니트','맨투맨','후드티'];
+    const kinds = cold ? ['니트','맨투맨','후드티','셔츠','티셔츠'] : ['티셔츠','셔츠','니트','맨투맨','후드티'];
     const sleeve = hot ? '반팔' : '긴팔';
     const tops = input.top === '상의 추천받기' ? kinds.map(kind => sleeve + ' ' + kind) : [input.top];
     if (hot && input.top === '상의 추천받기') { tops.splice(3); tops.push('민소매','반팔 니트'); }

@@ -7,9 +7,9 @@
     <title>오늘의 코디 온도차</title>
     <script src="scripts/motion-settings.js?v=20261110-1"></script>
     <script>document.documentElement.classList.add('auth-checking');</script>
-    <link rel="stylesheet" href="styles/base.css?v=20261110-fade-1">
+    <link rel="stylesheet" href="styles/base.css?v=20261112-nav-left-1">
     <link rel="stylesheet" href="styles/components.css">
-    <link rel="stylesheet" href="styles/onboarding.css?v=20261110-mobile-fill-1">
+    <link rel="stylesheet" href="styles/onboarding.css?v=20261112-responsive-fit-1">
     <link rel="stylesheet" href="styles/character.css?v=20261110-revert-1">
     <link rel="stylesheet" href="styles/tour.css">
     <link rel="stylesheet" href="styles/carousel.css">
@@ -22,7 +22,8 @@
     <link rel="stylesheet" href="styles/outfit-images.css?v=20261109-instant-1">
     <link rel="stylesheet" href="styles/motion-settings.css?v=20261110-1">
     <script src="assets/vendor/supabase/supabase.js"></script>
-    <link rel="stylesheet" href="styles/i18n.css?v=20261110-1">
+    <link rel="stylesheet" href="styles/i18n.css?v=20261112-responsive-fit-1">
+    <link rel="stylesheet" href="styles/notices.css?v=20261110-read-style-3">
 </head>
 
 <body>
@@ -266,11 +267,11 @@
     </section>
     <main class="shell" id="app" style="display:none">
         <header class="top">
-            <div class="brand">☁ 오늘의 코디 온도차</div>
+            <div class="brand">☁ 온도차</div>
             <button type="button" class="tour-replay" onclick="startFeatureTour()">사용법 안내</button>
             <nav class="nav" aria-label="주요 메뉴"><button class="active" id="navHome" onclick="showHome()">코디 추천</button><button
                     id="navCalendar" onclick="showCalendar()">코디 캘린더</button><button type="button" id="navCharacter"
-                    onclick="openCharacterSetup(true)">캐릭터 설정</button><button type="button" id="navCommunity" onclick="showCommunity()">커뮤니티</button></nav>
+                    onclick="openCharacterSetup(true)">캐릭터 설정</button><button type="button" id="navCommunity" onclick="showCommunity()">커뮤니티</button><button type="button" id="navNotices" onclick="showNotices()"><span>공지사항</span><span class="notice-unread" id="noticeUnread" hidden></span></button></nav>
             <div class="account-area"><span id="accountLabel" hidden></span><button type="button" class="account-button"
                     id="accountButton" onclick="handleAccountButton()">마이페이지</button></div>
         </header>
@@ -425,6 +426,11 @@
                 </aside>
             </div>
         </section>
+        <section id="noticesCard" class="card notices" hidden aria-labelledby="noticesTitle">
+            <header class="notices-heading"><span class="notices-eyebrow">ONDOCHA NEWS</span><h1 id="noticesTitle" tabindex="-1">공지사항</h1><button type="button" id="noticeCreate" class="primary" onclick="openNoticeComposer()" hidden>공지 작성</button><p>온도차의 새로운 소식과 이용 안내를 확인하세요.</p></header>
+            <div class="notices-tools"><input id="noticeSearch" type="search" placeholder="공지 검색" aria-label="공지 검색"><select id="noticeFilter" aria-label="공지 분류"><option value="all">전체</option><option value="guide">이용 안내</option><option value="update">업데이트</option></select></div>
+            <p id="noticeServerStatus" role="status" data-no-translate></p><p id="noticeCount" class="notices-count" role="status" aria-live="polite" data-no-translate></p><div id="noticeList" class="notice-list" data-no-translate></div><p id="noticeEmpty" class="notice-empty" hidden>검색 결과가 없어요.</p>
+        </section>
 <section class="card community" id="communityCard" hidden aria-labelledby="communityTitle">
 <header class="community-heading"><div><span class="community-eyebrow">OUR OUTFITS</span><h1 id="communityTitle">오늘의 코디, 함께 나눠요</h1><p>추천받은 코디를 올리고 서로의 취향을 발견해 보세요.</p></div><button type="button" class="primary" onclick="openCommunityComposer()">＋ 내 코디 올리기</button></header>
 <div class="community-toolbar"><button type="button" class="community-text-button" onclick="showAllCommunity()">모든 코디 보기</button><button type="button" class="community-text-button" onclick="loadCommunity()">새로고침 ↻</button></div>
@@ -543,7 +549,7 @@
         </div>
     </section>
     <dialog id="myPage" class="mypage-dialog" aria-labelledby="myPageTitle">
-        <header class="mypage-heading"><div><p class="mypage-eyebrow">나의 온도차</p><h2 id="myPageTitle">마이페이지</h2></div><button type="button" class="mypage-close" onclick="closeMyPage()" aria-label="마이페이지 닫기" autofocus>×</button></header>
+        <header class="mypage-heading"><div><p class="mypage-eyebrow">나의 온도차</p><h2 id="myPageTitle">마이페이지</h2><span id="myPageAdminBadge" class="notice-pinned" hidden>관리자</span></div><button type="button" class="mypage-close" onclick="closeMyPage()" aria-label="마이페이지 닫기" autofocus>×</button></header>
         <section class="mypage-profile" aria-label="계정 정보"><span class="mypage-icon" aria-hidden="true">☁</span><div><h3 id="myPageName"></h3><p id="myPageEmail"></p></div></section>
         <form class="mypage-nickname" id="myPageNicknameForm" onsubmit="saveMyPageNickname(event)">
             <label for="myPageNickname">닉네임</label>
@@ -554,6 +560,15 @@
         <section class="mypage-settings" aria-labelledby="myPageSettingsTitle"><h3 id="myPageSettingsTitle">화면 설정</h3><label class="mypage-motion-toggle" for="disableAnimations"><span>애니메이션 끄기</span><input type="checkbox" id="disableAnimations" onchange="setAnimationsDisabled(this.checked)"></label><p>화면 전환과 움직이는 효과를 끕니다. 이 기기에 설정이 저장돼요.</p></section>
         <div class="mypage-links"><button type="button" onclick="myPageNavigate('character')">내 캐릭터 꾸미기 <span aria-hidden="true">→</span></button><button type="button" onclick="myPageNavigate('calendar')">코디 캘린더 보기 <span aria-hidden="true">→</span></button></div>
         <button type="button" id="myPageAccountAction" class="mypage-account" onclick="myPageAccountAction()">로그인 / 회원가입</button>
+    </dialog>
+    <dialog id="noticeComposer" class="notice-composer" aria-labelledby="noticeComposerTitle">
+        <form id="noticeForm" onsubmit="saveSiteNotice(event)">
+            <header><h2 id="noticeComposerTitle">공지 작성</h2><button type="button" onclick="document.getElementById('noticeComposer').close()" aria-label="닫기">×</button></header>
+            <label>제목<input id="noticeTitleKo" required maxlength="120"></label><label>내용<textarea id="noticeBodyKo" required maxlength="10000" rows="7"></textarea></label>
+            <details><summary>영어 내용 (선택)</summary><label>English title<input id="noticeTitleEn" maxlength="160"></label><label>English body<textarea id="noticeBodyEn" maxlength="12000" rows="5"></textarea></label></details>
+            <label>분류<select id="noticeCategory"><option value="update">업데이트</option><option value="guide">이용 안내</option></select></label><label class="notice-pin-control"><input type="checkbox" id="noticePinned">중요 공지</label>
+            <p id="noticeFormStatus" role="status" data-no-translate></p><footer><button type="button" onclick="document.getElementById('noticeComposer').close()">취소</button><button id="noticeSubmit" type="submit" class="primary">저장</button></footer>
+        </form>
     </dialog>
     <div class="toast" id="toast"></div>
 
@@ -578,34 +593,36 @@
         </aside>
     </div>
 
-    <script src="scripts/i18n.js?v=20261110-1"></script>
-    <script src="scripts/onboarding-layout.js?v=20261109-1"></script>
+    <script src="scripts/i18n.js?v=20261112-hoodie-1"></script>
+    <script src="scripts/onboarding-layout.js?v=20261112-responsive-fit-1"></script>
     <script src="scripts/state.js"></script>
-    <script src="scripts/clothing.js?v=20261110-language-1"></script>
+    <script src="scripts/clothing.js?v=20261112-no-blouse-1"></script>
     <script src="scripts/config.js?v=20261110-ai-off-1"></script>
-    <script src="scripts/auth.js?v=20261110-language-1"></script>
+    <script src="scripts/auth.js?v=20261110-admin-2"></script>
     <script src="scripts/auth-forms.js?v=20261105-first-character"></script>
     <script src="scripts/naver-login.js?v=20261105-2"></script>
     <script src="scripts/social-auth.js?v=20261105-naver-1"></script>
     <script src="scripts/guest-usage.js?v=20261109-guest-fix-1"></script>
-    <script src="scripts/navigation.js?v=20261109-community-1"></script>
+    <script src="scripts/navigation.js?v=20261110-notices-1"></script>
     <script src="scripts/weather.js"></script>
     <script src="scripts/weather-region-data.js"></script>
     <script src="scripts/weather-regions.js"></script>
-    <script src="scripts/outfit-planner.js?v=20261110-outerwear-2"></script><script src="scripts/recommendations.js?v=20261110-language-1"></script>
+    <script src="scripts/outfit-planner.js?v=20261112-no-blouse-1"></script><script src="scripts/recommendations.js?v=20261110-language-1"></script>
     <script src="scripts/avatar.js?v=20261110-bottom-types-8"></script>
     <script src="scripts/outfit-images.js?v=20261110-ai-off-1"></script>
     <script src="scripts/calendar.js?v=20261105-2"></script>
-    <script src="scripts/transitions.js?v=20261110-motion-1"></script>
+    <script src="scripts/transitions.js?v=20261110-notices-1"></script>
     <script src="scripts/character.js?v=20261110-motion-1"></script>
     <script src="scripts/character-picker.js?v=20261109-2"></script>
     <script src="scripts/screen-transitions.js?v=20261110-motion-1"></script>
     <script src="scripts/tour.js?v=20261110-motion-1"></script>
     <script src="scripts/carousel.js?v=20261110-motion-1"></script>
     <script src="scripts/community-moderation.js?v=20261110-1"></script>
-    <script src="scripts/community.js?v=20261110-language-1"></script>
+    <script src="scripts/community.js?v=20261110-admin-2"></script>
     <script src="scripts/mypage.js?v=20261110-motion-1"></script>
     <script src="scripts/codini-chat.js?v=20261110-language-1"></script>
+    <script src="scripts/notices-data.js?v=20261110-1"></script><script src="scripts/notices.js?v=20261110-read-style-3"></script>
+    <script src="scripts/admin.js?v=20261110-1"></script>
     <script src="scripts/init.js?v=20261109-community-1"></script>
 </body>
 

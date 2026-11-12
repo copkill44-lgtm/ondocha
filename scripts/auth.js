@@ -23,6 +23,8 @@ function setAccountUi(user) {
             : (user?.user_metadata?.nickname || user?.email || user?.user_metadata?.name || user?.user_metadata?.full_name || (user ? '내 계정' : ''));
     }
     if (typeof updateGuestUsage === 'function') updateGuestUsage();
+    if (typeof adminAuthChanged === 'function') adminAuthChanged();
+    if (typeof loadSiteNotices === 'function') loadSiteNotices();
     if (typeof communityAuthChanged === 'function') communityAuthChanged();
     if (typeof codiniChatAuthChanged === 'function') codiniChatAuthChanged();
 }

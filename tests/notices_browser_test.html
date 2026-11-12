@@ -1,0 +1,28 @@
+<!doctype html><meta charset="utf-8"><base href="../">
+<main id="app"><nav class="nav"><button id="navHome">Home</button><button id="navCalendar">Calendar</button><button id="navCommunity">Community</button><button id="navNotices">공지사항<span id="noticeUnread" hidden></span></button></nav><div id="sky"></div><div id="recommendCard"></div><div id="calendarCard"></div><section id="noticesCard" hidden><h1 id="noticesTitle" tabindex="-1">공지사항</h1><input id="noticeSearch"><select id="noticeFilter"><option value="all">전체</option><option value="guide">이용 안내</option><option value="update">업데이트</option></select><p id="noticeCount" data-no-translate></p><div id="noticeList" data-no-translate></div><p id="noticeEmpty" hidden>검색 결과가 없어요.</p></section></main><dialog id="myPage"><div class="mypage-links"></div></dialog>
+<script>
+function $(id){return document.getElementById(id)}function motionReductionEnabled(){return true}function renderCalendar(){}function hideCommunity(){document.getElementById('sky').hidden=false}
+</script><script src="scripts/navigation.js"></script><script src="scripts/transitions.js"></script><script src="scripts/notices-data.js"></script><script src="scripts/notices.js"></script><script src="scripts/i18n.js"></script>
+<script>
+(async()=>{try{
+const check=(ok,message)=>{if(!ok)throw Error(message)};
+setUiLanguage('ko');showNotices();
+check(!document.getElementById('noticesCard').hidden&&document.getElementById('sky').hidden,'notice navigation');
+check(document.querySelectorAll('.notice-item').length===ONDOCHA_NOTICES.length,'list');
+check(document.querySelector('.notice-item').dataset.noticeId==='20261110-welcome','pinned first');
+const first=document.querySelector('.notice-item');first.open=true;
+await new Promise(resolve=>setTimeout(resolve,50));
+check(JSON.parse(localStorage.getItem(NOTICE_READ_KEY)).includes(first.dataset.noticeId),'read state saved');
+check(first.querySelector('.notice-new').hidden,'read badge cleared');
+check(first.classList.contains('notice-read'),'read style applied');
+renderNotices();check(document.querySelector('.notice-item').classList.contains('notice-read'),'read style restored');
+document.getElementById('noticeSearch').value='없는 검색 내용';renderNotices();check(!document.getElementById('noticeEmpty').hidden,'empty search');
+document.getElementById('noticeSearch').value='';document.getElementById('noticeFilter').value='update';renderNotices();check(document.querySelectorAll('.notice-item').length===2,'category filter');
+setUiLanguage('en');check(document.querySelector('.notice-item h2').textContent.includes('language'),'English content');
+document.getElementById('noticeSearch').value='clothing';renderNotices();check(document.querySelectorAll('.notice-item').length===1,'English search');
+showHome();check(document.getElementById('noticesCard').hidden&&!document.getElementById('sky').hidden,'home navigation');
+showNotices();showCalendar();check(document.getElementById('noticesCard').hidden&&document.getElementById('calendarCard').classList.contains('visible'),'calendar navigation');
+setUiLanguage('ko');document.getElementById('noticeSearch').value='';document.getElementById('noticeFilter').value='all';showNotices();
+document.body.dataset.test='PASS: list, pinned order, read persistence, search, filter, English, navigation';
+}catch(error){document.body.dataset.test='FAIL: '+error.message}})();
+</script>

@@ -9,11 +9,12 @@ html[lang="en"] #welcome .welcome-box { position: static; transform: none; width
 html[lang="en"] #welcome .welcome-box::before { content: ''; display: block; height: min(300px,35vh); background: url('../assets/images/mascots/onboarding-excited.png') center/contain no-repeat; }
 html[lang="en"] #welcome .welcome-accessible { position: static; width: auto; height: auto; clip-path: none; overflow: visible; margin: 20px 0; font: bold clamp(36px,7vw,64px) Arial,sans-serif; }
 html[lang="en"] #welcome .start-button { position: static; transform: none; display: inline-flex; width: auto; margin: 12px auto; font: bold 18px Arial,sans-serif; }
-html[lang="en"] #onboarding .onboard-picture,html[lang="en"] #onboarding .mobile-copy { display: none !important; }
-html[lang="en"] .english-onboarding { display: flex; width: 100%; height: 100%; box-sizing: border-box; padding: 70px 32px 120px; align-items: center; justify-content: center; flex-direction: column; text-align: center; background: linear-gradient(145deg,#f6faff,#dfecff); }
-html[lang="en"] .english-onboarding img { height: min(260px,35vh); max-width: 80%; object-fit: contain; }
-html[lang="en"] .english-onboarding h2 { font: bold clamp(26px,5vw,46px) Arial,sans-serif; color: #496a96; }
-html[lang="en"] .english-onboarding p { font: 18px/1.7 Arial,sans-serif; color: #7590b2; max-width: 440px; }
+html[lang="en"] #onboarding .onboarding-slide > .onboard-picture,
+html[lang="en"] #onboarding .mobile-copy { display: none !important; }
+html[lang="en"] .english-onboarding { display: block; width: 100%; height: 100%; overflow: hidden; }
+/* Preserve the full artwork and its original proportions in both languages. */
+html[lang="en"] #onboarding .english-onboarding .onboard-full-art { object-fit: contain; transform: none; transform-origin: center; }
+html[lang="en"].onboarding-portrait #onboarding .english-onboarding .onboard-full-art { transform: none; }
 html[lang="en"] .nav { flex-wrap: wrap; }
 html[lang="en"] .nav button { font-family: Arial,sans-serif; }
 html[lang="en"] #categoryModal .choice { min-width: 65px; }

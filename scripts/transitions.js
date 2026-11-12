@@ -13,6 +13,7 @@ function transitionPage(change, direction) {
 }
 showHome = function() {
     transitionPage(() => {
+        if (typeof hideNotices === 'function') hideNotices();
         if (typeof hideCommunity === 'function') hideCommunity();
         $('calendarCard').classList.remove('visible');
         $('recommendCard').style.display = 'block';
@@ -22,6 +23,7 @@ showHome = function() {
 };
 showCalendar = function() {
     transitionPage(() => {
+        if (typeof hideNotices === 'function') hideNotices();
         if (typeof hideCommunity === 'function') hideCommunity();
         $('recommendCard').style.display = 'none';
         $('calendarCard').classList.add('visible');

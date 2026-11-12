@@ -1,0 +1,32 @@
+<!doctype html><meta charset="utf-8"><base href="../">
+<nav class="nav"><button id="navNotices"><span id="noticeUnread" hidden></span></button></nav><div id="sky"></div><div id="recommendCard"></div><div id="calendarCard"></div><section id="noticesCard"><h1 id="noticesTitle"></h1><button id="noticeCreate" hidden></button><input id="noticeSearch"><select id="noticeFilter"><option value="all">All</option></select><p id="noticeCount"></p><p id="noticeServerStatus"></p><div id="noticeList"></div><p id="noticeEmpty"></p></section><span id="myPageAdminBadge" hidden></span>
+<dialog id="noticeComposer"><form id="noticeForm"><h2 id="noticeComposerTitle"></h2><input id="noticeTitleKo" required maxlength="120"><textarea id="noticeBodyKo" required></textarea><input id="noticeTitleEn"><textarea id="noticeBodyEn"></textarea><select id="noticeCategory"><option value="update">Update</option><option value="guide">Guide</option></select><input id="noticePinned" type="checkbox"><p id="noticeFormStatus"></p><button id="noticeSubmit"></button></form></dialog>
+<script>
+let currentAuthUser={id:'admin'},uiLanguage='ko';const toast=()=>{};window.confirm=()=>true;
+const rows=[];let nextId=1;
+const supabaseClient={rpc:async()=>({data:currentAuthUser?.id==='admin',error:null}),from(){
+ const state={op:'read',payload:null,id:null};const chain={select(){return chain},order(){return chain},limit(){return chain},eq(key,value){if(key==='id')state.id=value;return chain},insert(payload){state.op='insert';state.payload=payload;return chain},update(payload){state.op='update';state.payload=payload;return chain},delete(){state.op='delete';return chain},then(resolve){
+  if(state.op==='read')return Promise.resolve(resolve({data:[...rows],error:null}));
+  if(currentAuthUser?.id!=='admin')return Promise.resolve(resolve({data:null,error:{code:'42501'}}));
+  if(state.op==='insert'){const row={...state.payload,id:String(nextId++),published_at:'2026-11-10T12:00:00+09:00'};rows.push(row);return Promise.resolve(resolve({data:[{id:row.id}],error:null}))}
+  const index=rows.findIndex(row=>row.id===state.id);if(index<0)return Promise.resolve(resolve({data:[],error:null}));
+  if(state.op==='update')Object.assign(rows[index],state.payload);else rows.splice(index,1);
+  return Promise.resolve(resolve({data:[{id:state.id}],error:null}));
+ }};return chain;
+}};
+</script><script src="scripts/notices-data.js"></script><script src="scripts/notices.js"></script><script src="scripts/admin.js"></script><script>
+(async()=>{try{
+ const check=(value,label)=>{if(!value)throw Error(label)};
+ await adminAuthChanged();await loadSiteNotices();
+ check(isSiteAdmin()&&!document.getElementById('noticeCreate').hidden,'admin permission');
+ openNoticeComposer();document.getElementById('noticeTitleKo').value='<b>공지</b>';document.getElementById('noticeBodyKo').value='안전한 공지 내용';
+ await saveSiteNotice({preventDefault(){},target:document.getElementById('noticeForm')});
+ check(rows.length===1&&document.querySelector('.notice-item h2').textContent==='<b>공지</b>'&&!document.querySelector('.notice-item h2 b'),'publish safe text');
+ openNoticeComposer(siteNotices[0]);document.getElementById('noticeTitleKo').value='수정한 공지';await saveSiteNotice({preventDefault(){},target:document.getElementById('noticeForm')});check(rows[0].title_ko==='수정한 공지','edit');
+ currentAuthUser={id:'ordinary'};await adminAuthChanged();check(!isSiteAdmin()&&document.getElementById('noticeCreate').hidden,'ordinary user denied');
+ const button=document.createElement('button');await deleteSiteNotice(siteNotices[0],button);check(rows.length===1,'non-admin cannot delete');
+ currentAuthUser={id:'admin'};await adminAuthChanged();await deleteSiteNotice(siteNotices[0],button);check(rows.length===0&&siteNotices.length===0,'delete persists empty list');
+ currentAuthUser=null;await adminAuthChanged();check(!isSiteAdmin()&&document.getElementById('noticeCreate').hidden,'logout removes authority');
+ document.body.dataset.test='PASS: admin lookup, create, edit, safe text, ordinary user denial, delete, logout';
+ }catch(error){document.body.dataset.test='FAIL: '+error.message}})();
+</script>

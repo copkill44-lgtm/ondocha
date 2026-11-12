@@ -51,6 +51,7 @@ function communityError(error) {
     return '연결하지 못했어요. 잠시 후 다시 시도해 주세요.';
 }
 function showCommunity() {
+    if (typeof hideNotices === 'function') hideNotices();
     document.getElementById('sky').hidden=true;
     document.getElementById('recommendCard').style.display='none';
     document.getElementById('calendarCard').classList.remove('visible');
@@ -108,7 +109,7 @@ function renderCommunity() {
         const card=communityElement('article','community-post');card.id='community-post-'+post.id;
         const head=communityElement('div','community-post-head'),author=communityElement('div','community-author');
         author.append(communityElement('span','community-author-badge',String(communityDisplayText(post.author_name)||'코디 친구').slice(0,1)),communityElement('strong','',communityDisplayText(post.author_name)||'코디 친구'));head.append(author);
-        if(currentAuthUser?.id===post.user_id) head.append(communityButton('삭제',()=>deleteCommunityPost(post),'community-text-button'));
+        if(currentAuthUser&&(currentAuthUser.id===post.user_id || (typeof isSiteAdmin==='function'&&isSiteAdmin()))) head.append(communityButton('삭제',()=>deleteCommunityPost(post),'community-text-button'));
         const actions=communityElement('div','community-post-actions'),liked=communityLiked.has(post.id);
         const like=communityButton((liked?'♥ ':'♡ ')+(post.community_likes?.[0]?.count||0),b=>toggleCommunityLike(post,b),'community-heart');
         like.setAttribute('aria-label','하트');like.setAttribute('aria-pressed',String(liked));
@@ -136,10 +137,14 @@ async function toggleCommunityLike(post,button) {
     finally{button.disabled=false;}
 }
 async function deleteCommunityPost(post) {
-    if(currentAuthUser?.id!==post.user_id || !confirm(typeof uiText === 'function' ? uiText('이 코디 게시물을 삭제할까요? 댓글과 하트도 함께 삭제돼요.') : '이 코디 게시물을 삭제할까요? 댓글과 하트도 함께 삭제돼요.')) return;
+    if(!currentAuthUser || (currentAuthUser.id!==post.user_id && !(typeof isSiteAdmin==='function'&&isSiteAdmin())) || !confirm(typeof uiText === 'function' ? uiText('이 코디 게시물을 삭제할까요? 댓글과 하트도 함께 삭제돼요.') : '이 코디 게시물을 삭제할까요? 댓글과 하트도 함께 삭제돼요.')) return;
     try {
-        const {error}=await supabaseClient.from('community_posts').delete().eq('id',post.id).eq('user_id',currentAuthUser.id);
-        if(error) throw error;
+        const owner=currentAuthUser.id;
+        let query=supabaseClient.from('community_posts').delete().eq('id',post.id);
+        if(!(typeof isSiteAdmin==='function'&&isSiteAdmin()))query=query.eq('user_id',owner);
+        const {data,error}=await query.select('id');
+        if(error||!data?.length)throw error||Error('delete denied');
+        if(currentAuthUser?.id!==owner)return;
         communityPosts=communityPosts.filter(p=>p.id!==post.id);renderCommunity();
         if(!communityPosts.length) document.getElementById('communityStatus').textContent='아직 올라온 코디가 없어요.';
         toast('게시물을 삭제했어요.');
@@ -160,11 +165,15 @@ async function renderCommunityComments(post,panel,countButton) {
         data.reverse().forEach(comment=>{
             const row=communityElement('div','community-comment');
             row.append(communityElement('strong','',communityDisplayText(comment.author_name)),communityElement('p','',communityDisplayText(comment.body)));
-            if(currentAuthUser?.id===comment.user_id) row.append(communityButton('삭제',async button=>{
+            if(currentAuthUser&&(currentAuthUser.id===comment.user_id || (typeof isSiteAdmin==='function'&&isSiteAdmin()))) row.append(communityButton('삭제',async button=>{
                 button.disabled=true;
                 try {
-                    const r=await supabaseClient.from('community_comments').delete().eq('id',comment.id).eq('user_id',currentAuthUser.id);
-                    if(r.error) throw r.error;
+                    const owner=currentAuthUser.id;
+                    let query=supabaseClient.from('community_comments').delete().eq('id',comment.id);
+                    if(!(typeof isSiteAdmin==='function'&&isSiteAdmin()))query=query.eq('user_id',owner);
+                    const r=await query.select('id');
+                    if(r.error||!r.data?.length)throw r.error||Error('delete denied');
+                    if(currentAuthUser?.id!==owner)return;
                     post.community_comments=[{count:Math.max(0,(post.community_comments?.[0]?.count||0)-1)}];
                     countButton.textContent='댓글 '+post.community_comments[0].count;
                     await renderCommunityComments(post,panel,countButton);
