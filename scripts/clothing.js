@@ -6,6 +6,12 @@ let customTopCategories = JSON.parse(localStorage.getItem('custom-top-types') ||
 let categoryOptions = [...baseCategories, ...customCategories];
 let topSleeveChoice = '반팔';
 let bottomTypeChoice = '치마';
+let accessoryTypeChoice = '신발';
+const ACCESSORY_SHOES = ['운동화','스니커즈','로퍼','구두','부츠','샌들','슬리퍼'];
+function isAccessoryShoe(name) { return /운동화|스니커즈|로퍼|구두|부츠|샌들|슬리퍼|신발/.test(name); }
+function accessoryShoesSelection() { return selectedClothingValues('accessoryCategory').filter(isAccessoryShoe).join(' · '); }
+function outfitAccessorySelectionText() { return selectedClothingValues('accessoryCategory').filter(name => !isAccessoryShoe(name)).join(' · ') || '없음'; }
+
 
 function updateFeelFromSlider() {
     let values = ['매우 추워요', '쌀쌀해요', '괜찮아요', '따뜻해요', '더워요'],
@@ -35,6 +41,7 @@ function outerwearSelection() {
 function normalizeAccessorySelection(input) {
     const choices = [...document.querySelectorAll('input[name="accessoryCategory"]')];
     const exclusive = value => value === '없음' || value === '액세서리 추천받기';
+    if (input.checked && isAccessoryShoe(input.value)) choices.forEach(x => { if (x !== input && isAccessoryShoe(x.value)) x.checked = false; });
     if (input.checked) choices.forEach(x => {
         if (x !== input && (exclusive(input.value) || exclusive(x.value))) x.checked = false;
     });
@@ -177,8 +184,33 @@ function renderCategoryChoices(selectValue, selectedGroup) {
         bottomTabs,
         makeGroup('옷 종류', bottomGroups[bottomTypeChoice], 'category', keep)
     );
-    let accessories = ['액세서리 추천받기', '없음', '가방', '모자', '스카프', '목걸이', '귀걸이', '시계', ...customAccessoryCategories];
-    accessoryBox.replaceChildren(...accessories.map(name => makeChoice(name, 'accessoryCategory', accessoryKeep)))
+    const groups = {'신발':[...ACCESSORY_SHOES], '가방':['가방'], '모자':['모자'], '목도리':['스카프'], '주얼리':['목걸이','귀걸이','시계']};
+    customAccessoryCategories.forEach(name => {
+        const kind = isAccessoryShoe(name) ? '신발' : /가방/.test(name) ? '가방' : /모자/.test(name) ? '모자' : /스카프|목도리/.test(name) ? '목도리' : /목걸이|귀걸이|시계|반지|팔찌/.test(name) ? '주얼리' : '그 외';
+        (groups[kind] ||= []).push(name);
+    });
+    const tabs = document.createElement('div');
+    tabs.className = 'category-subgroup sleeve-selection';
+    const title = document.createElement('strong');
+    title.className = 'category-subgroup-title'; title.textContent = '액세서리 분류'; tabs.append(title);
+    const panels = Object.entries(groups).map(([kind,names]) => {
+        const panel = makeGroup(kind + ' 종류', [...new Set(names)], 'accessoryCategory', accessoryKeep);
+        panel.hidden = kind !== accessoryTypeChoice;
+        return panel;
+    });
+    Object.keys(groups).forEach((kind,i) => {
+        const button = document.createElement('button');
+        button.type = 'button'; button.className = 'sleeve-choice'; button.textContent = kind;
+        button.setAttribute('aria-pressed', String(kind === accessoryTypeChoice));
+        button.onclick = () => {
+            accessoryTypeChoice = kind;
+            tabs.querySelectorAll('button').forEach(tab => tab.setAttribute('aria-pressed', String(tab === button)));
+            panels.forEach((panel,j) => panel.hidden = i !== j);
+        };
+        tabs.append(button);
+    });
+    accessoryBox.replaceChildren(makeChoice('액세서리 추천받기','accessoryCategory',accessoryKeep), makeChoice('없음','accessoryCategory',accessoryKeep), tabs, ...panels);
+
 }
 
 function removeCategory(name, group = 'category') {
@@ -209,7 +241,7 @@ function updateCustomClothingSubtypes() {
         options = {
             topCategory: ['티셔츠', '셔츠', '니트', '맨투맨', '후드티', '민소매', '겉옷'],
             category: ['반바지', '긴바지', '치마'],
-            accessoryCategory: ['가방', '모자', '스카프', '목걸이', '귀걸이', '시계']
+            accessoryCategory: ['가방', '모자', '스카프', '목걸이', '귀걸이', '시계', '신발']
         },
         select = document.getElementById('customClothingSubtype');
     select.replaceChildren(...options[group].map(name => {
@@ -400,6 +432,16 @@ function categoryPreferenceText(group) {
 
 function clothingIconMarkup(name, color = "#f7f5ef") {
     if (name.endsWith('추천받기')) return '';
+    if (isAccessoryShoe(name)) {
+        const shoeFrames = {
+            '운동화': '70 0 250 185', '스니커즈': '380 0 240 185',
+            '로퍼': '675 0 245 185', '구두': '980 0 240 185',
+            '부츠': '1290 0 215 185', '샌들': '1570 0 245 185',
+            '슬리퍼': '1865 0 250 185'
+        };
+        const type = Object.keys(shoeFrames).find(kind => name.includes(kind)) || '운동화';
+        return '<svg viewBox="0 0 120 120" aria-hidden="true"><svg x="5" y="5" width="110" height="110" viewBox="' + shoeFrames[type] + '" preserveAspectRatio="xMidYMid meet" style="overflow:hidden"><image href="assets/images/icon/신발 아이콘.png?v=20261112-shoes-2" width="2172" height="185"/></svg></svg>';
+    }
     const accessoryIcons = { '가방': 'accessory-bag', '모자': 'accessory-hat', '스카프': 'accessory-scarf', '목걸이': 'accessory-necklace', '귀걸이': 'accessory-earrings', '시계': 'accessory-watch' };
     const accessoryIcon = Object.keys(accessoryIcons).find(type => name.includes(type));
     if (accessoryIcon) {

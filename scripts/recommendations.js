@@ -96,6 +96,7 @@ function generateRecommendations(aiRecommendations) {
         })
     }
     looks.forEach((look, index) => {
+        if (input.shoes) look.shoes = [input.shoes, '👟'];
         look.wearColor = outfitWearColor(look, index, true);
         look.outerwear = recommendationOuterwear(input, index);
         if (accessoryRaw !== '액세서리 추천받기') look.accessory = accessoryChoice;

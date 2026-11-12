@@ -5,7 +5,7 @@ function recommendationInput() {
     const chosen = name => document.querySelector('input[name="' + name + '"]:checked')?.value || '';
     return {
         feel: chosen('feel'), top: chosen('topCategory') || '상의 추천받기', bottom: chosen('category') || '하의 추천받기',
-        outerwear: outerwearSelection(), accessory: accessorySelectionText(),
+        outerwear: outerwearSelection(), accessory: outfitAccessorySelectionText(), shoes: accessoryShoesSelection(),
         temperature: Number.isFinite(weatherTemp) ? weatherTemp : null,
         apparent: Number.isFinite(weatherApparentTemp) ? weatherApparentTemp : null,
         place: getFieldValue('place').slice(0,80), occasion: getFieldValue('occasion').slice(0,80), time: getFieldValue('time').slice(0,40),

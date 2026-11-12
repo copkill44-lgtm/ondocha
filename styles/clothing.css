@@ -143,3 +143,6 @@
 #categoryModal .sleeve-choice { border: 1px solid #dce7f5; border-radius: 12px; background: white; color: #6885aa; padding: 10px 24px; font: inherit; cursor: pointer; }
 #categoryModal .sleeve-choice[aria-pressed="true"] { background: #e8f1ff; border-color: #769bd0; color: #426fa9; }
 #categoryModal .sleeve-choice:focus-visible { outline: 3px solid #769bd0; outline-offset: 2px; }
+#categoryModal #accessoryCategoryList > .category-subgroup { grid-column: 1 / -1; }
+#categoryModal #accessoryCategoryList > .category-subgroup[hidden] { display: none; }
+#categoryModal #accessoryCategoryList .sleeve-choice { padding: 9px 16px; }

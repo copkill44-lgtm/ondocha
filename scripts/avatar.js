@@ -7,13 +7,25 @@ function characterImageLayers(config = {}) {
     return { body: root + (bodies[config.skin] || bodies.default), face: root + (faces[config.eyes] || faces.default), hair: root + (hair[config.hair] || hair.open) + '?v=ear-alignment-3' };
 }
 
-// Each extracted garment uses a fixed, body-aligned placement in avatar coordinates.
+// Garments aligned on the full 896 x 1792 body canvas retain their original placement.
 const WEAR_LAYERS = {
-    'tee-short': { file: 'tee-short.png', x: 183, y: 790, width: 515, height: 416 },
-    'tee-long': { file: 'tee-long.png', x: 145, y: 775, width: 590, height: 440 },
+    'tee-short': { file: 'tee-short.png?v=20261112-body-aligned-1', x: 0, y: 0, width: 896, height: 1792 },
+    'tee-long': { file: 'tee-long.png?v=20261112-body-aligned-1', x: 0, y: 0, width: 896, height: 1792 },
     'shirt-short': { file: 'shirt-short.png?v=20261110-aligned-3', x: 0, y: 0, width: 896, height: 1792 },
     'shirt-long': { file: 'shirt-long.png?v=20261110-aligned-2', x: 0, y: -33, width: 896, height: 1870 }
 };
+// Scale the supplied trouser artwork around the character waist and ankles.
+const BOTTOM_WEAR_LAYERS = {
+    basic: { file: '일반 바지.png?v=20261112-pants-1', x: 112, y: 310, width: 672, height: 1344 },
+    cargo: { file: '카고바지.png?v=20261112-pants-1', x: 112, y: 310, width: 672, height: 1344 }
+};
+function outfitBottomWearLayer(name) {
+    name = String(name || '');
+    if (/반바지|쇼츠|버뮤다|짧은|치마|스커트/.test(name)) return null;
+    if (/카고/.test(name)) return BOTTOM_WEAR_LAYERS.cargo;
+    if (/기본 바지|일반\s*바지|긴바지/.test(name)) return BOTTOM_WEAR_LAYERS.basic;
+    return null;
+}
 let wearFilterSequence = 0;
 function outfitWearLayer(name) {
     name = String(name || '');
@@ -49,7 +61,8 @@ function renderOutfitAvatar(outfit, index, config = characterConfig) {
     const skirt = /치마|스커트/.test(lowerName) && !/치마바지/.test(lowerName);
     const wear = outfit.onepiece ? null : outfitWearLayer(outfit.top?.[0]);
     const top = wear ? outfitWearMarkup(wear, outfitWearColor(outfit, index)) : '<path d="M326 801L364 788Q440 875 511 789L555 805L625 984L577 1015L550 929L575 1193Q440 1210 280 1193L305 929L258 1015L211 984Z" fill="' + color + '" stroke="#ffffffa6" stroke-width="7" stroke-linejoin="round"/>';
-    const bottom = outfit.onepiece || skirt
+    const bottomWear = outfit.onepiece ? null : outfitBottomWearLayer(lowerName);
+    const bottom = bottomWear ? outfitWearMarkup(bottomWear, lowerColor) : outfit.onepiece || skirt
         ? '<path d="M280 1176H575L628 ' + (short ? 1350 : 1460) + 'Q440 ' + (short ? 1380 : 1490) + ' 238 ' + (short ? 1350 : 1460) + 'Z" fill="' + (outfit.onepiece ? color : lowerColor) + '" stroke="#ffffffa6" stroke-width="7"/>'
         : '<path d="M280 1185H585L582 ' + (short ? 1320 : 1520) + 'L456 ' + (short ? 1320 : 1520) + 'L442 1265L429 ' + (short ? 1320 : 1520) + 'H292Z" fill="' + lowerColor + '" stroke="#ffffffa6" stroke-width="7" stroke-linejoin="round"/>';
     return '<svg viewBox="0 0 896 1792" role="img" aria-label="내 캐릭터의 추천 코디"><image href="' + layers.body + '" width="896" height="1792"/>' + bottom + top + '<image href="' + layers.face + '" width="896" height="1792"/><image href="' + layers.hair + '" width="896" height="1792"/></svg>';
