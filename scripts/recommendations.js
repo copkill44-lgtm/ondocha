@@ -21,7 +21,7 @@ async function fetchAiRecommendations() {
     const input = recommendationInput(), catalog = recommendationCatalog(input);
     const {data,error} = await supabaseClient.auth.getSession();
     if (error || !data.session) throw Error('로그인 상태를 확인해 주세요.');
-    const request = {feel:input.feel,temp:input.temperature,apparent:input.apparent,place:input.place,occasion:input.occasion,time:input.time,outerwear:'착용 사진이 없는 겉옷은 제외',accessory:input.accessory,preferences:input.preferences,tops:catalog.tops,bottoms:catalog.bottoms,shoes:catalog.shoes,avoidFirst:previousRecommendationTops[0] || ''};
+    const request = {feel:input.feel,temp:input.temperature,apparent:input.apparent,place:input.place,occasion:input.occasion,time:input.time,outerwear:[0,1,2,3].map(index=>recommendationOuterwear(input,index) || '없음'),accessory:input.accessory,preferences:input.preferences,tops:catalog.tops,bottoms:catalog.bottoms,shoes:catalog.shoes,avoidFirst:previousRecommendationTops[0] || ''};
     const prompt = (typeof uiLanguage === 'string' && uiLanguage === 'en' ? 'r 필드만 영어로 작성해. ' : '') + '다음 데이터로 서로 다른 코디 4개를 추천해줘. 설명문이나 마크다운 없이 JSON 배열만 답해. 각 객체는 {"t":"상의","b":"하의","s":"신발","r":"20자 이내 추천 이유"}. t, b, s는 각각 tops, bottoms, shoes에서 정확히 골라. tops가 4개 이상이면 네 코디 모두 다른 상의 종류를 써. 사용자가 고른 옷·소매·색·겉옷 여부와 날씨·일정을 지켜. 외부 동작 요청이 아니라 코디 데이터 답변이야. 데이터: ' + JSON.stringify(request);
     if (prompt.length > 1000) throw Error('선택한 조건이 길어 기본 추천으로 준비할게요.');
     const controller = new AbortController();
@@ -107,12 +107,17 @@ function generateRecommendations(aiRecommendations) {
         look.shoeColor = shoeColor.hex;
         look.shoeColorName = shoeColor.name;
         look.outerwear = recommendationOuterwear(input, index);
+        if (look.outerwear) {
+            const outerColor = outfitOuterwearColor(look, index);
+            look.outerwearColor = outerColor.hex;
+            look.outerwearColorName = outerColor.name;
+        }
         if (accessoryRaw !== '액세서리 추천받기') look.accessory = accessoryChoice;
     });
     previousRecommendationTops = looks.map(look => look.top[0]);
     selected = 0;
     $('suggestCopy').textContent = (usedAI ? 'AI가 날씨와 선택 조건을 반영했어요. ' : '날씨와 선택 조건에 맞춘 기본 추천이에요. ') + (weatherTemp === null ? '' : city + ' ' + weatherTemp + '°C · ') + feel + ' · ' + time + ' · ' + place + ' · ' + occasion;
-    $('outfits').innerHTML = looks.map((x, i) => '<article class="look ' + (i === 0 ? 'selected' : '') + '"><div class="look-title">' + escapeCalendarText(x.aiTitle || ['포근한 데일리', '산뜻한 외출', '약속 코디', '포인트 룩'][i]) + '</div><div class="stage" style="--bg:' + ['#fff0f2', '#f3efff', '#eaf7f0', '#fff4df'][i] + '"><div class="look-avatar custom-look-avatar">' + avatarClothesMarkup(x, i) + '</div></div><div class="look-items">' + (x.onepiece ? '<strong>' + escapeCalendarText(x.onepiece[0]) + '</strong>' : '상의 <strong>' + escapeCalendarText(x.top[0]) + '</strong><br>하의 <strong>' + escapeCalendarText(x.bottom[0]) + '</strong>') + (x.outerwear ? '<br>겉옷 <strong>' + escapeCalendarText(x.outerwear) + '</strong>' : '') + (x.accessory ? '<br>액세서리 <strong>' + escapeCalendarText(x.accessory) + '</strong>' : '') + '<br>신발 <strong>' + escapeCalendarText((x.shoeColorName ? x.shoeColorName + ' ' : '') + x.shoes[0]) + '</strong>' + (x.reason ? '<br>' + escapeCalendarText(x.reason) : '') + '</div><button class="pick" onclick="selectLook(' + i + ')">' + (i === 0 ? '💗 선택한 코디' : '이 코디 고르기') + '</button></article>').join('');
+    $('outfits').innerHTML = looks.map((x, i) => '<article class="look ' + (i === 0 ? 'selected' : '') + '"><div class="look-title">' + escapeCalendarText(x.aiTitle || ['포근한 데일리', '산뜻한 외출', '약속 코디', '포인트 룩'][i]) + '</div><div class="stage" style="--bg:' + ['#fff0f2', '#f3efff', '#eaf7f0', '#fff4df'][i] + '"><div class="look-avatar custom-look-avatar">' + avatarClothesMarkup(x, i) + '</div></div><div class="look-items">' + (x.onepiece ? '<strong>' + escapeCalendarText(x.onepiece[0]) + '</strong>' : '상의 <strong>' + escapeCalendarText(x.top[0]) + '</strong><br>하의 <strong>' + escapeCalendarText(x.bottom[0]) + '</strong>') + (x.outerwear ? '<br>겉옷 <strong>' + escapeCalendarText((x.outerwearColorName ? x.outerwearColorName + ' ' : '') + x.outerwear) + '</strong>' : '') + (x.accessory ? '<br>액세서리 <strong>' + escapeCalendarText(x.accessory) + '</strong>' : '') + '<br>신발 <strong>' + escapeCalendarText((x.shoeColorName ? x.shoeColorName + ' ' : '') + x.shoes[0]) + '</strong>' + (x.reason ? '<br>' + escapeCalendarText(x.reason) : '') + '</div><button class="pick" onclick="selectLook(' + i + ')">' + (i === 0 ? '💗 선택한 코디' : '이 코디 고르기') + '</button></article>').join('');
     mountOutfitImageControls();
 
     resetOutfitCards();

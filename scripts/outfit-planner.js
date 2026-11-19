@@ -27,8 +27,11 @@ function recommendationCatalog(input) {
     const shoes = OUTFIT_SHOES.includes(selectedShoe) ? [selectedShoe] : OUTFIT_SHOES.filter(name => name !== '슬리퍼' || hot && !formal);
     return { tops, bottoms, shoes, cold, hot, comfort };
 }
-function recommendationOuterwear() {
-    // No outerwear has a matching character wear photograph yet.
+function recommendationOuterwear(input, index) {
+    if (input.outerwear) return input.outerwear === '후드집업' && index % 2 === 0 ? '후드집업' : '';
+    const {comfort} = recommendationCatalog(input);
+    if (comfort < 15 && index % 2 === 0) return '후드집업';
+    if (comfort >= 15 && comfort < 20 && index === 0) return '후드집업';
     return '';
 }
 function shuffledChoices(items) {

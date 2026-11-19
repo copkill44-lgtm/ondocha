@@ -77,6 +77,7 @@ function outfitShoeWearLayer(name) {
     if (/운동화/.test(name)) return '운동화.png?v=20261119-shoes-1';
     return null;
 }
+const OUTFIT_LOWER_COLORS = ['#7388ac', '#8e789e', '#799984', '#a77f63'];
 function outfitShoeColor(outfit, index, usePreferences = false) {
     const palette = shoeColorPalette;
     if (isClothingHex(outfit.shoeColor)) return {name:outfit.shoeColorName || '직접 고른 색상',hex:outfit.shoeColor};
@@ -88,17 +89,35 @@ function outfitShoeColor(outfit, index, usePreferences = false) {
     const brightness = .2126*r + .7152*g + .0722*b;
     const warm = r > b + 20 && r > g;
     const denim = /데님|청바지/.test(outfit.bottom?.[0] || '');
-    const name = denim ? (warm && brightness > 140 ? '탄색' : '화이트') : brightness < 105 ? '화이트' : warm ? '크림' : '블랙';
+    const lightNeutral = brightness >= 205 && Math.max(r,g,b) - Math.min(r,g,b) <= 65;
+    const lower = OUTFIT_LOWER_COLORS[Math.abs(Number(index) || 0) % OUTFIT_LOWER_COLORS.length];
+    const [lr,lg,lb] = [1,3,5].map(i=>parseInt(lower.slice(i,i+2),16));
+    const blueBottom = denim ? !['화이트','블랙'].includes(outfit.denimColor) : lb > lr + 12 && lb > lg;
+    const name = lightNeutral && blueBottom ? '탄색' : denim ? (warm && brightness > 140 ? '탄색' : '화이트') : brightness < 105 ? '화이트' : warm ? '크림' : '블랙';
     return {name,hex:palette[name]};
 }
 function outfitShoeMarkup(file, color) {
     // Multiplication retains the original photograph's shading and transparency.
     return outfitWearMarkup({file,x:0,y:0,width:896,height:1792},color);
 }
+function outfitOuterwearColor(outfit, index) {
+    if (isClothingHex(outfit.outerwearColor)) return {name:outfit.outerwearColorName || '겉옷',hex:outfit.outerwearColor};
+    const top = outfitWearColor(outfit, index);
+    const [r,g,b] = [1,3,5].map(i=>parseInt(top.slice(i,i+2),16));
+    const brightness = .2126*r + .7152*g + .0722*b;
+    const choices = brightness >= 170
+        ? [{name:'네이비',hex:'#354564'},{name:'차콜',hex:'#50545c'}]
+        : [{name:'그레이',hex:'#a4a6ad'},{name:'토프',hex:'#b5a48e'}];
+    return choices[Math.floor(Math.abs(Number(index) || 0) / 2) % choices.length];
+}
+function outfitOuterwearMarkup(name, color = '#a4a6ad') {
+    if (name !== '후드집업') return '';
+    return outfitWearMarkup({file:'후드집업.png?v=20261119-1',x:0,y:0,width:896,height:1792},color);
+}
 function renderOutfitAvatar(outfit, index, config = characterConfig) {
     const layers = characterImageLayers(config);
     const palette = ['#e8a9b2', '#9cb7de', '#93c4a5', '#d4a46d'];
-    const lowerPalette = ['#7388ac', '#8e789e', '#799984', '#a77f63'];
+    const lowerPalette = OUTFIT_LOWER_COLORS;
     const variant = Math.abs(Number(index) || 0) % 4;
     const color = palette[variant], lowerColor = lowerPalette[variant];
     const lowerName = String(outfit.bottom?.[0] || '');
@@ -112,5 +131,5 @@ function renderOutfitAvatar(outfit, index, config = characterConfig) {
     const bottom = bottomWear ? (bottomWear.denim ? outfitDenimMarkup(bottomWear, outfit.denimColor || '파랑') : outfitWearMarkup(bottomWear, lowerColor)) : outfit.onepiece || skirt
         ? '<path d="M280 1176H575L628 ' + (short ? 1350 : 1460) + 'Q440 ' + (short ? 1380 : 1490) + ' 238 ' + (short ? 1350 : 1460) + 'Z" fill="' + (outfit.onepiece ? color : lowerColor) + '" stroke="#ffffffa6" stroke-width="7"/>'
         : '<path d="M280 1185H585L582 ' + (short ? 1320 : 1520) + 'L456 ' + (short ? 1320 : 1520) + 'L442 1265L429 ' + (short ? 1320 : 1520) + 'H292Z" fill="' + lowerColor + '" stroke="#ffffffa6" stroke-width="7" stroke-linejoin="round"/>';
-    return '<svg viewBox="0 0 896 1792" role="img" aria-label="내 캐릭터의 추천 코디"><image href="' + layers.body + '" width="896" height="1792"/>' + shoes + bottom + top + '<image href="' + layers.face + '" width="896" height="1792"/><image href="' + layers.hair + '" width="896" height="1792"/></svg>';
+    return '<svg viewBox="0 0 896 1792" role="img" aria-label="내 캐릭터의 추천 코디"><image href="' + layers.body + '" width="896" height="1792"/>' + shoes + bottom + top + outfitOuterwearMarkup(outfit.outerwear, outfitOuterwearColor(outfit, index).hex) + '<image href="' + layers.face + '" width="896" height="1792"/><image href="' + layers.hair + '" width="896" height="1792"/></svg>';
 }
