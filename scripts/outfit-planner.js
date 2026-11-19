@@ -32,10 +32,11 @@ function recommendationCatalog(input) {
     return { tops, bottoms, shoes, cold, hot, comfort };
 }
 function recommendationOuterwear(input, index) {
-    if (input.outerwear) return input.outerwear === '후드집업' && index % 2 === 0 ? '후드집업' : '';
+    if (input.outerwear) return ['후드집업', '바람막이'].includes(input.outerwear) && index % 2 === 0 ? input.outerwear : '';
     const {comfort} = recommendationCatalog(input);
-    if (comfort < 15 && index % 2 === 0) return '후드집업';
-    if (comfort >= 15 && comfort < 20 && index === 0) return '후드집업';
+    if (comfort < 15 && index === 0) return '후드집업';
+    if (comfort < 15 && index === 2) return '바람막이';
+    if (comfort >= 15 && comfort < 20 && index === 0) return '바람막이';
     return '';
 }
 function shuffledChoices(items) {

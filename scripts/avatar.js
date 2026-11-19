@@ -115,8 +115,12 @@ function outfitOuterwearColor(outfit, index) {
     return choices[Math.floor(Math.abs(Number(index) || 0) / 2) % choices.length];
 }
 function outfitOuterwearMarkup(name, color = '#a4a6ad') {
-    if (name !== '후드집업') return '';
-    return outfitWearMarkup({file:'후드집업.png?v=20261119-1',x:0,y:0,width:896,height:1792},color);
+    const images = {
+        '후드집업': 'assets/images/wear/후드집업.png?v=20261119-1',
+        '바람막이': 'assets/images/characters/' + encodeURIComponent('바람막이.png')
+    };
+    if (!Object.prototype.hasOwnProperty.call(images, name)) return '';
+    return outfitWearMarkup({src:images[name],x:0,y:0,width:896,height:1792},color);
 }
 function renderOutfitAvatar(outfit, index, config = characterConfig) {
     const layers = characterImageLayers(config);
