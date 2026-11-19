@@ -77,6 +77,24 @@ function outfitShoeWearLayer(name) {
     if (/운동화/.test(name)) return '운동화.png?v=20261119-shoes-1';
     return null;
 }
+function outfitShoeColor(outfit, index, usePreferences = false) {
+    const palette = shoeColorPalette;
+    if (isClothingHex(outfit.shoeColor)) return {name:outfit.shoeColorName || '직접 고른 색상',hex:outfit.shoeColor};
+    const preference = usePreferences ? clothingPreferences.shoes?.color : null;
+    if (isClothingHex(preference)) return {name:'직접 고른 색상',hex:preference};
+    if (Object.hasOwn(palette, preference)) return {name:preference,hex:palette[preference]};
+    const top = outfitWearColor(outfit, index);
+    const [r,g,b] = [1,3,5].map(i=>parseInt(top.slice(i,i+2),16));
+    const brightness = .2126*r + .7152*g + .0722*b;
+    const warm = r > b + 20 && r > g;
+    const denim = /데님|청바지/.test(outfit.bottom?.[0] || '');
+    const name = denim ? (warm && brightness > 140 ? '탄색' : '화이트') : brightness < 105 ? '화이트' : warm ? '크림' : '블랙';
+    return {name,hex:palette[name]};
+}
+function outfitShoeMarkup(file, color) {
+    // Multiplication retains the original photograph's shading and transparency.
+    return outfitWearMarkup({file,x:0,y:0,width:896,height:1792},color);
+}
 function renderOutfitAvatar(outfit, index, config = characterConfig) {
     const layers = characterImageLayers(config);
     const palette = ['#e8a9b2', '#9cb7de', '#93c4a5', '#d4a46d'];
@@ -89,7 +107,7 @@ function renderOutfitAvatar(outfit, index, config = characterConfig) {
     const wear = outfit.onepiece ? null : outfitWearLayer(outfit.top?.[0]);
     const top = wear ? outfitWearMarkup(wear, outfitWearColor(outfit, index)) : '<path d="M326 801L364 788Q440 875 511 789L555 805L625 984L577 1015L550 929L575 1193Q440 1210 280 1193L305 929L258 1015L211 984Z" fill="' + color + '" stroke="#ffffffa6" stroke-width="7" stroke-linejoin="round"/>';
     const shoeLayer = outfitShoeWearLayer(outfit.shoes?.[0]);
-    const shoes = shoeLayer ? '<image href="assets/images/wear/' + shoeLayer + '" x="0" y="0" width="896" height="1792"/>' : '';
+    const shoes = shoeLayer ? outfitShoeMarkup(shoeLayer, outfitShoeColor(outfit, index).hex) : '';
     const bottomWear = outfit.onepiece ? null : outfitBottomWearLayer(lowerName);
     const bottom = bottomWear ? (bottomWear.denim ? outfitDenimMarkup(bottomWear, outfit.denimColor || '파랑') : outfitWearMarkup(bottomWear, lowerColor)) : outfit.onepiece || skirt
         ? '<path d="M280 1176H575L628 ' + (short ? 1350 : 1460) + 'Q440 ' + (short ? 1380 : 1490) + ' 238 ' + (short ? 1350 : 1460) + 'Z" fill="' + (outfit.onepiece ? color : lowerColor) + '" stroke="#ffffffa6" stroke-width="7"/>'

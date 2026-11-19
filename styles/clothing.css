@@ -146,3 +146,15 @@
 #categoryModal #accessoryCategoryList > .category-subgroup { grid-column: 1 / -1; }
 #categoryModal #accessoryCategoryList > .category-subgroup[hidden] { display: none; }
 #categoryModal #accessoryCategoryList .sleeve-choice { padding: 9px 16px; }
+
+/* Shoe swatches follow the clothing editor's soft blue selection style. */
+#categoryModal #shoeColorSettings[hidden] { display: none; }
+#categoryModal #shoeColorSettings { display: block; margin-top: 12px; }
+#categoryModal .shoe-color-options { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 8px; }
+#categoryModal .shoe-color-options label { position: relative; display: flex; flex-direction: column; align-items: center; gap: 7px; min-width: 46px; padding: 7px 5px; border: 1px solid transparent; border-radius: 12px; color: #6a7f9e; font-size: 11px; cursor: pointer; }
+#categoryModal .shoe-color-options input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+#categoryModal .shoe-color-choice i { display: block; width: 25px; height: 25px; border: 2px solid #e8edf4; border-radius: 50%; background: var(--swatch); box-shadow: 0 2px 5px #415a7810; }
+#categoryModal .shoe-color-options label:has(input:checked) { background: #edf4ff; border-color: #bdd0ea; color: #426fa9; }
+#categoryModal .shoe-color-options label:has(input:focus-visible) { outline: 2px solid #769bd0; outline-offset: 2px; }
+#categoryModal .shoe-color-options .shoe-color-auto { align-self: center; padding: 10px 12px; border-color: #e4eaf3; background: #fafbfd; }
+#categoryModal .shoe-color-custom i { background: conic-gradient(#f3a6b8,#e7cb81,#98cbb2,#99b9e3,#c7abe4,#f3a6b8); }

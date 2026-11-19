@@ -316,7 +316,18 @@ const clothingColorPalette = {"빨강": "#ef4444", "주황": "#f97316", "노랑"
 const accessoryColorPalette={"골드":"#d4af37","실버":"#c0c0c0","로즈골드":"#b76e79","브론즈":"#cd7f32","진주색":"#f4f0e5","검정":"#202024","브라운":"#8b5e3c","베이지":"#d4b896","화이트":"#ffffff"};
 const shirtColorPalette = {'흰색':'#ffffff','크림':'#fff3d6','네이비':'#354564','그레이':'#9ca3af'};
 function isShirtClothing(name) { return /셔츠|블라우스/.test(name || '') && !/티셔츠/.test(name || ''); }
+const shoeColorPalette = {'블랙':'#303238','화이트':'#ffffff','탄색':'#c49a61','크림':'#f4e8ce','그레이':'#90959d','네이비':'#354564','브라운':'#8b5e3c'};
+function syncShoeColorControls(group) {
+ const panel = $('shoeColorSettings');
+ if (!panel) return;
+ panel.hidden = group !== 'accessoryCategory' || !selectedClothingValues('accessoryCategory').some(isAccessoryShoe);
+ const color = clothingPreferences.shoes?.color || 'auto';
+ const choice = isClothingHex(color) ? 'custom' : Object.hasOwn(shoeColorPalette, color) ? color : 'auto';
+ panel.querySelectorAll('input[name="shoeColor"]').forEach(input => input.checked = input.value === choice);
+ if (isClothingHex(color)) $('shoeCustomColor').value = color;
+}
 function renderClothingColorOptions(group){
+ syncShoeColorControls(group);
  const container=document.querySelector('#categoryModal .color-options');
  const denim = group === 'category' && /데님|청바지/.test(selectedClothingValues('category')[0] || '');
  const palette=denim ? {'화이트':'#ffffff','블랙':'#202024','파랑':'#9cb7de'} : group==='accessoryCategory'?accessoryColorPalette:{...clothingColorPalette,...shirtColorPalette};
@@ -447,8 +458,6 @@ function categoryPreferenceText(group) {
 function clothingIconMarkup(name, color = "#f7f5ef") {
     if (name.endsWith('추천받기')) return '';
     if (isAccessoryShoe(name)) {
-        const shoeImage = /스니커즈|스니커츠/.test(name) ? '스니커즈.png' : /슬리퍼/.test(name) ? '슬리퍼.png' : /운동화/.test(name) ? '운동화.png' : '';
-        if (shoeImage) return '<svg viewBox="210 1500 450 290" aria-hidden="true"><image href="assets/images/wear/' + shoeImage + '?v=20261119-shoes-1" width="896" height="1792"/></svg>';
         const shoeFrames = {
             '운동화': '70 0 250 185', '스니커즈': '380 0 240 185',
             '로퍼': '675 0 245 185', '구두': '980 0 240 185',
@@ -604,8 +613,20 @@ function closeCategoryModal() {
     modal.setAttribute("aria-hidden", "true");
     document.body.style.overflow = ""
 }
+document.getElementById("categoryModal").addEventListener("click", event => {
+    if (event.target.matches('input[name="shoeColor"][value="custom"]')) $('shoeCustomColor').click();
+});
 document.getElementById("categoryModal").addEventListener("change", event => {
     let group = document.getElementById("categoryModal").dataset.group;
+    if (['shoeColor', 'shoeCustomColor'].includes(event.target.name)) {
+        const value = event.target.name === 'shoeCustomColor' || event.target.value === 'custom' ? $('shoeCustomColor').value : event.target.value;
+        clothingPreferences.shoes = {color:value};
+        localStorage.setItem('clothing-preferences', JSON.stringify(clothingPreferences));
+        syncShoeColorControls(group);
+        updateCategoryPreview();
+        return;
+    }
+
     if (event.target.matches('input[name="clothingPattern"],input[name="clothingColor"]')) {
         let pref = clothingPreferences[group] || {};
         if (event.target.name === "clothingPattern") pref.pattern = event.target.value;
@@ -621,7 +642,10 @@ document.getElementById("categoryModal").addEventListener("change", event => {
         renderClothingColorOptions(event.target.name);
         syncClothingColorWheel();
     }
-    if (event.target.name === 'accessoryCategory') normalizeAccessorySelection(event.target);
+    if (event.target.name === 'accessoryCategory') {
+        normalizeAccessorySelection(event.target);
+        syncShoeColorControls(group);
+    }
     if (event.target.name === 'outerCategory' && event.target.checked) {
         document.querySelectorAll('input[name="outerCategory"]').forEach(input => {
             if (input !== event.target) input.checked = false;
