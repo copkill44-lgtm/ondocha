@@ -206,6 +206,13 @@ function completeCharacterSetup() {
         const choice = document.querySelector('input[name="category"]:checked');
         if (choice) document.getElementById('categoryValue').textContent = choice.value;
     }
+    // Discard incompatible current results when changing recommendation gender.
+    if (characterConfig.gender === 'male' && looks.some(look => isSkirtBottom(look.onepiece?.[0] || look.bottom?.[0]))) {
+        looks = [];
+        selected = 0;
+        document.getElementById('outfits').replaceChildren();
+        document.getElementById('suggest').classList.remove('show');
+    }
     localStorage.setItem('codini-character', JSON.stringify(characterConfig));
     accountNeedsCharacterSetup = false;
     if (characterEditing) {

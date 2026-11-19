@@ -283,6 +283,10 @@ STEP 1 · 나만의 캐릭터|STEP 1 · Your character
 브라운|Brown
 베이지|Beige
 화이트|White
+흰색|White
+크림|Cream
+네이비|Navy
+그레이|Gray
 매우 추워요|Very cold
 쌀쌀해요|Chilly
 괜찮아요|Comfortable

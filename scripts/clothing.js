@@ -8,7 +8,7 @@ let topSleeveChoice = '반팔';
 let bottomTypeChoice = '치마';
 let accessoryTypeChoice = '신발';
 const ACCESSORY_SHOES = ['운동화','스니커즈','로퍼','구두','부츠','샌들','슬리퍼'];
-function isAccessoryShoe(name) { return /운동화|스니커즈|로퍼|구두|부츠|샌들|슬리퍼|신발/.test(name); }
+function isAccessoryShoe(name) { return /운동화|스니커즈|스니커츠|로퍼|구두|부츠|샌들|슬리퍼|신발/.test(name); }
 function accessoryShoesSelection() { return selectedClothingValues('accessoryCategory').filter(isAccessoryShoe).join(' · '); }
 function outfitAccessorySelectionText() { return selectedClothingValues('accessoryCategory').filter(name => !isAccessoryShoe(name)).join(' · ') || '없음'; }
 
@@ -47,8 +47,11 @@ function normalizeAccessorySelection(input) {
     });
     if (!choices.some(x => x.checked)) choices.find(x => x.value === '없음').checked = true;
 }
+function isSkirtBottom(name) { return /치마|스커트|원피스|skirt|dress/i.test(name || ''); }
 function renderCategoryChoices(selectValue, selectedGroup) {
-    categoryOptions = categoryOptions.filter(name => !/원피스/.test(name));
+    categoryOptions = [...baseCategories, ...customCategories].filter(name => !/원피스/.test(name));
+    const pantsOnly = typeof characterConfig !== 'undefined' && characterConfig.gender === 'male';
+    const availableBottoms = categoryOptions.filter(name => !pantsOnly || !isSkirtBottom(name));
     let keep = selectedGroup === 'category' && selectValue ? selectValue : document.querySelector('input[name="category"]:checked')?.value || '긴치마',
         topKeep = selectedGroup === 'topCategory' && selectValue ? selectValue : document.querySelector('input[name="topCategory"]:checked')?.value || '상의 추천받기',
         accessoryKeep = selectedClothingValues('accessoryCategory'),
@@ -58,6 +61,7 @@ function renderCategoryChoices(selectValue, selectedGroup) {
         accessoryBox = document.getElementById('accessoryCategoryList');
 
     keep = ({ '긴치마': '기본 치마', '짧은치마': '짧은 치마', '짧은바지': '기본 반바지', '긴바지': '기본 바지' })[keep] || keep;
+    if (pantsOnly && isSkirtBottom(keep)) keep = '하의 추천받기';
     if (selectedGroup === 'accessoryCategory' && selectValue) {
         accessoryKeep = ['없음', '액세서리 추천받기'].includes(selectValue) ? [selectValue] : [...accessoryKeep.filter(x => !['없음', '액세서리 추천받기'].includes(x)), selectValue];
     }
@@ -150,16 +154,17 @@ function renderCategoryChoices(selectValue, selectedGroup) {
         makeGroup('겉옷', ['바람막이', '가디건', '패딩', '후드집업', ...customOuter], 'outerCategory', outerKeep)
     );
     const bottomGroups = {
-        '반바지': categoryOptions.filter(name => /반바지|쇼츠|버뮤다|짧은바지/.test(name)),
-        '긴바지': categoryOptions.filter(name => /바지|팬츠|슬랙스/.test(name) && !/치마|스커트|짧은|반바지|쇼츠|버뮤다/.test(name)),
-        '치마': categoryOptions.filter(name => /치마|스커트/.test(name))
+        '반바지': availableBottoms.filter(name => /반바지|쇼츠|버뮤다|짧은바지/.test(name)),
+        '긴바지': availableBottoms.filter(name => /바지|팬츠|슬랙스/.test(name) && !/치마|스커트|짧은|반바지|쇼츠|버뮤다/.test(name)),
+        '치마': availableBottoms.filter(name => /치마|스커트/.test(name))
     };
-    const otherBottoms = categoryOptions.filter(name => !Object.values(bottomGroups).flat().includes(name));
+    Object.keys(bottomGroups).forEach(key => { if (!bottomGroups[key].length) delete bottomGroups[key]; });
+    const otherBottoms = availableBottoms.filter(name => !Object.values(bottomGroups).flat().includes(name));
     if (otherBottoms.length) bottomGroups['그 외'] = otherBottoms;
     Object.keys(bottomGroups).forEach(key => bottomGroups[key] = [...new Set(bottomGroups[key])]);
     const selectedBottomGroup = Object.keys(bottomGroups).find(key => bottomGroups[key].includes(keep));
     if (selectedBottomGroup) bottomTypeChoice = selectedBottomGroup;
-    if (!bottomGroups[bottomTypeChoice]) bottomTypeChoice = '치마';
+    if (!bottomGroups[bottomTypeChoice]) bottomTypeChoice = Object.keys(bottomGroups)[0];
     const bottomTabs = document.createElement('div');
     bottomTabs.className = 'category-subgroup sleeve-selection';
     const bottomTitle = document.createElement('strong');
@@ -309,10 +314,12 @@ let clothingPreferences = JSON.parse(localStorage.getItem("clothing-preferences"
 const clothingColorPalette = {"빨강": "#ef4444", "주황": "#f97316", "노랑": "#facc15", "초록": "#22c55e", "파랑": "#3b82f6", "보라": "#a855f7", "핑크": "#ec4899", "아이보리": "#f7f5ef", "검정": "#202024"};
 
 const accessoryColorPalette={"골드":"#d4af37","실버":"#c0c0c0","로즈골드":"#b76e79","브론즈":"#cd7f32","진주색":"#f4f0e5","검정":"#202024","브라운":"#8b5e3c","베이지":"#d4b896","화이트":"#ffffff"};
+const shirtColorPalette = {'흰색':'#ffffff','크림':'#fff3d6','네이비':'#354564','그레이':'#9ca3af'};
+function isShirtClothing(name) { return /셔츠|블라우스/.test(name || '') && !/티셔츠/.test(name || ''); }
 function renderClothingColorOptions(group){
  const container=document.querySelector('#categoryModal .color-options');
  const denim = group === 'category' && /데님|청바지/.test(selectedClothingValues('category')[0] || '');
- const palette=denim ? {'화이트':'#ffffff','블랙':'#202024','파랑':'#9cb7de'} : group==='accessoryCategory'?accessoryColorPalette:clothingColorPalette;
+ const palette=denim ? {'화이트':'#ffffff','블랙':'#202024','파랑':'#9cb7de'} : group==='accessoryCategory'?accessoryColorPalette:{...clothingColorPalette,...shirtColorPalette};
  if (denim) {
      const pref = clothingPreferences.category ||= {};
      if (!['화이트','블랙','파랑'].includes(pref.color)) pref.color = '파랑';
@@ -339,7 +346,7 @@ let clothingWheelState = {h: 215, s: .3, v: .87};
 function isClothingHex(value) { return /^#[0-9a-f]{6}$/i.test(value || ''); }
 function clothingPreviewColor(group) {
     const color = (clothingPreferences[group] || {}).color;
-    return isClothingHex(color) ? color : accessoryColorPalette[color] || clothingColorPalette[color] || legacyClothingColors[color] || '#f7f5ef';
+    return isClothingHex(color) ? color : shirtColorPalette[color] || accessoryColorPalette[color] || clothingColorPalette[color] || legacyClothingColors[color] || '#f7f5ef';
 }
 function clothingHsvToHex({h, s, v}) {
     const channel = n => {
@@ -440,6 +447,8 @@ function categoryPreferenceText(group) {
 function clothingIconMarkup(name, color = "#f7f5ef") {
     if (name.endsWith('추천받기')) return '';
     if (isAccessoryShoe(name)) {
+        const shoeImage = /스니커즈|스니커츠/.test(name) ? '스니커즈.png' : /슬리퍼/.test(name) ? '슬리퍼.png' : /운동화/.test(name) ? '운동화.png' : '';
+        if (shoeImage) return '<svg viewBox="210 1500 450 290" aria-hidden="true"><image href="assets/images/wear/' + shoeImage + '?v=20261119-shoes-1" width="896" height="1792"/></svg>';
         const shoeFrames = {
             '운동화': '70 0 250 185', '스니커즈': '380 0 240 185',
             '로퍼': '675 0 245 185', '구두': '980 0 240 185',
@@ -608,8 +617,8 @@ document.getElementById("categoryModal").addEventListener("change", event => {
         return
     }
     if (!event.target.matches('input[type="radio"],input[type="checkbox"]')) return;
-    if (event.target.name === 'category') {
-        renderClothingColorOptions('category');
+    if (['category', 'topCategory'].includes(event.target.name)) {
+        renderClothingColorOptions(event.target.name);
         syncClothingColorWheel();
     }
     if (event.target.name === 'accessoryCategory') normalizeAccessorySelection(event.target);

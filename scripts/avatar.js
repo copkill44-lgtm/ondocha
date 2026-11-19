@@ -38,6 +38,15 @@ function outfitWearLayer(name) {
 }
 function outfitWearColor(outfit, index, usePreferences = false) {
     if (/^#[0-9a-f]{6}$/i.test(outfit.wearColor || '')) return outfit.wearColor;
+    const shirt = typeof isShirtClothing === 'function' && isShirtClothing(outfit.top?.[0]);
+    const automaticTop = typeof selectedClothingValues === 'function' && selectedClothingValues('topCategory')[0] === '상의 추천받기';
+    if (shirt && automaticTop) {
+        const preference = usePreferences ? clothingPreferences.topCategory?.color : null;
+        if (Object.hasOwn(shirtColorPalette, preference)) return shirtColorPalette[preference];
+        const name = String(outfit.top?.[0] || '');
+        const named = Object.keys(shirtColorPalette).find(color => name.includes(color));
+        return named ? shirtColorPalette[named] : Object.values(shirtColorPalette)[Math.abs(Number(index) || 0) % 4];
+    }
     if (usePreferences && typeof clothingPreviewColor === 'function') {
         const preference = clothingPreferences.topCategory?.color;
         if (preference && preference !== '상관없음') return clothingPreviewColor('topCategory');
@@ -61,6 +70,13 @@ function outfitDenimMarkup(layer, color) {
     const row = [.2126 * scale, .7152 * scale, .0722 * scale, 0, offset].join(' ');
     return '<defs><filter id="' + id + '" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="' + row + ' ' + row + ' ' + row + ' 0 0 0 1 0"/></filter></defs>' + image + ' filter="url(#' + id + ')"/>';
 }
+function outfitShoeWearLayer(name) {
+    name = String(name || '');
+    if (/스니커즈|스니커츠/.test(name)) return '스니커즈.png?v=20261119-shoes-1';
+    if (/슬리퍼/.test(name)) return '슬리퍼.png?v=20261119-shoes-1';
+    if (/운동화/.test(name)) return '운동화.png?v=20261119-shoes-1';
+    return null;
+}
 function renderOutfitAvatar(outfit, index, config = characterConfig) {
     const layers = characterImageLayers(config);
     const palette = ['#e8a9b2', '#9cb7de', '#93c4a5', '#d4a46d'];
@@ -72,9 +88,11 @@ function renderOutfitAvatar(outfit, index, config = characterConfig) {
     const skirt = /치마|스커트/.test(lowerName) && !/치마바지/.test(lowerName);
     const wear = outfit.onepiece ? null : outfitWearLayer(outfit.top?.[0]);
     const top = wear ? outfitWearMarkup(wear, outfitWearColor(outfit, index)) : '<path d="M326 801L364 788Q440 875 511 789L555 805L625 984L577 1015L550 929L575 1193Q440 1210 280 1193L305 929L258 1015L211 984Z" fill="' + color + '" stroke="#ffffffa6" stroke-width="7" stroke-linejoin="round"/>';
+    const shoeLayer = outfitShoeWearLayer(outfit.shoes?.[0]);
+    const shoes = shoeLayer ? '<image href="assets/images/wear/' + shoeLayer + '" x="0" y="0" width="896" height="1792"/>' : '';
     const bottomWear = outfit.onepiece ? null : outfitBottomWearLayer(lowerName);
     const bottom = bottomWear ? (bottomWear.denim ? outfitDenimMarkup(bottomWear, outfit.denimColor || '파랑') : outfitWearMarkup(bottomWear, lowerColor)) : outfit.onepiece || skirt
         ? '<path d="M280 1176H575L628 ' + (short ? 1350 : 1460) + 'Q440 ' + (short ? 1380 : 1490) + ' 238 ' + (short ? 1350 : 1460) + 'Z" fill="' + (outfit.onepiece ? color : lowerColor) + '" stroke="#ffffffa6" stroke-width="7"/>'
         : '<path d="M280 1185H585L582 ' + (short ? 1320 : 1520) + 'L456 ' + (short ? 1320 : 1520) + 'L442 1265L429 ' + (short ? 1320 : 1520) + 'H292Z" fill="' + lowerColor + '" stroke="#ffffffa6" stroke-width="7" stroke-linejoin="round"/>';
-    return '<svg viewBox="0 0 896 1792" role="img" aria-label="내 캐릭터의 추천 코디"><image href="' + layers.body + '" width="896" height="1792"/>' + bottom + top + '<image href="' + layers.face + '" width="896" height="1792"/><image href="' + layers.hair + '" width="896" height="1792"/></svg>';
+    return '<svg viewBox="0 0 896 1792" role="img" aria-label="내 캐릭터의 추천 코디"><image href="' + layers.body + '" width="896" height="1792"/>' + shoes + bottom + top + '<image href="' + layers.face + '" width="896" height="1792"/><image href="' + layers.hair + '" width="896" height="1792"/></svg>';
 }
