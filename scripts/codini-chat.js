@@ -36,6 +36,28 @@ function codiniChatContext(){
   outfit:outfit?{top:safe(outfit.top?.[0]),bottom:safe(outfit.onepiece?.[0]||outfit.bottom?.[0]),outerwear:safe(outfit.outerwear),shoes:safe(outfit.shoes?.[0]),accessory:safe(outfit.accessory)}:null
  };
 }
+// Weather is already public in the weather card; answer from that data without a model call.
+function codiniWeatherReply(text){
+ const weatherQuestion=/날씨|기온|온도|비가|비 와|비 오|눈이|눈 와|눈 오|우산|weather|temperature|rain|snow|umbrella/i.test(text);
+ const outfitQuestion=/뭘.*입|뭐.*입|옷|코디|차림|셔츠|바지|겉옷|what.*wear|outfit|clothes|jacket/i.test(text);
+ if(!weatherQuestion||outfitQuestion)return null;
+ const en=typeof uiLanguage==='string'&&uiLanguage==='en';
+ if(/내일|모레|주말|다음|어제|이번 주|이번주|예보|tomorrow|yesterday|weekend|next|forecast/i.test(text))return en
+  ? 'I can share the current weather for the location selected in the weather card. Forecasts and past weather are not connected yet.'
+  : '지금은 날씨 카드에 선택된 지역의 현재 날씨를 알려드릴 수 있어요. 내일이나 주말 예보·지난 날씨는 아직 연결되지 않았어요.';
+ const ready=typeof weatherTemp==='number'&&Number.isFinite(weatherTemp);
+ if(!ready)return en
+  ? 'The weather has not loaded yet. Select a location in the weather card or press its refresh button, then ask me again.'
+  : '아직 날씨 정보를 불러오지 못했어요. 날씨 카드에서 지역을 선택하거나 새로고침한 뒤 다시 물어봐 주세요.';
+ const title=document.getElementById('skyTitle')?.textContent?.trim();
+ const detail=document.getElementById('skyDetail')?.textContent?.trim();
+ const source=document.getElementById('weatherBadge')?.textContent?.trim();
+ const location=typeof city==='string'?city:'';
+ const summary=title||[location,weatherTemp+'°C'].filter(Boolean).join(' ');
+ return (en?'Here is the current weather shown for the selected location: ':'현재 사이트에 선택된 지역 기준으로 알려드릴게요. ')+summary+
+  (detail?' · '+detail:'')+(source?' ('+source+')':'')+'. '+
+  (en?'To check another location, change it in the weather card.':'다른 지역은 날씨 카드에서 변경하면 확인할 수 있어요.');
+}
 async function sendCodiniChat(event){
  event.preventDefault();
  if(codiniChatBusy)return;
@@ -43,6 +65,14 @@ async function sendCodiniChat(event){
  const text=input.value.trim();
  if(!text)return;
  if([...text].length>1000){status.textContent='질문은 1,000자 이내로 입력해 주세요.';return;}
+ const weatherReply=codiniWeatherReply(text);
+ if(weatherReply!==null){
+  chatMessage('user',text);chatMessage('assistant',weatherReply);
+  codiniChatHistory.push({role:'user',content:text},{role:'assistant',content:weatherReply});
+  codiniChatHistory=codiniChatHistory.slice(-10);
+  input.value='';status.textContent='';document.getElementById('codiniChatLogin').hidden=true;
+  return;
+ }
  if(!currentAuthUser||!supabaseClient){status.textContent='로그인하면 코디니와 AI 채팅을 할 수 있어요.';document.getElementById('codiniChatLogin').hidden=false;return;}
  document.getElementById('codiniChatLogin').hidden=true;
  const owner=currentAuthUser.id,request=++codiniChatRequest;
