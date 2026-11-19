@@ -311,7 +311,13 @@ const clothingColorPalette = {"빨강": "#ef4444", "주황": "#f97316", "노랑"
 const accessoryColorPalette={"골드":"#d4af37","실버":"#c0c0c0","로즈골드":"#b76e79","브론즈":"#cd7f32","진주색":"#f4f0e5","검정":"#202024","브라운":"#8b5e3c","베이지":"#d4b896","화이트":"#ffffff"};
 function renderClothingColorOptions(group){
  const container=document.querySelector('#categoryModal .color-options');
- const palette=group==='accessoryCategory'?accessoryColorPalette:clothingColorPalette;
+ const denim = group === 'category' && /데님|청바지/.test(selectedClothingValues('category')[0] || '');
+ const palette=denim ? {'화이트':'#ffffff','블랙':'#202024','파랑':'#9cb7de'} : group==='accessoryCategory'?accessoryColorPalette:clothingColorPalette;
+ if (denim) {
+     const pref = clothingPreferences.category ||= {};
+     if (!['화이트','블랙','파랑'].includes(pref.color)) pref.color = '파랑';
+     localStorage.setItem('clothing-preferences', JSON.stringify(clothingPreferences));
+ }
  container.replaceChildren();
  const add=(value,cls,color)=>{
   const label=document.createElement('label'),input=document.createElement('input'),name=document.createElement('span');
@@ -322,9 +328,10 @@ function renderClothingColorOptions(group){
   if(value!=='상관없음')label.append(document.createElement('i'));
   label.append(name);container.append(label);
  };
- add('상관없음','no-color');
+ if (!denim) add('상관없음','no-color');
  Object.entries(palette).forEach(([name,color])=>add(name,'',color));
- add('custom','custom-color-choice');
+ if (!denim) add('custom','custom-color-choice');
+ container.querySelectorAll('input').forEach(input => input.checked = input.value === (clothingPreferences[group]?.color || '상관없음'));
 }
 
 const legacyClothingColors = {하늘색: "#9cb7de", 베이지: "#d4a46d", 골드: "#d4af37", 실버: "#c0c0c0", 로즈골드: "#b76e79", 브론즈: "#cd7f32"};
@@ -507,7 +514,7 @@ function updateCategoryPreview() {
             accessoryCategory: ["액세서리", "accessoryCategoryList"]
         },
         selected = document.querySelector('input[name="' + group + '"]:checked'),
-        name = group === 'accessoryCategory' ? accessorySelectionText() : (selected?.value || (group === 'category' ? '긴치마' : '상의 추천받기')) + (group === 'topCategory' && outerwearSelection() ? ' + ' + outerwearSelection() : ''),
+        name = group === 'accessoryCategory' ? accessorySelectionText() : (selected?.value || (group === 'category' ? '하의 추천받기' : '상의 추천받기')) + (group === 'topCategory' && outerwearSelection() ? ' + ' + outerwearSelection() : ''),
         icons = {
             "상의 추천받기": "👚",
             "니트": "🧶",
@@ -550,6 +557,7 @@ function openCategoryModal(group) {
     modal.dataset.group = group;
     const isAccessory = group === 'accessoryCategory';
     renderClothingColorOptions(group);
+    pref = clothingPreferences[group] || {};
     $('categorySelectionTitle').textContent = isAccessory ? '액세서리 선택' : '옷 선택';
     $('categoryModalDescription').textContent = isAccessory ? '취향에 맞는 액세서리와 색상을 골라주세요.' : '취향에 맞는 옷과 색상을 골라주세요.';
     // Keep previously saved colors available through the custom picker.
@@ -600,6 +608,10 @@ document.getElementById("categoryModal").addEventListener("change", event => {
         return
     }
     if (!event.target.matches('input[type="radio"],input[type="checkbox"]')) return;
+    if (event.target.name === 'category') {
+        renderClothingColorOptions('category');
+        syncClothingColorWheel();
+    }
     if (event.target.name === 'accessoryCategory') normalizeAccessorySelection(event.target);
     if (event.target.name === 'outerCategory' && event.target.checked) {
         document.querySelectorAll('input[name="outerCategory"]').forEach(input => {

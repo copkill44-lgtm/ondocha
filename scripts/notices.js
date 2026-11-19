@@ -8,7 +8,7 @@ function noticeText(ko,en) { return noticeLanguage()==='en'?en:ko; }
 function noticeNode(tag,cls,text) { const node=document.createElement(tag);if(cls)node.className=cls;if(text!==undefined)node.textContent=text;return node; }
 function updateNoticeBadge() {
     const unread=siteNotices.filter(notice=>!noticeReadIds.has(notice.id)).length;
-    const badge=document.getElementById('noticeUnread');badge.hidden=!unread;badge.textContent=String(unread);
+    const badge=document.getElementById('noticeUnread');badge.hidden=!unread || (typeof noticeBadgeEnabled === 'function' && !noticeBadgeEnabled());badge.textContent=String(unread);
     badge.setAttribute('aria-label',noticeText('읽지 않은 공지 '+unread+'개',unread+' unread notices'));
 }
 function markNoticeRead(id) {

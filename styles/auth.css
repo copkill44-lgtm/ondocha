@@ -62,3 +62,17 @@
 .mypage-nickname input:focus-visible{outline:2px solid #6b9cd9;outline-offset:2px}
 .mypage-nickname p{margin:8px 0 0;color:#8398b2;font-size:11px;line-height:1.7}
 .mypage-profile h3{overflow-wrap:anywhere}
+
+#myPage [hidden] { display: none !important; }
+.mypage-settings-back { margin: 20px 0 12px; padding: 8px 0; border: 0; background: transparent; color: #5278a7; font: inherit; font-size: 13px; cursor: pointer; }
+#myPageAccountSettingsTitle { margin: 8px 0 20px; font-size: 20px; }
+#myPageAccountSettings .mypage-account { margin: 16px 0 0; }
+#myPageWithdrawal { border-color: #efdde1; }
+#myPageWithdraw { color: #ab5266; background: #fff0f3; }
+
+.settings-menu { margin-top: 24px; }
+[data-settings-panel] > h3 { margin: 4px 0 20px; font-size: 20px; }
+[data-settings-panel] .mypage-settings details { padding: 12px 0; border-bottom: 1px solid #edf2f9; font-size: 13px; line-height: 1.7; }
+[data-settings-panel] .mypage-settings details:last-child { border-bottom: 0; }
+[data-settings-panel] summary { cursor: pointer; }
+[data-settings-panel] .mypage-account { margin: 16px 0 0; }

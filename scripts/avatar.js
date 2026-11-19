@@ -14,14 +14,16 @@ const WEAR_LAYERS = {
     'shirt-short': { file: 'shirt-short.png?v=20261110-aligned-3', x: 0, y: 0, width: 896, height: 1792 },
     'shirt-long': { file: 'shirt-long.png?v=20261110-aligned-2', x: 0, y: -33, width: 896, height: 1870 }
 };
-// Scale the supplied trouser artwork around the character waist and ankles.
+// The supplied trousers share the body canvas and retain its original alignment.
 const BOTTOM_WEAR_LAYERS = {
-    basic: { file: '일반 바지.png?v=20261112-pants-1', x: 112, y: 310, width: 672, height: 1344 },
-    cargo: { file: '카고바지.png?v=20261112-pants-1', x: 112, y: 310, width: 672, height: 1344 }
+    basic: { file: '일반 바지.png?v=20261112-pants-2', x: 0, y: 0, width: 896, height: 1792 },
+    denim: { file: '청바지.png?v=20261112-denim-1', x: 0, y: 0, width: 896, height: 1792, denim: true },
+    cargo: { file: '카고바지.png?v=20261112-pants-2', x: 0, y: 0, width: 896, height: 1792 }
 };
 function outfitBottomWearLayer(name) {
     name = String(name || '');
     if (/반바지|쇼츠|버뮤다|짧은|치마|스커트/.test(name)) return null;
+    if (/데님|청바지/.test(name)) return BOTTOM_WEAR_LAYERS.denim;
     if (/카고/.test(name)) return BOTTOM_WEAR_LAYERS.cargo;
     if (/기본 바지|일반\s*바지|긴바지/.test(name)) return BOTTOM_WEAR_LAYERS.basic;
     return null;
@@ -50,6 +52,15 @@ function outfitWearMarkup(layer, color) {
     const rgb = [1,3,5].map(offset => parseInt(color.slice(offset, offset + 2), 16) / 255);
     return '<defs><filter id="' + id + '" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="' + rgb[0] + ' 0 0 0 0 0 ' + rgb[1] + ' 0 0 0 0 0 ' + rgb[2] + ' 0 0 0 0 0 1 0"/></filter></defs><image href="assets/images/wear/' + layer.file + '" x="' + layer.x + '" y="' + layer.y + '" width="' + layer.width + '" height="' + layer.height + '" preserveAspectRatio="none" filter="url(#' + id + ')"/>';
 }
+function outfitDenimMarkup(layer, color) {
+    const image = '<image href="assets/images/wear/' + layer.file + '" x="0" y="0" width="896" height="1792"';
+    if (!['화이트', '블랙'].includes(color)) return image + '/>';
+    const id = 'denim-tint-' + (++wearFilterSequence);
+    const scale = color === '화이트' ? .6 : .24;
+    const offset = color === '화이트' ? .4 : .015;
+    const row = [.2126 * scale, .7152 * scale, .0722 * scale, 0, offset].join(' ');
+    return '<defs><filter id="' + id + '" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="' + row + ' ' + row + ' ' + row + ' 0 0 0 1 0"/></filter></defs>' + image + ' filter="url(#' + id + ')"/>';
+}
 function renderOutfitAvatar(outfit, index, config = characterConfig) {
     const layers = characterImageLayers(config);
     const palette = ['#e8a9b2', '#9cb7de', '#93c4a5', '#d4a46d'];
@@ -62,7 +73,7 @@ function renderOutfitAvatar(outfit, index, config = characterConfig) {
     const wear = outfit.onepiece ? null : outfitWearLayer(outfit.top?.[0]);
     const top = wear ? outfitWearMarkup(wear, outfitWearColor(outfit, index)) : '<path d="M326 801L364 788Q440 875 511 789L555 805L625 984L577 1015L550 929L575 1193Q440 1210 280 1193L305 929L258 1015L211 984Z" fill="' + color + '" stroke="#ffffffa6" stroke-width="7" stroke-linejoin="round"/>';
     const bottomWear = outfit.onepiece ? null : outfitBottomWearLayer(lowerName);
-    const bottom = bottomWear ? outfitWearMarkup(bottomWear, lowerColor) : outfit.onepiece || skirt
+    const bottom = bottomWear ? (bottomWear.denim ? outfitDenimMarkup(bottomWear, outfit.denimColor || '파랑') : outfitWearMarkup(bottomWear, lowerColor)) : outfit.onepiece || skirt
         ? '<path d="M280 1176H575L628 ' + (short ? 1350 : 1460) + 'Q440 ' + (short ? 1380 : 1490) + ' 238 ' + (short ? 1350 : 1460) + 'Z" fill="' + (outfit.onepiece ? color : lowerColor) + '" stroke="#ffffffa6" stroke-width="7"/>'
         : '<path d="M280 1185H585L582 ' + (short ? 1320 : 1520) + 'L456 ' + (short ? 1320 : 1520) + 'L442 1265L429 ' + (short ? 1320 : 1520) + 'H292Z" fill="' + lowerColor + '" stroke="#ffffffa6" stroke-width="7" stroke-linejoin="round"/>';
     return '<svg viewBox="0 0 896 1792" role="img" aria-label="내 캐릭터의 추천 코디"><image href="' + layers.body + '" width="896" height="1792"/>' + bottom + top + '<image href="' + layers.face + '" width="896" height="1792"/><image href="' + layers.hair + '" width="896" height="1792"/></svg>';

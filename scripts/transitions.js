@@ -1,15 +1,8 @@
 // transitions.js — Page and weather transitions
-function transitionPage(change, direction) {
-    if (motionReductionEnabled()) { change(); return; }
-    const app = $('app');
-    app.classList.remove('slide-in-left', 'slide-in-right', 'slide-out-left', 'slide-out-right');
-    app.classList.add('slide-out-' + direction);
-    setTimeout(() => {
-        change();
-        app.classList.remove('slide-out-' + direction);
-        app.classList.add('slide-in-' + (direction === 'left' ? 'right' : 'left'));
-        setTimeout(() => app.classList.remove('slide-in-left', 'slide-in-right'), 360)
-    }, 180)
+// Page cards animate themselves, matching Community and Notices.
+function transitionPage(change) {
+    $('app').classList.remove('slide-in-left', 'slide-in-right', 'slide-out-left', 'slide-out-right');
+    change();
 }
 showHome = function() {
     transitionPage(() => {

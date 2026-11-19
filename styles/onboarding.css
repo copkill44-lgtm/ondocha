@@ -1094,6 +1094,14 @@
     html.onboarding-portrait #onboarding .onboarding-actions button { min-height: 48px; min-width: 80px; padding: 10px 18px; }
 
 
-/* Reserve space for navigation while preserving the complete artwork. */
-#onboarding .onboarding-card { min-height: 0; }
-#onboarding .onboarding-card .onboarding-slides { bottom: calc(112px + env(safe-area-inset-bottom, 0px)); top: env(safe-area-inset-top, 0px); }
+/* Fill the viewport with one continuous artwork; controls overlay its lower edge. */
+#onboarding { height: 100dvh; overflow: hidden; }
+#onboarding .onboarding-card { height: 100%; min-height: 0; }
+#onboarding .onboarding-card .onboarding-slides { inset: 0; }
+#onboarding .onboarding-slide .onboard-picture { -webkit-mask-image: none; mask-image: none; }
+#onboarding .onboarding-slide .onboard-full-art,
+html.onboarding-portrait #onboarding .onboarding-slide .onboard-full-art {
+    object-fit: cover;
+    object-position: center;
+    transform: none;
+}

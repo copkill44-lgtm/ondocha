@@ -12,8 +12,8 @@ html[lang="en"] #welcome .start-button { position: static; transform: none; disp
 html[lang="en"] #onboarding .onboarding-slide > .onboard-picture,
 html[lang="en"] #onboarding .mobile-copy { display: none !important; }
 html[lang="en"] .english-onboarding { display: block; width: 100%; height: 100%; overflow: hidden; }
-/* Preserve the full artwork and its original proportions in both languages. */
-html[lang="en"] #onboarding .english-onboarding .onboard-full-art { object-fit: contain; transform: none; transform-origin: center; }
+/* Match the full-viewport artwork in both languages. */
+html[lang="en"] #onboarding .english-onboarding .onboard-full-art { object-fit: cover; transform: none; transform-origin: center; }
 html[lang="en"].onboarding-portrait #onboarding .english-onboarding .onboard-full-art { transform: none; }
 html[lang="en"] .nav { flex-wrap: wrap; }
 html[lang="en"] .nav button { font-family: Arial,sans-serif; }

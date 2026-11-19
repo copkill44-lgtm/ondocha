@@ -1,5 +1,8 @@
 function openMyPage() {
     syncMotionSettings();
+    showSettingsPanel('home', false);
+    document.getElementById('myPageGuestLogin').hidden = !!currentAuthUser;
+    document.getElementById('noticeBadgeEnabled').checked = noticeBadgeEnabled();
     const user = currentAuthUser;
     const metadata = user?.user_metadata || {};
     document.getElementById('myPageName').textContent = metadata.nickname || metadata.name || metadata.full_name || (user ? '온도차 회원' : '방문자님');
@@ -10,6 +13,8 @@ function openMyPage() {
     document.getElementById('myPageNicknameForm').hidden = !user;
     document.getElementById('myPageNickname').value = metadata.nickname || metadata.name || metadata.full_name || '';
     document.getElementById('myPageNicknameStatus').textContent = '커뮤니티에 공개되는 이름이에요.';
+    document.getElementById('myPageWithdrawal').hidden = !user;
+    document.getElementById('myPageWithdraw').disabled = authActionBusy;
     const action = document.getElementById('myPageAccountAction');
     action.textContent = user ? '로그아웃' : '로그인 / 회원가입';
     action.disabled = authActionBusy;
@@ -62,4 +67,28 @@ async function saveMyPageNickname(event) {
     }catch{
         status.textContent='닉네임을 저장하지 못했어요. 연결을 확인하고 다시 시도해 주세요.';
     }finally{button.disabled=false;}
+}
+
+let activeSettingsPanel = 'home';
+function showSettingsPanel(panel, focus = true) {
+    const previous = activeSettingsPanel;
+    activeSettingsPanel = panel;
+    document.getElementById('settingsHome').hidden = panel !== 'home';
+    document.querySelectorAll('[data-settings-panel]').forEach(node => {
+        node.hidden = node.id !== 'settingsPanel-' + panel;
+    });
+    document.getElementById('myPage').scrollTop = 0;
+    if (focus) {
+        const target = panel === 'home' ? 'settingsMenu-' + (previous === 'home' ? 'profile' : previous) : 'settingsTitle-' + panel;
+        document.getElementById(target)?.focus();
+    }
+}
+function openMyPageAccountSettings() { showSettingsPanel('privacy'); }
+function closeMyPageAccountSettings() { showSettingsPanel('home'); }
+function noticeBadgeEnabled() {
+    try { return localStorage.getItem('ondocha-notice-badge') !== 'off'; } catch { return true; }
+}
+function setNoticeBadgeEnabled(enabled) {
+    try { localStorage.setItem('ondocha-notice-badge', enabled ? 'on' : 'off'); } catch {}
+    if (typeof updateNoticeBadge === 'function') updateNoticeBadge();
 }

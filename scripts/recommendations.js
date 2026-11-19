@@ -97,6 +97,10 @@ function generateRecommendations(aiRecommendations) {
     }
     looks.forEach((look, index) => {
         if (input.shoes) look.shoes = [input.shoes, '👟'];
+        if (/데님|청바지/.test(look.bottom?.[0] || '')) {
+            const denimColor = clothingPreferences.category?.color;
+            look.denimColor = ['화이트','블랙','파랑'].includes(denimColor) ? denimColor : '파랑';
+        }
         look.wearColor = outfitWearColor(look, index, true);
         look.outerwear = recommendationOuterwear(input, index);
         if (accessoryRaw !== '액세서리 추천받기') look.accessory = accessoryChoice;

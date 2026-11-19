@@ -1,5 +1,32 @@
 // Translate presentation text only. Form values and stored wardrobe data stay stable.
 const UI_TRANSLATIONS = Object.fromEntries(`
+설정|Settings
+화면|Display
+알림 설정|Notifications
+고객 지원|Support
+개인정보 및 보안|Privacy and security
+← 설정으로|← Back to settings
+설정 닫기|Close settings
+읽지 않은 공지 표시|Unread notice badge
+공지사항 메뉴에 읽지 않은 공지 개수를 표시합니다. 이 기기에 설정이 저장돼요.|Show unread counts in the Notices menu. This preference is saved on this device.
+브라우저 푸시 알림이나 이메일은 발송하지 않습니다.|This does not send browser push notifications or emails.
+공지사항 및 이용 안내|Notices and guides
+자주 묻는 질문|Frequently asked questions
+저장한 코디는 어디서 보나요?|Where can I find my saved outfits?
+마이페이지의 코디 캘린더 보기에서 확인할 수 있어요. 로그인하면 계정에 저장됩니다.|Open the outfit calendar in My page. Log in to save outfits to your account.
+비밀번호를 잊었어요.|I forgot my password.
+개인정보 및 보안에서 비밀번호 재설정 메일을 요청할 수 있어요. 소셜 로그인 계정은 해당 서비스에서 비밀번호를 변경해 주세요.|Request a password reset email in Privacy and security. For social accounts, change your password with your login provider.
+탈퇴한 계정을 복구하고 싶어요.|How do I restore my account?
+탈퇴 후 7일 안에 다시 로그인하면 계정이 자동 복구됩니다.|Log in within 7 days of withdrawal to automatically restore your account.
+비밀번호 재설정|Reset password
+내 데이터 안내|About your data
+로그인하면 저장한 코디와 캐릭터 설정이 계정에 연결됩니다. 커뮤니티에 작성한 게시물과 댓글은 다른 사용자에게 공개됩니다.|When you log in, saved outfits and character settings are linked to your account. Community posts and comments are public.
+소셜 로그인 계정의 비밀번호는 해당 서비스에서 변경해 주세요.|Change your social account password with your login provider.
+계정 설정|Account settings
+← 마이페이지로|← Back to My page
+이 기기에서 로그아웃합니다. 저장한 코디는 계정에 유지돼요.|Sign out on this device. Your saved outfits will remain in your account.
+계정 탈퇴|Delete account
+탈퇴 후 7일 안에 다시 로그인하면 계정이 자동 복구됩니다. 7일이 지나면 계정과 저장한 코디, 커뮤니티 게시물 및 댓글이 영구 삭제됩니다.|Log in within 7 days of withdrawal to automatically restore your account. After 7 days, your account, saved outfits, posts and comments will be permanently deleted.
 오늘의 코디 온도차|Ondocha · Today's Outfit
 ☁ 온도차|☁ Ondocha
 온도차|Ondocha
@@ -380,7 +407,7 @@ function mountLanguageSettings() {
     const picker=document.createElement('label');picker.className='language-picker';picker.innerHTML='<span aria-hidden="true">🌐</span><select data-language-select aria-label="언어" onchange="setUiLanguage(this.value)"><option value="ko">한국어</option><option value="en">English</option></select>';
     document.body.append(picker);
     const setting=document.createElement('section');setting.className='mypage-settings';setting.innerHTML='<label class="language-setting">언어 <select data-language-select onchange="setUiLanguage(this.value)"><option value="ko">한국어</option><option value="en">English</option></select></label><p>이 기기에 언어 설정이 저장돼요.</p>';
-    document.querySelector('#myPage .mypage-links').before(setting);
+    document.getElementById('settingsLanguageMount').append(setting);
     const pages=[['Find your comfort','Outfit ideas that fit how you feel.'],['Make it your own','Choose clothes, colors and styles you love.'],['Dress for your day','Weather, plans and your comfort, all considered.']];
     document.querySelectorAll('#onboarding .onboarding-slide').forEach((slide,i)=>{
         const card=document.createElement('div');

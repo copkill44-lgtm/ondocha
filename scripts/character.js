@@ -12,6 +12,9 @@ let characterReturnNav = 'navHome';
 function renderCharacter() {
     const previousAppearance = JSON.stringify(characterConfig);
     const wasInitialized = characterInitialized;
+    const gender = document.getElementById('charGender');
+    if (gender && !characterInitialized) gender.value = characterConfig.gender || '';
+    if (gender) characterConfig.gender = gender.value;
     let hair = document.getElementById('charHair'),
         skin = document.getElementById('charSkin'),
         eyes = document.getElementById('charEyes');
@@ -191,7 +194,18 @@ function cancelCharacterSetup() {
 function completeCharacterSetup() {
     const setup = document.getElementById('characterSetup');
     if (setup.classList.contains('leaving')) return;
+    const gender = document.getElementById('charGender');
+    if (!gender || !['male', 'female'].includes(gender.value)) {
+        toast('코디 추천에 사용할 남자 또는 여자를 선택해 주세요.');
+        gender?.focus();
+        return;
+    }
     renderCharacter();
+    if (typeof renderCategoryChoices === 'function') {
+        renderCategoryChoices();
+        const choice = document.querySelector('input[name="category"]:checked');
+        if (choice) document.getElementById('categoryValue').textContent = choice.value;
+    }
     localStorage.setItem('codini-character', JSON.stringify(characterConfig));
     accountNeedsCharacterSetup = false;
     if (characterEditing) {

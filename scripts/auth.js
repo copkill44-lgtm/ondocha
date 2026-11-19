@@ -11,11 +11,12 @@ let suspendCloudSync = false,
     authSyncPromise = null;
 let authInitializationError = '';
 let accountNeedsCharacterSetup = false;
+let accountWithdrawalBusy = false;
 
 function setAccountUi(user) {
     const button = document.getElementById('accountButton');
     const label = document.getElementById('accountLabel');
-    if (button) button.textContent = '마이페이지';
+    if (button) button.textContent = typeof uiText === 'function' ? uiText('설정') : '설정';
     if (label) {
         label.hidden = true;
         label.textContent = user?.email?.endsWith('@naver.ondocha.invalid')
@@ -124,6 +125,16 @@ async function synchronizeAuthUser(user) {
         }
         return;
     }
+    if (accountWithdrawalBusy) return;
+    const { data: accountState, error: accountError } = await supabaseClient.rpc('restore_withdrawn_account');
+    if (accountError) throw accountError;
+    if (accountState === 'expired') {
+        await supabaseClient.auth.signOut({ scope: 'local' });
+        await synchronizeAuthUser(null);
+        toast(accountText('복구 기간이 지나 계정이 삭제되었어요. 새로 가입해 주세요.', 'Your recovery period has ended. Please create a new account.'));
+        return;
+    }
+    if (accountState === 'restored') toast(accountText('7일 이내에 다시 로그인하여 계정이 복구되었어요.', 'Your account has been restored because you logged in within 7 days.'));
     currentAuthUser = user;
     setAccountUi(user);
     suspendCloudSync = true;
@@ -237,5 +248,42 @@ async function logoutAccount() {
         toast('로그아웃하지 못했어요. 연결을 확인하고 다시 시도해 주세요.');
     } finally {
         authActionBusy = false;
+    }
+}
+
+function accountText(ko, en) {
+    return document.documentElement.lang === 'en' ? en : ko;
+}
+
+async function withdrawAccount() {
+    if (!currentAuthUser || !supabaseClient || authActionBusy) return;
+    if (!window.confirm(accountText('정말 탈퇴하시겠어요? 즉시 로그아웃되며, 탈퇴 후 7일 안에 다시 로그인하면 계정이 자동 복구됩니다. 7일이 지나면 계정과 저장한 코디, 커뮤니티 게시물 및 댓글이 영구 삭제됩니다.', 'Withdraw your account? You will be signed out. Log in again within 7 days to automatically restore your account. After 7 days, your account, saved outfits, posts and comments will be permanently deleted.'))) return;
+    authActionBusy = true;
+    accountWithdrawalBusy = true;
+    const button = document.getElementById('myPageWithdraw');
+    button.disabled = true;
+    let requested = false;
+    try {
+        clearTimeout(cloudSaveTimer);
+        await saveCloudState();
+        const { error } = await supabaseClient.rpc('request_account_withdrawal');
+        if (error) throw error;
+        requested = true;
+        authDataReady = false;
+        // Clear this device even if global sign-out fails on a poor connection.
+        try { await supabaseClient.auth.signOut(); } catch {}
+        await supabaseClient.auth.signOut({ scope: 'local' });
+        await synchronizeAuthUser(null);
+        window.alert(accountText('탈퇴가 접수되었어요. 7일 안에 다시 로그인하면 계정이 자동 복구됩니다.', 'Your withdrawal has been requested. Log in within 7 days to restore your account.'));
+        location.reload();
+    } catch {
+        if (requested) {
+            await synchronizeAuthUser(null);
+            location.reload();
+        } else toast(accountText('탈퇴를 처리하지 못했어요. 연결을 확인하고 다시 시도해 주세요.', 'Could not request withdrawal. Check your connection and try again.'));
+    } finally {
+        authActionBusy = false;
+        accountWithdrawalBusy = false;
+        button.disabled = false;
     }
 }

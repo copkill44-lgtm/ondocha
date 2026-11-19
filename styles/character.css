@@ -273,3 +273,8 @@
     #characterSetup .character-choice-grid { height: 212px; }
     #characterSetup .character-picker-heading { height: 36px; }
 }
+
+.character-gender-setting { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 10px; color: #496a96; font-size: 13px; }
+.character-gender-setting select { padding: 7px 12px; border: 1px solid #cbdcf0; border-radius: 10px; background: #fff; color: #496a96; font: inherit; }
+.character-gender-setting select:focus-visible { outline: 3px solid #769bd0; outline-offset: 2px; }
+#characterSetup .character-gender-note { margin: 6px 0 0; color: #8496ad; font-size: 11px; line-height: 1.5; }

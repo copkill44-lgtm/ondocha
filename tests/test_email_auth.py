@@ -31,7 +31,7 @@ function toast(s){messages.push(s);} function setTimeout(){return 0;} function c
 const ONDOCHA_CONFIG={supabaseUrl:'https://example.supabase.co',supabasePublishableKey:'sb_publishable_test'};
 const user={id:'account-a',email:'person@example.com'};
 let authResponse={data:{session:{user}},error:null},signupResponse={data:{session:null,user},error:null};
-const client={auth:{
+const client={rpc:async()=>({data:'active',error:null}),auth:{
  signInWithPassword:async payload=>{calls.signIn++;calls.loginPayload=payload;return authResponse;},
  signUp:async payload=>{calls.signUp++;calls.signupPayload=payload;return signupResponse;},
  resetPasswordForEmail:async(email,options)=>{calls.reset++;calls.resetOptions=options;return {error:null};},
@@ -126,5 +126,18 @@ class EmailAuthTests(unittest.TestCase):
  def test_completed_account_skips_setup(self):
   result=self.run_js("remoteRow={data:{'codini-character':JSON.stringify({hair:'tied',skin:'default',eyes:'default'})}};await submitEmailLogin(submitEvent('loginForm'));return [calls.setup,calls.home];")
   self.assertEqual(result,[0,1])
+
+ def test_withdrawal_restores_before_loading_data(self):
+  result=self.run_js("document.documentElement={lang:'en'};client.rpc=async()=>({data:'restored',error:null});await processAuthUser(user);return [currentAuthUser.id,authDataReady,messages.some(x=>x.includes('restored'))];")
+  self.assertEqual(result,['account-a',True,True])
+ def test_expired_withdrawal_never_loads_or_saves_data(self):
+  result=self.run_js("document.documentElement={lang:'en'};client.rpc=async()=>({data:'expired',error:null});await processAuthUser(user);return [currentAuthUser,authDataReady,calls.save];")
+  self.assertEqual(result,[None,False,0])
+ def test_withdrawal_rpc_failure_keeps_account(self):
+  result=self.run_js("document.documentElement={lang:'en'};window.confirm=()=>true;currentAuthUser=user;client.rpc=async()=>({error:{code:'offline'}});await withdrawAccount();return [currentAuthUser.id,authActionBusy,accountWithdrawalBusy,calls.reload];")
+  self.assertEqual(result,['account-a',False,False,0])
+ def test_withdrawal_clears_local_account_data(self):
+  result=self.run_js("document.documentElement={lang:'en'};window.confirm=()=>true;window.alert=()=>{};currentAuthUser=user;authDataReady=true;localStorage.setItem('codini-data-owner',user.id);localStorage.setItem('ootd-events','{}');client.rpc=async()=>({error:null});await withdrawAccount();return [currentAuthUser,localStorage.getItem('ootd-events'),authDataReady];")
+  self.assertEqual(result,[None,None,False])
 
 if __name__=='__main__':unittest.main(verbosity=2)
