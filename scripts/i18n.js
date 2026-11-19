@@ -266,6 +266,7 @@ STEP 1 · 나만의 캐릭터|STEP 1 · Your character
 기본 치마|Classic skirt
 치마바지|Skort
 짧은 치마|Mini skirt
+긴 치마|Long skirt
 긴치마|Long skirt
 짧은치마|Mini skirt
 짧은바지|Shorts

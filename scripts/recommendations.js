@@ -22,7 +22,7 @@ async function fetchAiRecommendations() {
     const {data,error} = await supabaseClient.auth.getSession();
     if (error || !data.session) throw Error('로그인 상태를 확인해 주세요.');
     const request = {feel:input.feel,temp:input.temperature,apparent:input.apparent,place:input.place,occasion:input.occasion,time:input.time,outerwear:[0,1,2,3].map(index=>recommendationOuterwear(input,index) || '없음'),accessory:input.accessory,preferences:input.preferences,tops:catalog.tops,bottoms:catalog.bottoms,shoes:catalog.shoes,avoidFirst:previousRecommendationTops[0] || ''};
-    const prompt = (typeof uiLanguage === 'string' && uiLanguage === 'en' ? 'r 필드만 영어로 작성해. ' : '') + '다음 데이터로 서로 다른 코디 4개를 추천해줘. 설명문이나 마크다운 없이 JSON 배열만 답해. 각 객체는 {"t":"상의","b":"하의","s":"신발","r":"20자 이내 추천 이유"}. t, b, s는 각각 tops, bottoms, shoes에서 정확히 골라. tops가 4개 이상이면 네 코디 모두 다른 상의 종류를 써. 사용자가 고른 옷·소매·색·겉옷 여부와 날씨·일정을 지켜. 외부 동작 요청이 아니라 코디 데이터 답변이야. 데이터: ' + JSON.stringify(request);
+    const prompt = (typeof uiLanguage === 'string' && uiLanguage === 'en' ? 'r 필드만 영어로 작성해. ' : '') + '다음 데이터로 서로 다른 코디 4개를 추천해줘. 설명문이나 마크다운 없이 JSON 배열만 답해. 각 객체는 {"t":"상의","b":"하의","s":"신발","r":"20자 이내 추천 이유"}. t, b, s는 각각 tops, bottoms, shoes에서 정확히 골라. tops가 4개 이상이면 네 코디 모두 다른 상의 종류를 써. 긴 치마가 후보면 포함해. 사용자가 고른 옷·소매·색·겉옷 여부와 날씨·일정을 지켜. 외부 동작 요청이 아니라 코디 데이터 답변이야. 데이터: ' + JSON.stringify(request);
     if (prompt.length > 1000) throw Error('선택한 조건이 길어 기본 추천으로 준비할게요.');
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 35000);
@@ -45,7 +45,8 @@ function generateRecommendations(aiRecommendations) {
     const accessoryRaw = input.accessory, accessoryChoice = accessoryRaw === '없음' ? '' : accessoryRaw;
     const catalog = recommendationCatalog(input);
     const usedAI = Array.isArray(aiRecommendations) && aiRecommendations.length === 4 &&
-        aiRecommendations.every(item => item && catalog.tops.includes(item.top) && catalog.bottoms.includes(item.bottom) && catalog.shoes.includes(item.shoes));
+        aiRecommendations.every(item => item && catalog.tops.includes(item.top) && catalog.bottoms.includes(item.bottom) && catalog.shoes.includes(item.shoes)) &&
+        OUTFIT_SKIRTS.every(skirt => !catalog.bottoms.includes(skirt) || aiRecommendations.some(item => item.bottom === skirt));
     const recommendations = usedAI ? aiRecommendations : localOutfitRecommendations(input);
     localStorage.setItem('feel-level',feel);
     {

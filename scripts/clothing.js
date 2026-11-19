@@ -1,5 +1,5 @@
 // clothing.js — Clothing choices and preferences
-const baseCategories = ['기본 바지', '데님 바지', '카고 바지', '와이드 바지', '조거 바지', '기본 반바지', '데님 반바지', '카고 반바지', '버뮤다 팬츠', '스포츠 반바지', '기본 치마', '치마바지', '짧은 치마'];
+const baseCategories = ['기본 바지', '데님 바지', '카고 바지', '와이드 바지', '조거 바지', '기본 반바지', '데님 반바지', '카고 반바지', '버뮤다 팬츠', '스포츠 반바지', '긴 치마', '치마바지'];
 let customCategories = JSON.parse(localStorage.getItem('custom-clothing-types') || '[]');
 let customTopCategories = JSON.parse(localStorage.getItem('custom-top-types') || '[]'),
     customAccessoryCategories = JSON.parse(localStorage.getItem('custom-accessory-types') || '[]');
@@ -60,7 +60,7 @@ function renderCategoryChoices(selectValue, selectedGroup) {
         topBox = document.getElementById('topCategoryList'),
         accessoryBox = document.getElementById('accessoryCategoryList');
 
-    keep = ({ '긴치마': '기본 치마', '짧은치마': '짧은 치마', '짧은바지': '기본 반바지', '긴바지': '기본 바지' })[keep] || keep;
+    keep = ({ '긴치마': '긴 치마', '기본 치마': '기본 바지', '일반 치마': '기본 바지', '짧은치마': '기본 바지', '짧은 치마': '기본 바지', '짧은바지': '기본 반바지', '긴바지': '기본 바지' })[keep] || keep;
     if (pantsOnly && isSkirtBottom(keep)) keep = '하의 추천받기';
     if (selectedGroup === 'accessoryCategory' && selectValue) {
         accessoryKeep = ['없음', '액세서리 추천받기'].includes(selectValue) ? [selectValue] : [...accessoryKeep.filter(x => !['없음', '액세서리 추천받기'].includes(x)), selectValue];
@@ -477,7 +477,7 @@ function clothingIconMarkup(name, color = "#f7f5ef") {
         '와이드 바지': 'pants-wide', '조거 바지': 'pants-jogger',
         '기본 반바지': 'shorts-basic', '데님 반바지': 'shorts-denim', '카고 반바지': 'shorts-cargo',
         '버뮤다 팬츠': 'shorts-bermuda', '스포츠 반바지': 'shorts-sport',
-        '기본 치마': 'skirt-basic', '치마바지': 'skort', '짧은 치마': 'skirt-short'
+        '긴 치마': 'skirt-basic', '기본 치마': 'skirt-short', '치마바지': 'skort', '짧은 치마': 'skirt-short'
     };
     if (bottomIcons[name]) {
         return '<svg viewBox="0 0 120 120" aria-hidden="true"><image href="assets/images/icon/' + bottomIcons[name] + '.png?v=20261110-1" x="5" y="5" width="110" height="110" preserveAspectRatio="xMidYMid meet"/></svg>';

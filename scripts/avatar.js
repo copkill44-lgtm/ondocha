@@ -22,6 +22,10 @@ const BOTTOM_WEAR_LAYERS = {
 };
 function outfitBottomWearLayer(name) {
     name = String(name || '');
+    if (!/치마\s*바지/.test(name) && /치마|스커트/.test(name)) {
+        const file = /짧은|미니|기본|일반/.test(name) ? '짧은 치마.png' : '긴 치마.png';
+        return { src: 'assets/images/characters/' + encodeURIComponent(file), x: 0, y: 0, width: 896, height: 1792 };
+    }
     if (/반바지|쇼츠|버뮤다|짧은|치마|스커트/.test(name)) return null;
     if (/데님|청바지/.test(name)) return BOTTOM_WEAR_LAYERS.denim;
     if (/카고/.test(name)) return BOTTOM_WEAR_LAYERS.cargo;
@@ -59,7 +63,7 @@ function outfitWearColor(outfit, index, usePreferences = false) {
 function outfitWearMarkup(layer, color) {
     const id = 'wear-tint-' + (++wearFilterSequence);
     const rgb = [1,3,5].map(offset => parseInt(color.slice(offset, offset + 2), 16) / 255);
-    return '<defs><filter id="' + id + '" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="' + rgb[0] + ' 0 0 0 0 0 ' + rgb[1] + ' 0 0 0 0 0 ' + rgb[2] + ' 0 0 0 0 0 1 0"/></filter></defs><image href="assets/images/wear/' + layer.file + '" x="' + layer.x + '" y="' + layer.y + '" width="' + layer.width + '" height="' + layer.height + '" preserveAspectRatio="none" filter="url(#' + id + ')"/>';
+    return '<defs><filter id="' + id + '" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="' + rgb[0] + ' 0 0 0 0 0 ' + rgb[1] + ' 0 0 0 0 0 ' + rgb[2] + ' 0 0 0 0 0 1 0"/></filter></defs><image href="' + (layer.src || 'assets/images/wear/' + layer.file) + '" x="' + layer.x + '" y="' + layer.y + '" width="' + layer.width + '" height="' + layer.height + '" preserveAspectRatio="none" filter="url(#' + id + ')"/>';
 }
 function outfitDenimMarkup(layer, color) {
     const image = '<image href="assets/images/wear/' + layer.file + '" x="0" y="0" width="896" height="1792"';

@@ -2,6 +2,7 @@
 let previousRecommendationTops = [];
 const OUTFIT_TOPS = ['반팔 티셔츠','반팔 셔츠','긴팔 티셔츠','긴팔 셔츠'];
 const OUTFIT_BOTTOMS = ['기본 바지','데님 바지','카고 바지'];
+const OUTFIT_SKIRTS = ['긴 치마'];
 const OUTFIT_SHOES = ['운동화','스니커즈','슬리퍼'];
 function recommendationInput() {
     const chosen = name => document.querySelector('input[name="' + name + '"]:checked')?.value || '';
@@ -21,7 +22,10 @@ function recommendationCatalog(input) {
     const cold = comfort < 15, hot = comfort >= 25;
     const sleeve = hot ? '반팔' : '긴팔';
     const tops = OUTFIT_TOPS.includes(input.top) ? [input.top] : OUTFIT_TOPS.filter(name => name.startsWith(sleeve));
-    const bottoms = OUTFIT_BOTTOMS.includes(input.bottom) ? [input.bottom] : [...OUTFIT_BOTTOMS];
+    const selectedBottom = ({'기본 치마':'기본 바지','일반 치마':'기본 바지','짧은치마':'기본 바지','짧은 치마':'기본 바지','긴치마':'긴 치마'})[input.bottom] || input.bottom;
+    const automaticBottoms = input.gender === 'male' ? OUTFIT_BOTTOMS : [...OUTFIT_BOTTOMS, ...OUTFIT_SKIRTS];
+    const allowsSelectedBottom = automaticBottoms.includes(selectedBottom) || (input.gender !== 'male' && selectedBottom === '치마바지');
+    const bottoms = allowsSelectedBottom ? [selectedBottom] : automaticBottoms;
     const selectedShoe = input.shoes === '스니커츠' ? '스니커즈' : input.shoes;
     const formal = /출근|면접|격식|결혼|회의/.test(input.place + input.occasion);
     const shoes = OUTFIT_SHOES.includes(selectedShoe) ? [selectedShoe] : OUTFIT_SHOES.filter(name => name !== '슬리퍼' || hot && !formal);
