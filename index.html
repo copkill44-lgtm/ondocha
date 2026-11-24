@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="styles/onboarding.css?v=20261119-artwork-ratio-1">
     <link rel="stylesheet" href="styles/character.css?v=20261112-gender-1">
     <link rel="stylesheet" href="styles/tour.css">
-    <link rel="stylesheet" href="styles/carousel.css">
+    <link rel="stylesheet" href="styles/carousel.css?v=20261124-outfit-selection-1">
     <link rel="stylesheet" href="styles/calendar.css">
     <link rel="stylesheet" href="styles/auth.css?v=20261113-settings-hub-1">
     <link rel="stylesheet" href="styles/weather.css?v=20261110-date-1">
@@ -412,10 +412,10 @@
                     <div class="outfit-pagination" id="outfitPagination"></div>
                     <div class="outfit-count" id="outfitCount" aria-live="polite"></div>
                 </div>
-                <button type="button" class="community-share-button" onclick="openCommunityComposer()">선택한 코디 커뮤니티에 올리기</button>
                 <div class="date-row"><label>일정 이름 <input id="eventName" type="text"
-                            placeholder="예: 친구와 저녁 약속"></label><button class="primary" onclick="saveLook()">선택한 코디를 캘린더에
-                        저장</button></div>
+                            placeholder="예: 친구와 저녁 약속"></label><button type="button" class="primary"
+                            onclick="saveLook()">선택한 코디를 캘린더에 저장</button></div>
+                <button type="button" class="community-share-button" onclick="openCommunityComposer()">선택한 코디 커뮤니티에 올리기</button>
             </div>
         </section>
         <section class="card calendar" id="calendarCard">
@@ -625,7 +625,7 @@
     <script src="scripts/weather.js"></script>
     <script src="scripts/weather-region-data.js"></script>
     <script src="scripts/weather-regions.js"></script>
-    <script src="scripts/outfit-planner.js?v=20261124-shorts-2"></script><script src="scripts/recommendations.js?v=20261124-variety-3"></script>
+    <script src="scripts/outfit-planner.js?v=20261124-shorts-2"></script><script src="scripts/recommendations.js?v=20261124-outfit-selection-1"></script>
     <script src="scripts/avatar.js?v=20261124-shorts-2"></script>
     <script src="scripts/outfit-images.js?v=20261110-ai-off-1"></script>
     <script src="scripts/calendar.js?v=20261105-2"></script>
@@ -634,7 +634,7 @@
     <script src="scripts/character-picker.js?v=20261109-2"></script>
     <script src="scripts/screen-transitions.js?v=20261110-motion-1"></script>
     <script src="scripts/tour.js?v=20261110-motion-1"></script>
-    <script src="scripts/carousel.js?v=20261110-motion-1"></script>
+    <script src="scripts/carousel.js?v=20261124-outfit-selection-1"></script>
     <script src="scripts/community-moderation.js?v=20261110-1"></script>
     <script src="scripts/community.js?v=20261124-post-limit-1"></script>
     <script src="scripts/mypage.js?v=20261113-settings-hub-1"></script>

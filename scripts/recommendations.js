@@ -122,14 +122,12 @@ function generateRecommendations(aiRecommendations) {
         if (accessoryRaw !== '액세서리 추천받기') look.accessory = accessoryChoice;
     });
     previousRecommendationTops = looks.map(look => look.top[0]);
-    selected = 0;
     $('suggestCopy').textContent = (usedAI ? 'AI가 날씨와 선택 조건을 반영했어요. ' : '날씨와 선택 조건에 맞춘 기본 추천이에요. ') + (weatherTemp === null ? '' : city + ' ' + weatherTemp + '°C · ') + feel + ' · ' + time + ' · ' + place + ' · ' + occasion;
-    $('outfits').innerHTML = looks.map((x, i) => '<article class="look ' + (i === 0 ? 'selected' : '') + '"><div class="look-title">' + escapeCalendarText(x.aiTitle || ['포근한 데일리', '산뜻한 외출', '약속 코디', '포인트 룩'][i]) + '</div><div class="stage" style="--bg:' + ['#fff0f2', '#f3efff', '#eaf7f0', '#fff4df'][i] + '"><div class="look-avatar custom-look-avatar">' + avatarClothesMarkup(x, i) + '</div></div><div class="look-items">' + (x.onepiece ? '<strong>' + escapeCalendarText(x.onepiece[0]) + '</strong>' : '상의 <strong>' + escapeCalendarText(x.top[0]) + '</strong><br>하의 <strong>' + escapeCalendarText(x.bottom[0]) + '</strong>') + (x.outerwear ? '<br>겉옷 <strong>' + escapeCalendarText((x.outerwearColorName ? x.outerwearColorName + ' ' : '') + x.outerwear) + '</strong>' : '') + (x.accessory ? '<br>액세서리 <strong>' + escapeCalendarText(x.accessory) + '</strong>' : '') + '<br>신발 <strong>' + escapeCalendarText((x.shoeColorName ? x.shoeColorName + ' ' : '') + x.shoes[0]) + '</strong>' + (x.reason ? '<br>' + escapeCalendarText(x.reason) : '') + '</div><button class="pick" onclick="selectLook(' + i + ')">' + (i === 0 ? '💗 선택한 코디' : '이 코디 고르기') + '</button></article>').join('');
+    $('outfits').innerHTML = looks.map((x, i) => '<article class="look"><div class="look-title">' + escapeCalendarText(x.aiTitle || ['포근한 데일리', '산뜻한 외출', '약속 코디', '포인트 룩'][i]) + '</div><div class="stage" style="--bg:' + ['#fff0f2', '#f3efff', '#eaf7f0', '#fff4df'][i] + '"><div class="look-avatar custom-look-avatar">' + avatarClothesMarkup(x, i) + '</div></div><div class="look-items">' + (x.onepiece ? '<strong>' + escapeCalendarText(x.onepiece[0]) + '</strong>' : '상의 <strong>' + escapeCalendarText(x.top[0]) + '</strong><br>하의 <strong>' + escapeCalendarText(x.bottom[0]) + '</strong>') + (x.outerwear ? '<br>겉옷 <strong>' + escapeCalendarText((x.outerwearColorName ? x.outerwearColorName + ' ' : '') + x.outerwear) + '</strong>' : '') + (x.accessory ? '<br>액세서리 <strong>' + escapeCalendarText(x.accessory) + '</strong>' : '') + '<br>신발 <strong>' + escapeCalendarText((x.shoeColorName ? x.shoeColorName + ' ' : '') + x.shoes[0]) + '</strong>' + (x.reason ? '<br>' + escapeCalendarText(x.reason) : '') + '</div></article>').join('');
     mountOutfitImageControls();
 
     resetOutfitCards();
     $('suggest').classList.add('show');
-    $('eventName').value = place + ' · ' + occasion;
     toast(usedAI ? 'AI 코디 네 가지를 준비했어요!' : '기본 코디 네 가지를 준비했어요!')
 }
 
@@ -209,13 +207,4 @@ function recommend() {
             }, poseDelay)
         }
     })()
-}
-
-function selectLook(i) {
-    selected = i;
-    document.querySelectorAll('.look').forEach((x, n) => {
-        x.classList.toggle('selected', i === n);
-        x.querySelector('.pick').textContent = i === n ? '💗 선택한 코디' : '이 코디 고르기'
-    });
-    toast('이 코디로 선택했어요')
 }

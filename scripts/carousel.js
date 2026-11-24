@@ -27,14 +27,19 @@ function showOutfitCard(index, animate = true) {
     const cards = [...document.querySelectorAll('#outfits .look')];
     if (index < 0 || index >= cards.length) return;
     const direction = index >= visibleOutfitCard ? 1 : -1;
+    if (!animate || index !== visibleOutfitCard) {
+        document.getElementById('eventName').value = cards[index].querySelector('.look-title').textContent;
+    }
     visibleOutfitCard = index;
+    selected = index;
     cards.forEach((card, i) => {
         card.hidden = i !== index;
+        card.classList.toggle('selected', i === index);
     });
     document.querySelectorAll('#outfitPagination button').forEach((dot, i) => dot.setAttribute('aria-current', String(i === index)));
     document.getElementById('outfitPrevious').disabled = index === 0;
     document.getElementById('outfitNext').disabled = index === cards.length - 1;
-    document.getElementById('outfitCount').textContent = (index + 1) + ' / ' + cards.length + ' · 한 장씩 둘러보고 마음에 드는 코디를 골라요';
+    document.getElementById('outfitCount').textContent = (index + 1) + ' / ' + cards.length;
     if (animate && !motionReductionEnabled()) {
         cards[index].animate([{
             opacity: 0,
