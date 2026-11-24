@@ -2,7 +2,7 @@
 let previousRecommendationTops = [];
 const OUTFIT_TOPS = ['반팔 티셔츠','반팔 셔츠','긴팔 티셔츠','긴팔 셔츠'];
 const OUTFIT_BOTTOMS = ['기본 바지','데님 바지','카고 바지'];
-const OUTFIT_SHORTS = ['기본 반바지','버뮤다 팬츠'];
+const OUTFIT_SHORTS = ['기본 반바지','데님 반바지','카고 반바지','버뮤다 팬츠','스포츠 반바지'];
 const OUTFIT_SKIRTS = ['긴 치마'];
 const OUTFIT_SHOES = ['운동화','스니커즈','슬리퍼'];
 function recommendationInput() {

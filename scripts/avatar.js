@@ -29,7 +29,7 @@ function outfitBottomWearLayer(name) {
         return { src: 'assets/images/characters/' + encodeURIComponent(file), x: 0, y: 0, width: 896, height: 1792 };
     }
     if (/버뮤다/.test(name)) return BOTTOM_WEAR_LAYERS.bermuda;
-    if (/^(?:기본\s*)?반바지$/.test(name) || name === '짧은바지') return BOTTOM_WEAR_LAYERS.shorts;
+    if (/^(?:(?:기본|데님|카고|스포츠)\s*)?반바지$/.test(name) || name === '짧은바지') return BOTTOM_WEAR_LAYERS.shorts;
     if (/반바지|쇼츠|짧은|치마|스커트/.test(name)) return null;
     if (/데님|청바지/.test(name)) return BOTTOM_WEAR_LAYERS.denim;
     if (/카고/.test(name)) return BOTTOM_WEAR_LAYERS.cargo;

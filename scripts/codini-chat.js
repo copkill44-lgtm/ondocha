@@ -39,7 +39,7 @@ function codiniChatContext(){
 // Weather is already public in the weather card; answer from that data without a model call.
 function codiniWeatherReply(text){
  const weatherQuestion=/날씨|기온|온도|몇\s*도|습도|습해|습하|건조해|풍속|바람|비\s*(?:가|와|오|올)|눈\s*(?:이|와|오|올)|우산|\b(?:weather|temperature|humid(?:ity)?|wind(?:y)?|rain(?:ing|y)?|snow(?:ing|y)?|umbrella)\b/i.test(text);
- const outfitQuestion=/뭘.*입|뭐.*입|옷|코디|차림|셔츠|바지|겉옷|what.*wear|outfit|clothes|jacket/i.test(text);
+ const outfitQuestion=/뭘.*입|뭐.*입|옷|코디|차림|셔츠|바지|겉옷|what.*wear|outfit|clothes|jacket/i.test(text.replace(/코디니/g,''));
  if(!weatherQuestion||outfitQuestion)return null;
  const en=typeof uiLanguage==='string'&&uiLanguage==='en';
  if(/내일|모레|주말|다음|어제|이번 주|이번주|예보|tomorrow|yesterday|weekend|next|forecast/i.test(text))return en
