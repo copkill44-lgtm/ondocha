@@ -5,7 +5,7 @@ let customTopCategories = JSON.parse(localStorage.getItem('custom-top-types') ||
     customAccessoryCategories = JSON.parse(localStorage.getItem('custom-accessory-types') || '[]');
 let categoryOptions = [...baseCategories, ...customCategories];
 let topSleeveChoice = '반팔';
-let bottomTypeChoice = '치마';
+let bottomTypeChoice = '긴바지';
 let accessoryTypeChoice = '신발';
 const ACCESSORY_SHOES = ['운동화','스니커즈','로퍼','구두','부츠','샌들','슬리퍼'];
 function isAccessoryShoe(name) { return /운동화|스니커즈|스니커츠|로퍼|구두|부츠|샌들|슬리퍼|신발/.test(name); }
@@ -48,11 +48,11 @@ function normalizeAccessorySelection(input) {
     if (!choices.some(x => x.checked)) choices.find(x => x.value === '없음').checked = true;
 }
 function isSkirtBottom(name) { return /치마|스커트|원피스|skirt|dress/i.test(name || ''); }
-function renderCategoryChoices(selectValue, selectedGroup) {
+function renderCategoryChoices(selectValue, selectedGroup, browseBottomGroup = false) {
     categoryOptions = [...baseCategories, ...customCategories].filter(name => !/원피스/.test(name));
     const pantsOnly = typeof characterConfig !== 'undefined' && characterConfig.gender === 'male';
     const availableBottoms = categoryOptions.filter(name => !pantsOnly || !isSkirtBottom(name));
-    let keep = selectedGroup === 'category' && selectValue ? selectValue : document.querySelector('input[name="category"]:checked')?.value || '긴치마',
+    let keep = selectedGroup === 'category' && selectValue ? selectValue : document.querySelector('input[name="category"]:checked')?.value || '하의 추천받기',
         topKeep = selectedGroup === 'topCategory' && selectValue ? selectValue : document.querySelector('input[name="topCategory"]:checked')?.value || '상의 추천받기',
         accessoryKeep = selectedClothingValues('accessoryCategory'),
         outerKeep = outerwearSelection(),
@@ -163,7 +163,7 @@ function renderCategoryChoices(selectValue, selectedGroup) {
     if (otherBottoms.length) bottomGroups['그 외'] = otherBottoms;
     Object.keys(bottomGroups).forEach(key => bottomGroups[key] = [...new Set(bottomGroups[key])]);
     const selectedBottomGroup = Object.keys(bottomGroups).find(key => bottomGroups[key].includes(keep));
-    if (selectedBottomGroup) bottomTypeChoice = selectedBottomGroup;
+    if (selectedBottomGroup && !browseBottomGroup) bottomTypeChoice = selectedBottomGroup;
     if (!bottomGroups[bottomTypeChoice]) bottomTypeChoice = Object.keys(bottomGroups)[0];
     const bottomTabs = document.createElement('div');
     bottomTabs.className = 'category-subgroup sleeve-selection';
@@ -179,8 +179,7 @@ function renderCategoryChoices(selectValue, selectedGroup) {
         button.setAttribute('aria-pressed', String(bottomTypeChoice === kind));
         button.onclick = () => {
             bottomTypeChoice = kind;
-            renderCategoryChoices(bottomGroups[kind][0], 'category');
-            document.querySelector('input[name="category"]:checked')?.dispatchEvent(new Event('change', { bubbles: true }));
+            renderCategoryChoices(undefined, undefined, true);
         };
         bottomTabs.append(button);
     });
@@ -189,6 +188,11 @@ function renderCategoryChoices(selectValue, selectedGroup) {
         bottomTabs,
         makeGroup('옷 종류', bottomGroups[bottomTypeChoice], 'category', keep)
     );
+    if (selectedBottomGroup && selectedBottomGroup !== bottomTypeChoice) {
+        const selection = makeChoice(keep, 'category', keep);
+        selection.hidden = true;
+        bottomBox.append(selection);
+    }
     const groups = {'신발':[...ACCESSORY_SHOES], '가방':['가방'], '모자':['모자'], '목도리':['스카프'], '주얼리':['목걸이','귀걸이','시계']};
     customAccessoryCategories.forEach(name => {
         const kind = isAccessoryShoe(name) ? '신발' : /가방/.test(name) ? '가방' : /모자/.test(name) ? '모자' : /스카프|목도리/.test(name) ? '목도리' : /목걸이|귀걸이|시계|반지|팔찌/.test(name) ? '주얼리' : '그 외';

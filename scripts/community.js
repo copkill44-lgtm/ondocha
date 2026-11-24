@@ -45,6 +45,11 @@ function communityAvatar(post) {
     return stage;
 }
 function communityError(error) {
+    if (error?.message === 'COMMUNITY_POST_COOLDOWN') {
+        const seconds = Number(error.details);
+        const minutes = Number.isFinite(seconds) && seconds > 0 ? Math.ceil(seconds / 60) : 60;
+        return '1시간 안에 글 5개를 올려 게시가 잠시 제한됐어요. 약 ' + minutes + '분 뒤에 다시 올릴 수 있어요.';
+    }
     if(error?.message?.includes('COMMUNITY_TEXT_BLOCKED')) return '욕설·비하·성적인 표현이 포함되어 있어요. 표현을 바꿔 주세요.';
     if (['42P01','PGRST205','PGRST200'].includes(error?.code)) return '커뮤니티를 준비 중이에요. 잠시 후 다시 확인해 주세요.';
     if (error?.code === '42501') return '로그인 상태를 확인하고 다시 시도해 주세요.';

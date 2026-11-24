@@ -2,6 +2,7 @@
 let previousRecommendationTops = [];
 const OUTFIT_TOPS = ['반팔 티셔츠','반팔 셔츠','긴팔 티셔츠','긴팔 셔츠'];
 const OUTFIT_BOTTOMS = ['기본 바지','데님 바지','카고 바지'];
+const OUTFIT_SHORTS = ['기본 반바지','버뮤다 팬츠'];
 const OUTFIT_SKIRTS = ['긴 치마'];
 const OUTFIT_SHOES = ['운동화','스니커즈','슬리퍼'];
 function recommendationInput() {
@@ -22,12 +23,12 @@ function recommendationCatalog(input) {
     const cold = comfort < 15, hot = comfort >= 25;
     const sleeve = hot ? '반팔' : '긴팔';
     const tops = OUTFIT_TOPS.includes(input.top) ? [input.top] : OUTFIT_TOPS.filter(name => name.startsWith(sleeve));
-    const selectedBottom = ({'기본 치마':'기본 바지','일반 치마':'기본 바지','짧은치마':'기본 바지','짧은 치마':'기본 바지','긴치마':'긴 치마'})[input.bottom] || input.bottom;
-    const automaticBottoms = input.gender === 'male' ? OUTFIT_BOTTOMS : [...OUTFIT_BOTTOMS, ...OUTFIT_SKIRTS];
-    const allowsSelectedBottom = automaticBottoms.includes(selectedBottom) || (input.gender !== 'male' && selectedBottom === '치마바지');
+    const selectedBottom = ({'기본 치마':'기본 바지','일반 치마':'기본 바지','짧은치마':'기본 바지','짧은 치마':'기본 바지','긴치마':'긴 치마','짧은바지':'기본 반바지'})[input.bottom] || input.bottom;
+    const formal = /출근|면접|격식|결혼|회의/.test(input.place + input.occasion);
+    const automaticBottoms = [...OUTFIT_BOTTOMS, ...(hot && !formal ? OUTFIT_SHORTS : []), ...(input.gender === 'male' ? [] : OUTFIT_SKIRTS)];
+    const allowsSelectedBottom = automaticBottoms.includes(selectedBottom) || OUTFIT_SHORTS.includes(selectedBottom) || (input.gender !== 'male' && selectedBottom === '치마바지');
     const bottoms = allowsSelectedBottom ? [selectedBottom] : automaticBottoms;
     const selectedShoe = input.shoes === '스니커츠' ? '스니커즈' : input.shoes;
-    const formal = /출근|면접|격식|결혼|회의/.test(input.place + input.occasion);
     const shoes = OUTFIT_SHOES.includes(selectedShoe) ? [selectedShoe] : OUTFIT_SHOES.filter(name => name !== '슬리퍼' || hot && !formal);
     return { tops, bottoms, shoes, cold, hot, comfort };
 }
@@ -70,6 +71,5 @@ function parseAiOutfits(reply, input) {
         if (!item || !catalog.tops.includes(item.t) || !catalog.bottoms.includes(item.b) || !catalog.shoes.includes(item.s) || typeof item.r !== 'string' || !item.r.trim() || item.r.length > 120) throw Error('선택 조건과 다른 AI 추천이에요.');
         return {title:['오늘의 데일리','산뜻한 외출','단정한 조합','포인트 코디'][i],top:item.t,bottom:item.b,shoes:item.s,reason:item.r,accessory:input.accessory === '액세서리 추천받기' ? ['가방','모자','목걸이','시계'][i] : input.accessory === '없음' ? '' : input.accessory};
     });
-    if (catalog.tops.length >= 4 && new Set(result.map(item => item.top)).size < 4) throw Error('AI 추천의 옷 종류가 반복됐어요.');
     return result;
 }

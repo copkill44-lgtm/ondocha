@@ -327,6 +327,7 @@ AI가 날씨와 선택 조건을 반영했어요.|AI considered your weather and
 코디니와 이야기하기|Chat with Codini
 나의 AI 코디 친구|Your AI style friend
 코디니에게 물어봐요|Ask Codini
+지금 날씨랑 습도는?|What's the weather and humidity right now?
 오늘 날씨에 뭘 입을까?|What should I wear today?
 이 코디 색 조합은 어때?|Do these colors work together?
 코디니에게 물어보세요|Ask Codini a question

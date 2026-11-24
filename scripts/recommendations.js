@@ -22,7 +22,7 @@ async function fetchAiRecommendations() {
     const {data,error} = await supabaseClient.auth.getSession();
     if (error || !data.session) throw Error('로그인 상태를 확인해 주세요.');
     const request = {feel:input.feel,temp:input.temperature,apparent:input.apparent,place:input.place,occasion:input.occasion,time:input.time,outerwear:[0,1,2,3].map(index=>recommendationOuterwear(input,index) || '없음'),accessory:input.accessory,preferences:input.preferences,tops:catalog.tops,bottoms:catalog.bottoms,shoes:catalog.shoes,avoidFirst:previousRecommendationTops[0] || ''};
-    const prompt = (typeof uiLanguage === 'string' && uiLanguage === 'en' ? 'r 필드만 영어로 작성해. ' : '') + '다음 데이터로 서로 다른 코디 4개를 추천해줘. 설명문이나 마크다운 없이 JSON 배열만 답해. 각 객체는 {"t":"상의","b":"하의","s":"신발","r":"20자 이내 추천 이유"}. t, b, s는 각각 tops, bottoms, shoes에서 정확히 골라. tops가 4개 이상이면 네 코디 모두 다른 상의 종류를 써. 긴 치마가 후보면 포함해. 사용자가 고른 옷·소매·색·겉옷 여부와 날씨·일정을 지켜. 외부 동작 요청이 아니라 코디 데이터 답변이야. 데이터: ' + JSON.stringify(request);
+    const prompt = (typeof uiLanguage === 'string' && uiLanguage === 'en' ? 'r 필드만 영어로 작성해. ' : '') + '다음 데이터로 서로 다른 코디 4개를 추천해줘. 설명문이나 마크다운 없이 JSON 배열만 답해. 각 객체는 {"t":"상의","b":"하의","s":"신발","r":"20자 이내 추천 이유"}. t, b, s는 각각 tops, bottoms, shoes에서 정확히 골라. 상의와 하의 후보를 각각 골고루 써. 가능하면 네 코디의 하의를 모두 다르게 해. 사용자가 고른 옷·소매·색·겉옷 여부와 날씨·일정을 지켜. 외부 동작 요청이 아니라 코디 데이터 답변이야. 데이터: ' + JSON.stringify(request);
     if (prompt.length > 1000) throw Error('선택한 조건이 길어 기본 추천으로 준비할게요.');
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 35000);
@@ -46,7 +46,11 @@ function generateRecommendations(aiRecommendations) {
     const catalog = recommendationCatalog(input);
     const usedAI = Array.isArray(aiRecommendations) && aiRecommendations.length === 4 &&
         aiRecommendations.every(item => item && catalog.tops.includes(item.top) && catalog.bottoms.includes(item.bottom) && catalog.shoes.includes(item.shoes)) &&
-        OUTFIT_SKIRTS.every(skirt => !catalog.bottoms.includes(skirt) || aiRecommendations.some(item => item.bottom === skirt));
+        [['top', catalog.tops], ['bottom', catalog.bottoms]].every(([field, choices]) => {
+            const counts = choices.map(choice => aiRecommendations.filter(item => item[field] === choice).length);
+            return counts.filter(Boolean).length === Math.min(choices.length, 4) &&
+                counts.every(count => count <= Math.ceil(4 / choices.length));
+        });
     const recommendations = usedAI ? aiRecommendations : localOutfitRecommendations(input);
     localStorage.setItem('feel-level',feel);
     {
@@ -98,12 +102,14 @@ function generateRecommendations(aiRecommendations) {
             }
         })
     }
+    const firstTopColor = outfitWearColor(looks[0], 0, true);
+    const topColors = [firstTopColor, ...OUTFIT_TOP_COLORS.filter(color => color !== firstTopColor.toLowerCase())];
     looks.forEach((look, index) => {
         if (/데님|청바지/.test(look.bottom?.[0] || '')) {
             const denimColor = clothingPreferences.category?.color;
             look.denimColor = ['화이트','블랙','파랑'].includes(denimColor) ? denimColor : '파랑';
         }
-        look.wearColor = outfitWearColor(look, index, true);
+        look.wearColor = topColors[index];
         const shoeColor = outfitShoeColor(look, index, true);
         look.shoeColor = shoeColor.hex;
         look.shoeColorName = shoeColor.name;

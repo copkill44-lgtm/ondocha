@@ -18,7 +18,9 @@ const WEAR_LAYERS = {
 const BOTTOM_WEAR_LAYERS = {
     basic: { file: '일반 바지.png?v=20261112-pants-2', x: 0, y: 0, width: 896, height: 1792 },
     denim: { file: '청바지.png?v=20261112-denim-1', x: 0, y: 0, width: 896, height: 1792, denim: true },
-    cargo: { file: '카고바지.png?v=20261112-pants-2', x: 0, y: 0, width: 896, height: 1792 }
+    cargo: { file: '카고바지.png?v=20261112-pants-2', x: 0, y: 0, width: 896, height: 1792 },
+    shorts: { file: '반바지.png', x: 0, y: 0, width: 896, height: 1792 },
+    bermuda: { file: '버뮤다.png', x: 0, y: 0, width: 896, height: 1792 }
 };
 function outfitBottomWearLayer(name) {
     name = String(name || '');
@@ -26,7 +28,9 @@ function outfitBottomWearLayer(name) {
         const file = /짧은|미니|기본|일반/.test(name) ? '짧은 치마.png' : '긴 치마.png';
         return { src: 'assets/images/characters/' + encodeURIComponent(file), x: 0, y: 0, width: 896, height: 1792 };
     }
-    if (/반바지|쇼츠|버뮤다|짧은|치마|스커트/.test(name)) return null;
+    if (/버뮤다/.test(name)) return BOTTOM_WEAR_LAYERS.bermuda;
+    if (/^(?:기본\s*)?반바지$/.test(name) || name === '짧은바지') return BOTTOM_WEAR_LAYERS.shorts;
+    if (/반바지|쇼츠|짧은|치마|스커트/.test(name)) return null;
     if (/데님|청바지/.test(name)) return BOTTOM_WEAR_LAYERS.denim;
     if (/카고/.test(name)) return BOTTOM_WEAR_LAYERS.cargo;
     if (/기본 바지|일반\s*바지|긴바지/.test(name)) return BOTTOM_WEAR_LAYERS.basic;
@@ -40,17 +44,9 @@ function outfitWearLayer(name) {
     const short = /반팔|짧은팔|쇼트|숏슬리브/.test(name) || (/티셔츠/.test(name) && !/긴팔|롱슬리브/.test(name));
     return WEAR_LAYERS[(shirt ? 'shirt' : 'tee') + (short ? '-short' : '-long')];
 }
+const OUTFIT_TOP_COLORS = ['#f7f5ef','#5276a8','#6b9277','#d88e9f'];
 function outfitWearColor(outfit, index, usePreferences = false) {
     if (/^#[0-9a-f]{6}$/i.test(outfit.wearColor || '')) return outfit.wearColor;
-    const shirt = typeof isShirtClothing === 'function' && isShirtClothing(outfit.top?.[0]);
-    const automaticTop = typeof selectedClothingValues === 'function' && selectedClothingValues('topCategory')[0] === '상의 추천받기';
-    if (shirt && automaticTop) {
-        const preference = usePreferences ? clothingPreferences.topCategory?.color : null;
-        if (Object.hasOwn(shirtColorPalette, preference)) return shirtColorPalette[preference];
-        const name = String(outfit.top?.[0] || '');
-        const named = Object.keys(shirtColorPalette).find(color => name.includes(color));
-        return named ? shirtColorPalette[named] : Object.values(shirtColorPalette)[Math.abs(Number(index) || 0) % 4];
-    }
     if (usePreferences && typeof clothingPreviewColor === 'function') {
         const preference = clothingPreferences.topCategory?.color;
         if (preference && preference !== '상관없음') return clothingPreviewColor('topCategory');
@@ -58,7 +54,7 @@ function outfitWearColor(outfit, index, usePreferences = false) {
     const colors = {화이트:'#ffffff',흰색:'#ffffff',아이보리:'#f7f5ef',블랙:'#202024',검정:'#202024',네이비:'#354564',베이지:'#d4b896',핑크:'#e8a9b2',파랑:'#9cb7de',초록:'#93c4a5'};
     const name = String(outfit.top?.[0] || '');
     const named = Object.keys(colors).find(color => name.includes(color));
-    return named ? colors[named] : ['#e8a9b2','#9cb7de','#93c4a5','#d4a46d'][Math.abs(Number(index) || 0) % 4];
+    return named ? colors[named] : OUTFIT_TOP_COLORS[Math.abs(Number(index) || 0) % OUTFIT_TOP_COLORS.length];
 }
 function outfitWearMarkup(layer, color) {
     const id = 'wear-tint-' + (++wearFilterSequence);
@@ -124,15 +120,14 @@ function outfitOuterwearMarkup(name, color = '#a4a6ad') {
 }
 function renderOutfitAvatar(outfit, index, config = characterConfig) {
     const layers = characterImageLayers(config);
-    const palette = ['#e8a9b2', '#9cb7de', '#93c4a5', '#d4a46d'];
     const lowerPalette = OUTFIT_LOWER_COLORS;
     const variant = Math.abs(Number(index) || 0) % 4;
-    const color = palette[variant], lowerColor = lowerPalette[variant];
+    const color = outfitWearColor(outfit, index), lowerColor = lowerPalette[variant];
     const lowerName = String(outfit.bottom?.[0] || '');
     const short = /짧은|쇼츠|반바지|버뮤다|치마바지/.test(lowerName);
     const skirt = /치마|스커트/.test(lowerName) && !/치마바지/.test(lowerName);
     const wear = outfit.onepiece ? null : outfitWearLayer(outfit.top?.[0]);
-    const top = wear ? outfitWearMarkup(wear, outfitWearColor(outfit, index)) : '<path d="M326 801L364 788Q440 875 511 789L555 805L625 984L577 1015L550 929L575 1193Q440 1210 280 1193L305 929L258 1015L211 984Z" fill="' + color + '" stroke="#ffffffa6" stroke-width="7" stroke-linejoin="round"/>';
+    const top = wear ? outfitWearMarkup(wear, color) : '<path d="M326 801L364 788Q440 875 511 789L555 805L625 984L577 1015L550 929L575 1193Q440 1210 280 1193L305 929L258 1015L211 984Z" fill="' + color + '" stroke="#ffffffa6" stroke-width="7" stroke-linejoin="round"/>';
     const shoeLayer = outfitShoeWearLayer(outfit.shoes?.[0]);
     const shoes = shoeLayer ? outfitShoeMarkup(shoeLayer, outfitShoeColor(outfit, index).hex) : '';
     const bottomWear = outfit.onepiece ? null : outfitBottomWearLayer(lowerName);
