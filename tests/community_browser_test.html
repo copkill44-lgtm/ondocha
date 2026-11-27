@@ -1,7 +1,7 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../"><link rel="stylesheet" href="styles/base.css"><link rel="stylesheet" href="styles/community.css"></head><body>
 <main class="shell" id="app"><nav class="nav"><button id="navHome">Home</button><button id="navCalendar">Calendar</button><button id="navCommunity">Community</button></nav><div id="sky"></div><div id="recommendCard"></div><div id="calendarCard"></div>
 <section id="communityCard" hidden><div id="communityStatus"></div><div class="community-grid" id="communityFeed"></div><button id="communityMore" hidden>More</button></section></main>
-<dialog class="community-dialog" id="communityComposer"><form onsubmit="publishCommunityPost(event)"><div id="communityComposerPreview"></div><input id="communityNickname" required maxlength="24"><textarea id="communityCaption"></textarea><p id="communityPublishStatus"></p><button id="communityPublishButton">Post</button></form></dialog><div id="toast"></div>
+<dialog class="community-dialog" id="communityComposer"><form onsubmit="publishCommunityPost(event)"><div id="communityComposerPreview"></div><textarea id="communityCaption"></textarea><p id="communityPublishStatus"></p><button id="communityPublishButton">Post</button></form></dialog><div id="toast"></div>
 <script>
 const $=id=>document.getElementById(id);
 let currentAuthUser=null,loginRequests=0,lastToast='',missingTables=false;
@@ -62,7 +62,7 @@ try{
  check(countButton.textContent.includes('1'),'comment count');
  panel.querySelector('.community-comment button').click();await flush();check(records.community_comments.length===0,'own comment deletion');
  openCommunityComposer();check(document.getElementById('communityComposer').open,'composer opens');
- check(document.querySelector('#communityComposerPreview svg') && document.getElementById('communityNickname').value==='Test friend','character snapshot');
+ check(document.querySelector('#communityComposerPreview svg'),'character snapshot');
 
  document.getElementById('communityCaption').value='씨 발';
  const beforeBlockedPost=writes;
@@ -73,6 +73,7 @@ try{
  await publishCommunityPost({preventDefault(){}});await flush();
  check(records.community_posts.length===2 && !document.getElementById('communityComposer').open,'publish');
  check(records.community_posts[1].appearance.hair==='open','appearance saved');
+ check(records.community_posts[1].author_name==='Test friend','profile nickname saved');
  check(document.querySelectorAll('.community-post-head > button').length===1,'only own delete button');
  await deleteCommunityPost(communityPosts.find(p=>p.user_id==='member'));check(records.community_posts.length===1,'own post deletion');
  check(communityAppearance({hair:'constructor',skin:'__proto__',eyes:'bad'}).hair==='open','appearance allowlist');

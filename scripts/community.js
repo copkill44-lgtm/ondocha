@@ -17,7 +17,7 @@ function communityButton(text, action, cls = '') {
 }
 function communityName() {
     const m = currentAuthUser?.user_metadata || {};
-    return String(m.nickname || m.name || m.full_name || '코디 친구').trim().slice(0,24) || '코디 친구';
+    return String(m.nickname || '코디 친구').trim().slice(0,24) || '코디 친구';
 }
 function communityRequireLogin() {
     if (currentAuthUser && supabaseClient) return true;
@@ -226,7 +226,7 @@ function openCommunityComposer() {
     if(!looks.length || !looks[selected]){toast('먼저 마음에 드는 코디를 추천받아 주세요.');showHome();return;}
     communityDraft={outfit:communityOutfit(looks[selected]),appearance:communityAppearance(characterConfig),visual_index:Math.abs(Number(selected)||0)%4};
     document.getElementById('communityComposerPreview').replaceChildren(communityAvatar(communityDraft));
-    document.getElementById('communityNickname').value=communityName();document.getElementById('communityCaption').value='';
+    document.getElementById('communityCaption').value='';
     document.getElementById('communityPublishStatus').textContent='';
     document.getElementById('communityComposer').showModal();
 }
@@ -237,11 +237,10 @@ async function publishCommunityPost(event) {
     if(submit.disabled)return;
     submit.disabled=true;status.textContent='코디를 올리고 있어요…';
     try {
-        const author=document.getElementById('communityNickname').value.trim();
-        if(!author){status.textContent='공개할 닉네임을 입력해 주세요.';return;}
+        const author=communityName();
         const warning=communityModerationMessage(author)||communityModerationMessage(document.getElementById('communityCaption').value);
         if(warning){status.textContent=warning;return;}
-        const {error}=await supabaseClient.from('community_posts').insert({...communityDraft,user_id:currentAuthUser.id,author_name:author.slice(0,24),caption:document.getElementById('communityCaption').value.trim().slice(0,500)});
+        const {error}=await supabaseClient.from('community_posts').insert({...communityDraft,user_id:currentAuthUser.id,author_name:author,caption:document.getElementById('communityCaption').value.trim().slice(0,500)});
         if(error)throw error;
         document.getElementById('communityComposer').close();communityDraft=null;
         const url=new URL(location.href);url.searchParams.delete('community');history.replaceState(null,'',url);
