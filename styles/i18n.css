@@ -1,5 +1,4 @@
-.language-picker { position: fixed; bottom: 16px; left: 16px; z-index: 210; display: flex; align-items: center; gap: 6px; padding: 8px 10px; border: 1px solid #d4e2f4; border-radius: 14px; background: #ffffffed; box-shadow: 0 3px 14px #46688812; }
-.language-picker select,.language-setting select { border: 0; background: transparent; color: #496a96; padding: 5px; font: 13px sans-serif; cursor: pointer; }
+.language-setting select { border: 0; background: transparent; color: #496a96; padding: 5px; font: 13px sans-serif; cursor: pointer; }
 .language-setting { display: flex; justify-content: space-between; align-items: center; gap: 16px; color: #496a96; }
 .english-onboarding { display: none; }
 html[lang="en"] body { font-family: Arial, sans-serif; }

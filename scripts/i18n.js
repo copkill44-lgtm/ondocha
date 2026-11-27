@@ -88,6 +88,7 @@ STEP 1 · 나만의 캐릭터|STEP 1 · Your character
 사용법 안내|How to use
 코디 추천|Outfit ideas
 코디 캘린더|Outfit calendar
+커뮤니티를 이용하려면 로그인해 주세요.|Log in to use the community.
 커뮤니티|Community
 마이페이지|My page
 오늘 하늘을 살펴보고 있어요|Checking today's weather
@@ -414,8 +415,6 @@ function setUiLanguage(language) {
     window.dispatchEvent(new CustomEvent('ondocha-language-change',{detail:uiLanguage}));
 }
 function mountLanguageSettings() {
-    const picker=document.createElement('label');picker.className='language-picker';picker.innerHTML='<span aria-hidden="true">🌐</span><select data-language-select aria-label="언어" onchange="setUiLanguage(this.value)"><option value="ko">한국어</option><option value="en">English</option></select>';
-    document.body.append(picker);
     const setting=document.createElement('section');setting.className='mypage-settings';setting.innerHTML='<label class="language-setting">언어 <select data-language-select onchange="setUiLanguage(this.value)"><option value="ko">한국어</option><option value="en">English</option></select></label><p>이 기기에 언어 설정이 저장돼요.</p>';
     document.getElementById('settingsLanguageMount').append(setting);
     const pages=[['Find your comfort','Outfit ideas that fit how you feel.'],['Make it your own','Choose clothes, colors and styles you love.'],['Dress for your day','Weather, plans and your comfort, all considered.']];

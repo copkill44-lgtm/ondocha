@@ -45,7 +45,7 @@ try{
  check(!document.querySelector('.community-caption img') && !window.injected,'caption injection');
  const post=communityPosts[0];
  await toggleCommunityLike(post,document.querySelector('.community-heart'));
- check(loginRequests===1 && writes===0,'guest cannot like');
+ check(loginRequests===0 && lastToast==='커뮤니티를 이용하려면 로그인해 주세요.' && writes===0,'guest sees login prompt without navigation');
  currentAuthUser={id:'member',user_metadata:{name:'Test friend'}};
  await toggleCommunityLike(post,document.querySelector('.community-heart'));
  check(records.community_likes.length===1 && document.querySelector('.community-heart').getAttribute('aria-pressed')==='true','heart added');

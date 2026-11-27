@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="styles/outfit-images.css?v=20261109-instant-1">
     <link rel="stylesheet" href="styles/motion-settings.css?v=20261113-shared-entrance-1">
     <script src="assets/vendor/supabase/supabase.js"></script>
-    <link rel="stylesheet" href="styles/i18n.css?v=20261113-fullscreen-art-2">
+    <link rel="stylesheet" href="styles/i18n.css?v=20261127-settings-language-1">
     <link rel="stylesheet" href="styles/notices.css?v=20261110-read-style-3">
 </head>
 
@@ -280,7 +280,7 @@
             <button type="button" class="tour-replay" onclick="startFeatureTour()">사용법 안내</button>
             <nav class="nav" aria-label="주요 메뉴"><button class="active" id="navHome" onclick="showHome()">코디 추천</button><button
                     id="navCalendar" onclick="showCalendar()">코디 캘린더</button><button type="button" id="navCharacter"
-                    onclick="openCharacterSetup(true)">캐릭터 설정</button><button type="button" id="navCommunity" onclick="showCommunity()">커뮤니티</button><button type="button" id="navNotices" onclick="showNotices()"><span>공지사항</span><span class="notice-unread" id="noticeUnread" hidden></span></button></nav>
+                    onclick="openCharacterSetup(true)">캐릭터 설정</button><button type="button" id="navCommunity" onclick="if (communityRequireLogin()) showCommunity()">커뮤니티</button><button type="button" id="navNotices" onclick="showNotices()"><span>공지사항</span><span class="notice-unread" id="noticeUnread" hidden></span></button></nav>
             <div class="account-area"><span id="accountLabel" hidden></span><button type="button" class="account-button"
                     id="accountButton" onclick="handleAccountButton()">설정</button></div>
         </header>
@@ -610,7 +610,7 @@
         </aside>
     </div>
 
-    <script src="scripts/i18n.js?v=20261127-outfit-reasons-1"></script>
+    <script src="scripts/i18n.js?v=20261127-guest-toast-1"></script>
     <script src="scripts/onboarding-layout.js?v=20261112-responsive-fit-1"></script>
     <script src="scripts/state.js"></script>
     <script src="scripts/clothing.js?v=20261124-variety-2"></script>
@@ -635,7 +635,7 @@
     <script src="scripts/tour.js?v=20261110-motion-1"></script>
     <script src="scripts/carousel.js?v=20261124-outfit-selection-1"></script>
     <script src="scripts/community-moderation.js?v=20261110-1"></script>
-    <script src="scripts/community.js?v=20261127-profile-name-1"></script>
+    <script src="scripts/community.js?v=20261127-guest-toast-1"></script>
     <script src="scripts/mypage.js?v=20261113-settings-hub-1"></script>
     <script src="scripts/codini-chat.js?v=20261124-weather-3"></script>
     <script src="scripts/notices-data.js?v=20261110-1"></script><script src="scripts/notices.js?v=20261113-settings-hub-1"></script>

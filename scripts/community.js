@@ -21,8 +21,7 @@ function communityName() {
 }
 function communityRequireLogin() {
     if (currentAuthUser && supabaseClient) return true;
-    openEmailAuth('loginView');
-    setAuthMessage('loginMessage', '로그인하면 코디를 올리고 댓글과 하트를 남길 수 있어요.', 'info');
+    toast('커뮤니티를 이용하려면 로그인해 주세요.');
     return false;
 }
 function communityAppearance(config = {}) {
