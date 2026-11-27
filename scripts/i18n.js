@@ -146,6 +146,10 @@ STEP 1 · 나만의 캐릭터|STEP 1 · Your character
 마음에 드는 코디를 골라봐요|Pick your favorite look
 작은 아바타에게 코디를 입혀봤어요.|Try these looks on your character.
 선택한 코디 커뮤니티에 올리기|Share this outfit
+겹쳐 입기|as a layer
+위에|with
+로 소매와 바지 기장을 짧게| for shorter sleeves and hems
+로 팔을 덮는 조합| for full sleeve coverage
 일정 이름|Event name
 선택한 코디를 캘린더에 저장|Save outfit to calendar
 내 캐릭터|My character

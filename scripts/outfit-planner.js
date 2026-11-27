@@ -40,6 +40,24 @@ function recommendationOuterwear(input, index) {
     if (comfort >= 15 && comfort < 20 && index === 0) return '바람막이';
     return '';
 }
+function outfitRecommendationReason(look, input, catalog) {
+    const temperature = Number.isFinite(input.apparent) ? '체감온도 ' + Math.round(input.apparent) + '°C'
+        : Number.isFinite(input.temperature) ? '기온 ' + Math.round(input.temperature) + '°C' : '';
+    const conditions = [temperature, input.feel].filter(Boolean).join(' · ');
+    const top = look.top?.[0] || look.onepiece?.[0];
+    const bottom = look.bottom?.[0];
+    const garments = look.onepiece ? [top] : [top, bottom];
+    const outfit = garments.filter(Boolean).join(' + ');
+    const reason = look.outerwear
+        ? top + ' 위에 ' + look.outerwear + ' 겹쳐 입기'
+        : catalog.hot && top?.startsWith('반팔') && OUTFIT_SHORTS.includes(bottom)
+            ? outfit + '로 소매와 바지 기장을 짧게'
+            : catalog.cold && top?.startsWith('긴팔')
+                ? outfit + '로 팔을 덮는 조합'
+                : outfit + ' 조합';
+    return [conditions, reason].filter(Boolean).join(' · ');
+}
+
 function shuffledChoices(items) {
     const result = [...items];
     for (let i = result.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [result[i],result[j]] = [result[j],result[i]]; }
@@ -51,13 +69,11 @@ function localOutfitRecommendations(input) {
     // Avoid repeating the previous first card when another top is available.
     if (tops.length > 1 && tops[0] === previousRecommendationTops[0]) tops.push(tops.shift());
     const bottoms = shuffledChoices(catalog.bottoms);
-    const formal = /출근|면접|격식|결혼|회의/.test(input.place + input.occasion);
     const shoes = shuffledChoices(catalog.shoes);
     return Array.from({length:4}, (_, i) => ({
         title: ['가볍게 나서는 날','단정한 외출','편안한 하루','기분 전환 코디'][i],
         top: tops[i % tops.length], bottom: bottoms[i % bottoms.length], shoes: shoes[i % shoes.length],
-        accessory: input.accessory === '액세서리 추천받기' ? ['가방','모자','목걸이','시계'][i] : input.accessory === '없음' ? '' : input.accessory,
-        reason: (catalog.cold ? '쌀쌀한 체감에 맞춘 긴소매 조합' : catalog.hot ? '더운 체감에 맞춘 가벼운 조합' : '활동하기 편한 간절기 조합') + (formal ? ' · 단정한 신발로 마무리해요.' : ' · ' + input.occasion.slice(0,30) + '에 어울려요.')
+        accessory: input.accessory === '액세서리 추천받기' ? ['가방','모자','목걸이','시계'][i] : input.accessory === '없음' ? '' : input.accessory
     }));
 }
 function parseAiOutfits(reply, input) {

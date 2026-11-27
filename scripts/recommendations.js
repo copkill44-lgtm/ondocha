@@ -97,8 +97,7 @@ function generateRecommendations(aiRecommendations) {
                 bottom: [bottomName, dress ? '' : bottomIcons[bottomIcon] || '👖'],
                 shoes: [shoeName, shoeIcons[shoeIcon] || '👟'],
                 accessory: String(item.accessory || ''),
-                aiTitle: String(item.title || ['포근한 데일리', '산뜻한 외출', '약속 코디', '포인트 룩'][i]),
-                reason: String(item.reason || '')
+                aiTitle: String(item.title || ['포근한 데일리', '산뜻한 외출', '약속 코디', '포인트 룩'][i])
             }
         })
     }
@@ -120,6 +119,7 @@ function generateRecommendations(aiRecommendations) {
             look.outerwearColorName = outerColor.name;
         }
         if (accessoryRaw !== '액세서리 추천받기') look.accessory = accessoryChoice;
+        look.reason = outfitRecommendationReason(look, input, catalog);
     });
     previousRecommendationTops = looks.map(look => look.top[0]);
     $('suggestCopy').textContent = (usedAI ? 'AI가 날씨와 선택 조건을 반영했어요. ' : '날씨와 선택 조건에 맞춘 기본 추천이에요. ') + (weatherTemp === null ? '' : city + ' ' + weatherTemp + '°C · ') + feel + ' · ' + time + ' · ' + place + ' · ' + occasion;
